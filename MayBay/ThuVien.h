@@ -13,7 +13,7 @@
 #define TRUE 1
 #define FALSE 0
 #define MAXLIST 300
-
+#define MAX_INPUT 255
 using namespace std;
 // 1800 <  NAM < 9999
 const int MAX_NAM = 9999;
@@ -112,7 +112,14 @@ struct NodeHanhKhach {
 };
 typedef NodeHanhKhach NodeHanhKhach;
 
-
+struct NhapChuoi {
+	int n = 0;
+	char* data[MAX_INPUT];
+};
+//========= cac ham xu ly nhap chuoi ==========
+void NhapMA(char var[], int len);
+void NhapCHUOI_SO(char var[], int len);
+void Nhap_SO(char var[], int len);
 //============= Xu ly Giao dien ==============
 const int soItem_MenuChinh = 7;
 const int soItem_MenuMB = 4;

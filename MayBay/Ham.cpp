@@ -12,33 +12,19 @@ int full(LIST_MB lstMB) {
 	return lstMB.n == MAXLIST;
 }
 
-void khungNhap() {
-	Normal();
-	gotoxy(COT + 25, DONGTD);
-	cout << "NHAP MAY BAY";
-	gotoxy(COT, DONGNHAP1);
-	cout << "Nhap so hieu:";
-	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP1 + 1);
-	gotoxy(COT, DONGNHAP2);
-	cout << "Nhap loai may bay:";
-	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP2 + 1);
-	gotoxy(COT, DONGNHAP3);
-	cout << "Nhap so day:";
-	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP3 + 1);
-	gotoxy(COT, DONGNHAP4);
-	cout << "Nhap so dong:";
-	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP4 + 1);
-}
 maybay createMB(LIST_MB& lstMB, mayBay &mb) {
 	khungNhap();
-
+	*mb.soHieuMayBay = '\0';
+	*mb.loaiMayBay = '\0';
 	gotoxy(COT + 1, DONGNHAP1 + 2);
 	rewind(stdin);
-	cin.getline(mb.soHieuMayBay, 20);
+	NhapMA(mb.soHieuMayBay, 20);
+	//cin.getline(mb.soHieuMayBay, 20);
 
 	gotoxy(COT + 1, DONGNHAP2 + 2);
 	rewind(stdin);
-	cin.getline(mb.loaiMayBay, 45);
+	NhapCHUOI_SO(mb.loaiMayBay, 45);
+	//cin.getline(mb.loaiMayBay, 45);
 
 	gotoxy(COT + 1, DONGNHAP3 + 2);
 	cin >> mb.soDay;
@@ -71,6 +57,175 @@ int delete_MB(LIST_MB& lstMB, int i){
 	return TRUE;
 }
 
+//========== xu ly nhap chuoi ===========
+void NhapMA(char var[], int len) {
+	int maxInput = len;
+	if (maxInput == 0)
+		maxInput = MAX_INPUT;
+	rewind(stdin);
+	NhapChuoi nhap;
+	nhap.n = strlen(var);
+
+	for (int i = 0; i < nhap.n; i++) {
+		nhap.data[i] = new char;
+		*nhap.data[i] = var[i];
+	}
+	while (true) {
+		if (kbhit()) {
+			char c = getch();
+			if (!kbhit() && !(!((int)c >= 65 && (int)c <= 90) && !((int)c >= 97 && (int)c <= 122)
+				&& !((int)c >= 48 && (int)c <= 57)) && nhap.n < maxInput) {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ' && c == ' ')
+					continue;
+				if (!(nhap.n == 0 && (int)c >= 48 && (int)c <= 57)) {
+					c = toupper(c);
+					nhap.data[nhap.n] = new char;
+					cout << c;
+					*nhap.data[nhap.n] = c;
+					nhap.n++;
+				}
+			}
+			if (c == '\r') {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
+					gotoxy(wherex() - 1, wherey());
+					cout << " ";
+					gotoxy(wherex() - 1, wherey());
+					if (nhap.n > 0)
+						nhap.n--;
+				}
+				break;
+			}
+			if (c == BACKSPACE) {
+				gotoxy(wherex() - 1, wherey());
+				cout << " ";
+				gotoxy(wherex() - 1, wherey());
+				nhap.n--;
+			}
+		}
+	}
+	for (int i = 0; i < nhap.n; i++) {
+		var[i] = *nhap.data[i];
+	}
+	var[nhap.n] = '\0';
+}
+void NhapCHUOI_SO(char var[], int len) {
+	
+	int maxInput = len;
+	if (maxInput == 0)
+		maxInput = MAX_INPUT;
+	rewind(stdin);
+	NhapChuoi nhap;
+	nhap.n = strlen(var);
+	
+	for (int i = 0; i < nhap.n; i++) {
+		nhap.data[i] = new char;
+		*nhap.data[i] = var[i];
+	}
+	while (true) {
+		if (kbhit()) {
+			char c = getch();
+			if (!kbhit() && !(!((int)c >= 65 && (int)c <= 90) && !((int)c >= 97 && (int)c <= 122)
+				&& c != ' ' && !((int)c >= 48 && (int)c <= 57)) && nhap.n < maxInput) {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ' && c == ' ')
+					continue;
+				if (!(nhap.n == 0 && (c == ' ' || ((int)c >= 48 && (int)c <= 57)))) {
+					if (nhap.n == 0)
+						c = toupper(c);
+					else {
+						if (*nhap.data[nhap.n - 1] == ' ')
+							c = toupper(c);
+						else
+							c = tolower(c);
+					}
+					nhap.data[nhap.n] = new char;
+					cout << c;
+					*nhap.data[nhap.n] = c;
+					nhap.n++;
+				}
+			}
+			if (c == '\r') {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
+					gotoxy(wherex() - 1, wherey());
+					cout << " ";
+					gotoxy(wherex() - 1, wherey());
+					if (nhap.n > 0)
+						nhap.n--;
+				}
+				break;
+			}
+			if (c == BACKSPACE) {
+				gotoxy(wherex() - 1, wherey());
+				cout << " ";
+				gotoxy(wherex() - 1, wherey());
+				nhap.n--;
+			}
+		}
+	}
+	for (int i = 0; i < nhap.n; i++) {
+		var[i] = *nhap.data[i];
+	}
+	var[nhap.n] = '\0';
+}
+
+void Nhap_SO(char var[], int len) {
+	char num[] = { '\0' };
+	int maxInput = len;
+	if (maxInput == 0)
+		maxInput = MAX_INPUT;
+	
+	rewind(stdin);
+	NhapChuoi nhap;
+	nhap.n = strlen(var);
+
+	for (int i = 0; i < nhap.n; i++) {
+		nhap.data[i] = new char;
+		*nhap.data[i] = var[i];
+	}
+	while (true) {
+		if (kbhit()) {
+			char c = getch();
+			if (!kbhit() && !(!((int)c >= 65 && (int)c <= 90) && !((int)c >= 97 && (int)c <= 122)
+				&& c != ' ' && !((int)c >= 48 && (int)c <= 57)) && nhap.n < maxInput) {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ' && c == ' ')
+					continue;
+				if (!(nhap.n == 0 && (c == ' ' || ((int)c >= 48 && (int)c <= 57)))) {
+					if (nhap.n == 0)
+						c = toupper(c);
+					else {
+						if (*nhap.data[nhap.n - 1] == ' ')
+							c = toupper(c);
+						else
+							c = tolower(c);
+					}
+					nhap.data[nhap.n] = new char;
+					cout << c;
+					*nhap.data[nhap.n] = c;
+					nhap.n++;
+				}
+			}
+			if (c == '\r') {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
+					gotoxy(wherex() - 1, wherey());
+					cout << " ";
+					gotoxy(wherex() - 1, wherey());
+					if (nhap.n > 0)
+						nhap.n--;
+				}
+				break;
+			}
+			if (c == BACKSPACE) {
+				gotoxy(wherex() - 1, wherey());
+				cout << " ";
+				gotoxy(wherex() - 1, wherey());
+				nhap.n--;
+			}
+		}
+	}
+	for (int i = 0; i < nhap.n; i++) {
+		var[i] = *nhap.data[i];
+	}
+	var[nhap.n] = '\0';
+}
 //========== giao dien =============
 
 void veKhungGiaoDIen() {
@@ -250,4 +405,22 @@ int menuDong_MayBay(char td[soItem_MenuMB][100]) {
 			return chon + 1;
 		}
 	} while (TRUE);
+}
+
+void khungNhap() {
+	Normal();
+	gotoxy(COT + 25, DONGTD);
+	cout << "NHAP MAY BAY";
+	gotoxy(COT, DONGNHAP1);
+	cout << "Nhap so hieu:";
+	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP1 + 1);
+	gotoxy(COT, DONGNHAP2);
+	cout << "Nhap loai may bay:";
+	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP2 + 1);
+	gotoxy(COT, DONGNHAP3);
+	cout << "Nhap so day:";
+	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP3 + 1);
+	gotoxy(COT, DONGNHAP4);
+	cout << "Nhap so dong:";
+	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP4 + 1);
 }

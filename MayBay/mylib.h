@@ -33,6 +33,7 @@
 #define BEDOWN 193
 
 #define ENTER 13
+#define BACKSPACE 8
 #define UP 72
 #define DOWN 80
 //const int WHITE=15;
