@@ -1,13 +1,11 @@
 ﻿  Ham.cpp
-C:\Users\lamho\source\repos\MayBay\MayBay\ThuVien.h(94,2): warning C4091: 'typedef ': ignored on left of 'NodeChuyenBay' when no variable is declared
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(67,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(118,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(221,27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(252,40): warning C4244: 'argument': conversion from 'double' to 'short', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(269,6): warning C4101: 'i': unreferenced local variable
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(312,6): warning C4101: 'i': unreferenced local variable
-  Main.cpp
-C:\Users\lamho\source\repos\MayBay\MayBay\ThuVien.h(94,2): warning C4091: 'typedef ': ignored on left of 'NodeChuyenBay' when no variable is declared
-  Generating Code...
-C:\Users\lamho\source\repos\MayBay\MayBay\mylib.h(49): warning C4172: returning address of local variable or temporary: S
+C:\Users\lamho\source\repos\MayBay\MayBay\ThuVien.h(95,2): warning C4091: 'typedef ': ignored on left of 'NodeChuyenBay' when no variable is declared
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(134,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(185,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(245,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(339,27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(370,40): warning C4244: 'argument': conversion from 'double' to 'short', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(451,6): warning C4101: 'i': unreferenced local variable
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(494,6): warning C4101: 'i': unreferenced local variable
+C:\Users\lamho\source\repos\MayBay\MayBay\mylib.h(55): warning C4172: returning address of local variable or temporary: S
   MayBay.vcxproj -> C:\Users\lamho\source\repos\MayBay\x64\Debug\MayBay.exe

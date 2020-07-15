@@ -1,6 +1,7 @@
 #pragma once
 #include "ThuVien.h"
 #include "mylib.h"
+
 //using namespace std;
 
 //============ ham xu ly danh sach may bay ===============//
@@ -14,8 +15,10 @@ int full(LIST_MB lstMB) {
 
 maybay createMB(LIST_MB& lstMB, mayBay &mb) {
 	khungNhap();
+
 	*mb.soHieuMayBay = '\0';
 	*mb.loaiMayBay = '\0';
+
 	gotoxy(COT + 1, DONGNHAP1 + 2);
 	rewind(stdin);
 	NhapMA(mb.soHieuMayBay, 20);
@@ -27,10 +30,12 @@ maybay createMB(LIST_MB& lstMB, mayBay &mb) {
 	//cin.getline(mb.loaiMayBay, 45);
 
 	gotoxy(COT + 1, DONGNHAP3 + 2);
-	cin >> mb.soDay;
+	Nhap_SO(mb.soDay, 11);
+	//cin >> mb.soDay;
 
 	gotoxy(COT + 1, DONGNHAP4 + 2);
-	cin >> mb.soDong;
+	Nhap_SO(mb.soDong, 11);
+	//cin >> mb.soDong;
 
 	return mb;
 }
@@ -55,6 +60,68 @@ int delete_MB(LIST_MB& lstMB, int i){
 	}
 	lstMB.n--;
 	return TRUE;
+}
+
+void show_MB(LIST_MB lstMB) {
+	veKhungDS(DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 70, 93);
+
+	for (int i = 0; i < lstMB.n; i++) {
+		//5, 25, 70, 93
+		gotoxy(COTDS_L + 1, DONGDS_U + 3 + i);
+		cout << i + 1;
+		gotoxy(COTDS_L + 6, DONGDS_U + 3 + i);
+		cout << lstMB.nodeMB[i]->data.soHieuMayBay;
+		gotoxy(COTDS_L + 26, DONGDS_U + 3 + i);
+		cout << lstMB.nodeMB[i]->data.loaiMayBay;
+		gotoxy(COTDS_L + 71, DONGDS_U + 3 + i);
+		cout << lstMB.nodeMB[i]->data.soDay;
+		gotoxy(COTDS_L + 94, DONGDS_U + 3 + i);
+		cout << lstMB.nodeMB[i]->data.soDong;
+	}
+	
+}
+
+//========== doc xuat file ===============
+int loadMB(LIST_MB& mb) {
+	fstream inFile;
+	inFile.open("C:/Users/lamho/source/repos/MayBay/MayBay/DATA/MayBay.txt", ios::in);
+	string temp;
+	if (inFile.is_open()) {
+		while (!inFile.eof()) {
+			mb.nodeMB[mb.n] = new nodeMB;
+			getline(inFile, temp);
+			inFile.getline(mb.nodeMB[mb.n]->data.soHieuMayBay, 20);
+			inFile.getline(mb.nodeMB[mb.n]->data.loaiMayBay, 45);
+			inFile >> mb.nodeMB[mb.n]->data.soDay;
+			inFile >> mb.nodeMB[mb.n]->data.soDong;
+			mb.n++;
+		}
+	}
+	else {
+		return 0;
+	}
+	//mb.n--;
+	inFile.close();
+	return 1;
+}
+int saveMB(LIST_MB mb) {
+	fstream outFile;
+	outFile.open("C:/Users/lamho/source/repos/MayBay/MayBay/DATA/MayBay.txt", ios::out);
+	int i = 0;
+	if (outFile.is_open()) {
+		while (i < mb.n) {
+			outFile << endl << mb.nodeMB[i]->data.soHieuMayBay;
+			outFile << endl << mb.nodeMB[i]->data.loaiMayBay;
+			outFile << endl << mb.nodeMB[i]->data.soDay;
+			outFile << endl << mb.nodeMB[i]->data.soDong;
+			i++;
+		}
+	}
+	else {
+		return 0;
+	}
+	outFile.close();
+	return 1;
 }
 
 //========== xu ly nhap chuoi ===========
@@ -95,7 +162,7 @@ void NhapMA(char var[], int len) {
 				}
 				break;
 			}
-			if (c == BACKSPACE) {
+			if (c == BACKSPACE && nhap.n > 0) {
 				gotoxy(wherex() - 1, wherey());
 				cout << " ";
 				gotoxy(wherex() - 1, wherey());
@@ -153,7 +220,7 @@ void NhapCHUOI_SO(char var[], int len) {
 				}
 				break;
 			}
-			if (c == BACKSPACE) {
+			if (c == BACKSPACE && nhap.n > 0) {
 				gotoxy(wherex() - 1, wherey());
 				cout << " ";
 				gotoxy(wherex() - 1, wherey());
@@ -167,64 +234,55 @@ void NhapCHUOI_SO(char var[], int len) {
 	var[nhap.n] = '\0';
 }
 
-void Nhap_SO(char var[], int len) {
-	char num[] = { '\0' };
+void Nhap_SO(int &var, int len) {
+	char num[12] = { '\0' };
 	int maxInput = len;
 	if (maxInput == 0)
 		maxInput = MAX_INPUT;
 	
 	rewind(stdin);
 	NhapChuoi nhap;
-	nhap.n = strlen(var);
+	nhap.n = strlen(num);
 
 	for (int i = 0; i < nhap.n; i++) {
 		nhap.data[i] = new char;
-		*nhap.data[i] = var[i];
+		*nhap.data[i] = num[i];
 	}
 	while (true) {
 		if (kbhit()) {
 			char c = getch();
-			if (!kbhit() && !(!((int)c >= 65 && (int)c <= 90) && !((int)c >= 97 && (int)c <= 122)
-				&& c != ' ' && !((int)c >= 48 && (int)c <= 57)) && nhap.n < maxInput) {
-				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ' && c == ' ')
-					continue;
-				if (!(nhap.n == 0 && (c == ' ' || ((int)c >= 48 && (int)c <= 57)))) {
-					if (nhap.n == 0)
-						c = toupper(c);
-					else {
-						if (*nhap.data[nhap.n - 1] == ' ')
-							c = toupper(c);
-						else
-							c = tolower(c);
-					}
+			if (nhap.n < 11) {
+				if (!kbhit() && (int)c >= 48 && (int)c <= 57 && nhap.n < maxInput) {
+
 					nhap.data[nhap.n] = new char;
 					cout << c;
 					*nhap.data[nhap.n] = c;
 					nhap.n++;
 				}
-			}
-			if (c == '\r') {
-				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
+				if (c == '\r') {
+					if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
+						gotoxy(wherex() - 1, wherey());
+						cout << " ";
+						gotoxy(wherex() - 1, wherey());
+						if (nhap.n > 0)
+							nhap.n--;
+					}
+					break;
+				}
+				if (c == BACKSPACE && nhap.n > 0) {
 					gotoxy(wherex() - 1, wherey());
 					cout << " ";
 					gotoxy(wherex() - 1, wherey());
-					if (nhap.n > 0)
-						nhap.n--;
+					nhap.n--;
 				}
-				break;
-			}
-			if (c == BACKSPACE) {
-				gotoxy(wherex() - 1, wherey());
-				cout << " ";
-				gotoxy(wherex() - 1, wherey());
-				nhap.n--;
 			}
 		}
 	}
 	for (int i = 0; i < nhap.n; i++) {
-		var[i] = *nhap.data[i];
+		num[i] = *nhap.data[i];
 	}
-	var[nhap.n] = '\0';
+	num[nhap.n] = '\0';
+	var = atoi(num);
 }
 //========== giao dien =============
 
@@ -313,6 +371,70 @@ void veKhungNhap(int dai, int rong, int posx, int posy, string source)
 	cout << source;
 }
 
+void veKhungDS(int rong, int dai, int colump1, int colump2, int colump3, int colump4,
+	int colump5, int posx, int posy) {
+	if (posx == 0 || posy == 0)
+	{
+		posx = COTDS_L;
+		posy = DONGDS_U;
+	}
+	veKhungNhap(dai, rong, posx, posy);
+	for (int v = 0; v < dai - 1; v++)
+	{
+		gotoxy(posx + 1 + v, posy + 2);
+		cout << char(196);
+	}
+
+	for (int v = 0; v < rong - 1; v++) // colump 1 
+	{
+		gotoxy(posx + colump1, posy + v + 1);
+		cout << char(179);
+	}
+	gotoxy(posx + colump1, posy + 2);
+	cout << char(197);
+	for (int v = 0; v < rong - 1; v++) // colump 2 
+	{
+		gotoxy(posx + colump2, posy + v + 1);
+		cout << char(179);
+	}
+	gotoxy(posx + colump2, posy + 2);
+	cout << char(197);
+	for (int v = 0; v < rong - 1; v++) // colump 3
+	{
+		gotoxy(posx + colump3, posy + v + 1);
+		cout << char(179);
+	}
+	gotoxy(posx + colump3, posy + 2);
+	cout << char(197);
+	for (int v = 0; v < rong - 1; v++) // colump 4
+	{
+		gotoxy(posx + colump4, posy + v + 1);
+		cout << char(179);
+	}
+	gotoxy(posx + colump4, posy + 2);
+	cout << char(197);
+	if (colump5 != 0)
+	{
+		for (int v = 0; v < rong - 1; v++) // colump 5
+		{
+			gotoxy(posx + colump5, posy + v + 1);
+			cout << char(179);
+		}
+		gotoxy(posx + colump5, posy + 2);
+		cout << char(197);
+	}
+	//5, 25, 70, 93
+	gotoxy(COTDS_L + 1, DONGDS_U + 1);
+	cout << "STT";
+	gotoxy(COTDS_L + 6, DONGDS_U + 1);
+	cout << "SO HIEU MAY BAY";
+	gotoxy(COTDS_L + 26, DONGDS_U + 1);
+	cout << "LOAI MAY BAY";
+	gotoxy(COTDS_L + 71, DONGDS_U + 1);
+	cout << "SO DAY";
+	gotoxy(COTDS_L + 94, DONGDS_U + 1);
+	cout << "SO DONG";
+}
 void Normal() {
 	SetColor(15);
 	SetBGColor(0);
@@ -323,7 +445,7 @@ void Highlight() {
 }
 int menuDong_Prim(char td[soItem_MenuChinh][100]) {
 	Normal();
-	system("cls");
+	//system("cls");
 	veKhungGiaoDIen();
 	int chon = 0;
 	int i;
@@ -366,7 +488,7 @@ int menuDong_Prim(char td[soItem_MenuChinh][100]) {
 
 int menuDong_MayBay(char td[soItem_MenuMB][100]) {
 	Normal();
-	system("cls");
+	//system("cls");
 	veKhungGiaoDIen();
 	int chon = 0;
 	int i;

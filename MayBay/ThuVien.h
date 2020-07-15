@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string.h>
+#include <string>
 #include <cstring>
 #include <fstream>
 
@@ -116,11 +117,14 @@ struct NhapChuoi {
 	int n = 0;
 	char* data[MAX_INPUT];
 };
-//========= cac ham xu ly nhap chuoi ==========
+//============= doc xuat file ================//
+int loadMB(LIST_MB &mb);
+int saveMB(LIST_MB mb);
+//========= cac ham xu ly nhap chuoi ==========//
 void NhapMA(char var[], int len);
 void NhapCHUOI_SO(char var[], int len);
-void Nhap_SO(char var[], int len);
-//============= Xu ly Giao dien ==============
+void Nhap_SO(int &var, int len);
+//============= Xu ly Giao dien ==============//
 const int soItem_MenuChinh = 7;
 const int soItem_MenuMB = 4;
 const int soItem_MenuCB = 4;
@@ -129,6 +133,8 @@ const int soItem_MenuDV = 3;
 void veKhungGiaoDIen();
 void khungNhap();
 void veKhungNhap(int dai, int rong, int posx, int posy, string source = "");
+void veKhungDS(int rong, int dai, int colump1 = 0, int colump2 = 0, int colump3 = 0, int colump4 = 0, 
+	int colump5 = 0, int posx = 0, int posy = 0);
 void Normal();
 void Highlight();
 int menuDong_Prim(char td[soItem_MenuChinh][100]);

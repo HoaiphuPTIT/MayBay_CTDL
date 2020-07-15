@@ -7,15 +7,21 @@
 #include <string.h>
 #include <windows.h>
 
+#define WIDTH 185
+#define HEIGHT 45
+
 #define COT 5
+#define COTDS_L 70
+#define COTDS_R 184
 #define DONG 1
 #define DONGTD 9
+#define DONGDS_U 3
+#define DONGDS_D 45
 #define DONGNHAP1 12
 #define DONGNHAP2 16
 #define DONGNHAP3 20
 #define DONGNHAP4 24
-#define WIDTH 185
-#define HEIGHT 45
+
 #define MIDDLE_DOC 65
 #define MIDDLE_NGANG 7
 #define RONGKHUNG 2
