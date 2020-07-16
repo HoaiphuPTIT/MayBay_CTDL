@@ -14,7 +14,7 @@ int full(LIST_MB lstMB) {
 }
 
 maybay createMB(LIST_MB& lstMB, mayBay &mb) {
-	khungNhap();
+	khungNhap(NHAP_MB);
 
 	*mb.soHieuMayBay = '\0';
 	*mb.loaiMayBay = '\0';
@@ -50,18 +50,39 @@ int insert_MB(LIST_MB& lstMB, mayBay mb) {
 	return TRUE;
 }
 
+int search_MB(LIST_MB lstMB, char ma[]) {
+	cout << ma;
+	for (int i = 0; i < lstMB.n; i++) {
+		if (stricmp(lstMB.nodeMB[i]->data.soHieuMayBay, ma) == 0) {
+			return i;
+		}
+			
+	}
+	return -1;
+}
+
 int delete_MB(LIST_MB& lstMB, int i){
 	int j;
 	if (empty(lstMB)) {
 		return FALSE;
 	}
+	if (i == -1)
+		return FALSE;
 	for (j = i + 1; j < lstMB.n; j++){
 		lstMB.nodeMB[j - 1] = lstMB.nodeMB[j];
 	}
 	lstMB.n--;
 	return TRUE;
 }
+char* gdXoaMayBay(LIST_MB lstMB) {
+	khungNhap(XOA_MB);
 
+	char temp[20] = { '\0' };
+	gotoxy(COT + 1, DONGNHAP1 + 2);
+	rewind(stdin);
+	NhapMA(temp, 20);
+	return temp;
+}
 void show_MB(LIST_MB lstMB) {
 	veKhungDS(DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 70, 93);
 
@@ -529,20 +550,29 @@ int menuDong_MayBay(char td[soItem_MenuMB][100]) {
 	} while (TRUE);
 }
 
-void khungNhap() {
+void khungNhap(int type) {
 	Normal();
-	gotoxy(COT + 25, DONGTD);
-	cout << "NHAP MAY BAY";
-	gotoxy(COT, DONGNHAP1);
-	cout << "Nhap so hieu:";
-	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP1 + 1);
-	gotoxy(COT, DONGNHAP2);
-	cout << "Nhap loai may bay:";
-	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP2 + 1);
-	gotoxy(COT, DONGNHAP3);
-	cout << "Nhap so day:";
-	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP3 + 1);
-	gotoxy(COT, DONGNHAP4);
-	cout << "Nhap so dong:";
-	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP4 + 1);
+	if (type == NHAP_MB) {
+		gotoxy(COT + 25, DONGTD);
+		cout << "NHAP MAY BAY";
+		gotoxy(COT, DONGNHAP1);
+		cout << "Nhap so hieu:";
+		veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP1 + 1);
+		gotoxy(COT, DONGNHAP2);
+		cout << "Nhap loai may bay:";
+		veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP2 + 1);
+		gotoxy(COT, DONGNHAP3);
+		cout << "Nhap so day:";
+		veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP3 + 1);
+		gotoxy(COT, DONGNHAP4);
+		cout << "Nhap so dong:";
+		veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP4 + 1);
+	}
+	else if (type == XOA_MB) {
+		gotoxy(COT + 25, DONGTD);
+		cout << "XOA MAY BAY";
+		gotoxy(COT, DONGNHAP1);
+		cout << "Nhap so hieu:";
+		veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP1 + 1);
+	}
 }

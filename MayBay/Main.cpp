@@ -58,7 +58,24 @@ int main() {
 				}
 				case 2:
 				{
-
+					char x[] = {'\0'};
+					strcpy(x, gdXoaMayBay(lstMB));
+					int i = search_MB(lstMB, x);
+					int xoa = delete_MB(lstMB, i);
+					if (xoa == TRUE) {
+						cout << "Xoa thanh cong";
+						int x = saveMB(lstMB);
+					}
+					else
+					{
+						cout << "Xoa that bai";
+					}
+					char c = getch();
+					if (c == 13) {
+						Normal();
+						system("cls");
+						break;
+					}
 				}
 				case soItem_MenuMB:
 				{

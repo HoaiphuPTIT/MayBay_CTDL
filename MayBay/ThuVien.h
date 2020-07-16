@@ -59,7 +59,7 @@ mayBay createMB(LIST_MB& lstMB, mayBay& mb);
 int insert_MB(LIST_MB& lstMB, mayBay mb);
 int delete_MB(LIST_MB& lstMB, int i);
 void show_MB(LIST_MB lstMB);
-int search_MB(LIST_MB lstMB);
+int search_MB(LIST_MB lstMB, char ma[]);
 
 // cau truc ve
 struct VeMayBay{
@@ -130,8 +130,9 @@ const int soItem_MenuMB = 4;
 const int soItem_MenuCB = 4;
 const int soItem_MenuDV = 3;
 
+char* gdXoaMayBay(LIST_MB lstMB);
 void veKhungGiaoDIen();
-void khungNhap();
+void khungNhap(int type);
 void veKhungNhap(int dai, int rong, int posx, int posy, string source = "");
 void veKhungDS(int rong, int dai, int colump1 = 0, int colump2 = 0, int colump3 = 0, int colump4 = 0, 
 	int colump5 = 0, int posx = 0, int posy = 0);

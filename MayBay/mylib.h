@@ -46,6 +46,15 @@
 #define PASSWORD "abcdef"
 //const int WHITE=15;
 
+#define NHAP_MB 1
+#define XOA_MB 2
+#define SUA_MB 3
+#define NHAP_CB 4
+#define XOA_CB 5
+#define SUA_CB 6
+#define NHAP_HK 7
+#define XOA_HK 8
+#define SUA_HK 9
 char* Pwd () {
      char S[40]; int i=0;
      while ((S[i]= getch()) != ENTER ) 
