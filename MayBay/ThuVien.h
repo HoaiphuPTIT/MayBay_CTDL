@@ -60,7 +60,7 @@ int insert_MB(LIST_MB& lstMB, mayBay mb);
 int delete_MB(LIST_MB& lstMB, int i);
 void show_MB(LIST_MB lstMB);
 int search_MB(LIST_MB lstMB, char ma[]);
-
+int hieuChinh_MB(LIST_MB& lstMB, int i);
 // cau truc ve
 struct VeMayBay{
 	char soVe[5];

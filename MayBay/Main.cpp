@@ -77,6 +77,27 @@ int main() {
 						break;
 					}
 				}
+				case 3:
+				{
+					char x[] = { '\0' };
+					strcpy(x, gdXoaMayBay(lstMB));
+					int i = search_MB(lstMB, x);
+					int sua = hieuChinh_MB(lstMB, i);
+					if (sua == TRUE) {
+						cout << "Hieu chinh thanh cong";
+						int x = saveMB(lstMB);
+					}
+					else
+					{
+						cout << "that bai";
+					}
+					char c = getch();
+					if (c == 13) {
+						Normal();
+						system("cls");
+						break;
+					}
+				}
 				case soItem_MenuMB:
 				{
 					cout << "hihi";
