@@ -24,6 +24,7 @@
     <ProjectGuid>{54fe44ca-e52c-496e-87c5-a1d7addfab58}</ProjectGuid>
     <RootNamespace>MayBay</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>QLChuyenBay</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "ThuVien.h"
-//#include "mylib.h"
 
 char tdChinh[soItem_MenuChinh][100] = { "1. Quan ly may bay                                     ",
 										 "2. Quan ly chuyen bay                                 ",
@@ -59,7 +58,7 @@ int main() {
 				case 2:
 				{
 					char x[] = {'\0'};
-					strcpy(x, gdXoaMayBay(lstMB));
+					strcpy(x, gdTimMa(lstMB, 2));
 					int i = search_MB(lstMB, x);
 					int xoa = delete_MB(lstMB, i);
 					if (xoa == TRUE) {
@@ -80,7 +79,7 @@ int main() {
 				case 3:
 				{
 					char x[] = { '\0' };
-					strcpy(x, gdXoaMayBay(lstMB));
+					strcpy(x, gdTimMa(lstMB, 3));
 					int i = search_MB(lstMB, x);
 					int sua = hieuChinh_MB(lstMB, i);
 					if (sua == TRUE) {

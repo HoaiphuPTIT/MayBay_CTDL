@@ -130,9 +130,9 @@ const int soItem_MenuMB = 4;
 const int soItem_MenuCB = 4;
 const int soItem_MenuDV = 3;
 
-char* gdXoaMayBay(LIST_MB lstMB);
+char* gdTimMa(LIST_MB lstMB, int type);
 void veKhungGiaoDIen();
-void khungNhap(int type);
+void khungNhap(int type, string title = "", string s1 = "", string s2 = "", string s3 = "", string s4 = "");
 void veKhungNhap(int dai, int rong, int posx, int posy, string source = "");
 void veKhungDS(int rong, int dai, int colump1 = 0, int colump2 = 0, int colump3 = 0, int colump4 = 0, 
 	int colump5 = 0, int posx = 0, int posy = 0);
