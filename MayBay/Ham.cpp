@@ -71,8 +71,8 @@ int delete_MB(LIST_MB& lstMB, int i){
 	lstMB.n--;
 	return TRUE;
 }
-char* gdTimMa(LIST_MB lstMB, int type) {
-	khungNhap(type);
+char* gdTimMa(LIST_MB lstMB, int type, string title) {
+	khungNhap(type, title);
 
 	char temp[20] = { '\0' };
 	gotoxy(COT + 1, DONGNHAP1 + 2);
@@ -120,6 +120,11 @@ void show_MB(LIST_MB lstMB) {
 	
 }
 
+// ============== ham xu ly danh sach chuyen bay ============//
+
+CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB) {
+	return cb;
+}
 //========== doc xuat file ===============
 int loadMB(LIST_MB& mb) {
 	fstream inFile;
@@ -569,12 +574,55 @@ int menuDong_MayBay(char td[soItem_MenuMB][100]) {
 	} while (TRUE);
 }
 
-void khungNhap(int type, string title, string s1, string s2, string s3, string s4) {
+int menuDong_ChuyenBay(char td[soItem_MenuCB][100]) {
+	Normal();
+	//system("cls");
+	veKhungGiaoDIen();
+	int chon = 0;
+	int i;
+	for (int i = 0; i < soItem_MenuCB; i++) {
+		gotoxy(COT, DONG + i);
+		cout << td[i];
+	}
+	Highlight();
+	gotoxy(COT, DONG + chon);
+	cout << td[chon];
+	char kytu;
+	do {
+		kytu = getch();
+		if (kytu == -32)
+			kytu = getch();
+		switch (kytu) {
+		case UP:
+			if (chon > 0) {
+				Normal();
+				gotoxy(COT, DONG + chon); cout << td[chon];
+				chon--;
+				Highlight();
+				gotoxy(COT, DONG + chon); 	cout << td[chon];
+			}
+			break;
+		case DOWN:
+			if (chon + 1 < soItem_MenuCB) {
+				Normal();
+				gotoxy(COT, DONG + chon);	cout << td[chon];
+				chon++;
+				Highlight();
+				gotoxy(COT, DONG + chon); 	cout << td[chon];
+			}
+			break;
+		case ENTER:
+			return chon + 1;
+		}
+	} while (TRUE);
+}
+void khungNhap(int type, string title, string s1, string s2, string s3, string s4,
+	string s5, string s6, string s7, string s8, string s9) {
 	Normal();
 	
 	if (type == XOA_MB || type == SUA_MB) {
 		gotoxy(COT + 25, DONGTD);
-		cout << "TIM SO HIEU MAY BAY";
+		cout << title;
 		gotoxy(COT, DONGNHAP1);
 		cout << "Nhap so hieu can tim:";
 		veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP1 + 1);
@@ -583,18 +631,45 @@ void khungNhap(int type, string title, string s1, string s2, string s3, string s
 		
 		gotoxy(COT + 25, DONGTD);
 		cout << title;
+
 		gotoxy(COT, DONGNHAP1);
 		cout << s1;
 		veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP1 + 1);
+
 		gotoxy(COT, DONGNHAP2);
 		cout << s2;
 		veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP2 + 1);
+		
 		gotoxy(COT, DONGNHAP3);
 		cout << s3;
 		veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP3 + 1);
-		gotoxy(COT, DONGNHAP4);
-		cout << s4;
-		veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP4 + 1);
+		
+		if (type == NHAP_CB) {
+			// khung nhap ngay
+			gotoxy(COT, DONGNHAP4);
+			cout << s4;
+			veKhungNhap(DAIKHUNGNHO, RONGKHUNG, COT, DONGNHAP4 + 1);
+
+			gotoxy(COT + DAIKHUNGNHO, DONGNHAP4);
+			veKhungNhap(DAIKHUNGNHO + DAIKHUNGNHO, RONGKHUNG, COT, DONGNHAP4 + 1);
+
+			gotoxy(COT + DAIKHUNGNHO + DAIKHUNGNHO, DONGNHAP4);
+			veKhungNhap(DAIKHUNGNHO + DAIKHUNGNHO + DAIKHUNGNHO, RONGKHUNG, COT, DONGNHAP4 + 1);
+
+			// khung nhap gio
+			gotoxy(COT, DONGNHAP5);
+			cout << s5;
+			veKhungNhap(DAIKHUNGNHO, RONGKHUNG, COT, DONGNHAP5 + 1);
+
+			gotoxy(COT + DAIKHUNGNHO, DONGNHAP5);
+			veKhungNhap(DAIKHUNGNHO + DAIKHUNGNHO, RONGKHUNG, COT, DONGNHAP5 + 1);
+		}
+		else {
+			gotoxy(COT, DONGNHAP4);
+			cout << s4;
+			veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP4 + 1);
+		}
+
 	}
 	
 }

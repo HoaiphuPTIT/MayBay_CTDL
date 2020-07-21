@@ -17,15 +17,22 @@
 #define DONGTD 9
 #define DONGDS_U 3
 #define DONGDS_D 45
+
 #define DONGNHAP1 12
 #define DONGNHAP2 16
 #define DONGNHAP3 20
 #define DONGNHAP4 24
+#define DONGNHAP5 28
+#define DONGNHAP6 32
+#define DONGNHAP7 36
+#define DONGNHAP8 40
+#define DONGNHAP9 44
 
 #define MIDDLE_DOC 65
 #define MIDDLE_NGANG 7
 #define RONGKHUNG 2
 #define DAIKHUNG 60
+#define DAIKHUNGNHO 10
 
 #define NGANG 196
 #define DOC 179

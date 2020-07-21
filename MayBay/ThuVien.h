@@ -24,7 +24,6 @@ struct ThoiGian
 {
 	int gio;
 	int phut;
-	int giay;
 
 	int ngay;
 	int thang;
@@ -95,6 +94,8 @@ typedef struct NodeChuyenBay {
 };
 typedef struct NodeChuyenBay* PTRChuyenBay;
 
+//============ cac ham xu ly chuyen bay ===============//
+CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB);
 
 // cau truc hanh khach
 struct HanhKhach {
@@ -130,9 +131,10 @@ const int soItem_MenuMB = 4;
 const int soItem_MenuCB = 4;
 const int soItem_MenuDV = 3;
 
-char* gdTimMa(LIST_MB lstMB, int type);
+char* gdTimMa(LIST_MB lstMB, int type, string title);
 void veKhungGiaoDIen();
-void khungNhap(int type, string title = "", string s1 = "", string s2 = "", string s3 = "", string s4 = "");
+void khungNhap(int type, string title = "", string s1 = "", string s2 = "", string s3 = "", string s4 = "",
+	string s5 = "", string s6 = "", string s7 = "", string s8 = "", string s9 = "");
 void veKhungNhap(int dai, int rong, int posx, int posy, string source = "");
 void veKhungDS(int rong, int dai, int colump1 = 0, int colump2 = 0, int colump3 = 0, int colump4 = 0, 
 	int colump5 = 0, int posx = 0, int posy = 0);
@@ -140,3 +142,4 @@ void Normal();
 void Highlight();
 int menuDong_Prim(char td[soItem_MenuChinh][100]);
 int menuDong_MayBay(char td[soItem_MenuMB][100]);
+int menuDong_ChuyenBay(char td[soItem_MenuCB][100]);
