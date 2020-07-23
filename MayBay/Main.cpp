@@ -22,7 +22,11 @@ char tdChuyenBay[soItem_MenuCB][100] = { "1. Them chuyen bay",
 
 int main() {
 	LIST_MB lstMB;
-	int x = loadMB(lstMB);
+	PTRChuyenBay lstCB;
+	initCB(lstCB);
+
+	int loadmb = loadMB(lstMB);
+	int loadcb = loadCB(lstCB);
 	int chon;
 	int exit = 1;
 	while (exit) {
@@ -47,7 +51,7 @@ int main() {
 				{
 					mayBay mb = createMB(lstMB, mb);
 					int a = insert_MB(lstMB, mb);
-					if (a == TRUE) {
+					if (a == 1) {
 						cout << "Them thanh cong!";
 						int x = saveMB(lstMB);
 					}
@@ -66,7 +70,7 @@ int main() {
 					strcpy(x, gdTimMa(lstMB, 2, "XOA MAY BAY"));
 					int i = search_MB(lstMB, x);
 					int xoa = delete_MB(lstMB, i);
-					if (xoa == TRUE) {
+					if (xoa == 1) {
 						cout << "Xoa thanh cong";
 						int save = saveMB(lstMB);
 					}
@@ -87,7 +91,7 @@ int main() {
 					strcpy(x, gdTimMa(lstMB, 3, "HIEU CHINH MAY BAY"));
 					int i = search_MB(lstMB, x);
 					int sua = hieuChinh_MB(lstMB, i);
-					if (sua == TRUE) {
+					if (sua == 1) {
 						cout << "Hieu chinh thanh cong";
 						int save = saveMB(lstMB);
 					}
@@ -104,7 +108,6 @@ int main() {
 				}
 				case soItem_MenuMB:
 				{
-					cout << "hihi";
 					exit1 = 0;
 					break;
 				}
@@ -121,12 +124,21 @@ int main() {
 			system("cls");
 			while (exit2)
 			{
+				showCB(lstCB);
 				chonCB = menuDong_ChuyenBay(tdChuyenBay);
 				switch (chonCB)
 				{
 				case 1:
 				{
-					khungNhap(4, "THEM CHUYEN BAY", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
+					CHUYENBAY cb;
+					cb = createCB(lstCB, cb, lstMB);
+					insertNodeCB(lstCB, cb);
+					char c = getch();
+					if (c == 13) {
+						Normal();
+						system("cls");
+						break;
+					}
 					break;
 				}
 				case soItem_MenuCB:

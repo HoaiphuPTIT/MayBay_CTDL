@@ -41,10 +41,10 @@ int insert_MB(LIST_MB& lstMB, mayBay mb) {
 	NODEMAYBAY p = new nodeMB;
 	p->data = mb;
 	if (full(lstMB)){
-		return FALSE;
+		return 0;
 	}
 	lstMB.nodeMB[lstMB.n++] = p;
-	return TRUE;
+	return 1;
 }
 
 int search_MB(LIST_MB lstMB, char ma[]) {
@@ -61,15 +61,15 @@ int search_MB(LIST_MB lstMB, char ma[]) {
 int delete_MB(LIST_MB& lstMB, int i){
 	int j;
 	if (empty(lstMB)) {
-		return FALSE;
+		return 0;
 	}
 	if (i == -1)
-		return FALSE;
+		return 0;
 	for (j = i + 1; j < lstMB.n; j++){
 		lstMB.nodeMB[j - 1] = lstMB.nodeMB[j];
 	}
 	lstMB.n--;
-	return TRUE;
+	return 1;
 }
 char* gdTimMa(LIST_MB lstMB, int type, string title) {
 	khungNhap(type, title);
@@ -84,7 +84,7 @@ char* gdTimMa(LIST_MB lstMB, int type, string title) {
 int hieuChinh_MB(LIST_MB& lstMB, int i) {
 	khungNhap(SUA_MB, "HIEU CHINH MAY BAY", "So hieu may bay:", "Sua loai may bay:", "Sua so day:", "Sua so dong:");
 	if (i == -1)
-		return FALSE;
+		return 0;
 	gotoxy(COT + 1, DONGNHAP1 + 2);
 	rewind(stdin);
 	cout << lstMB.nodeMB[i]->data.soHieuMayBay;
@@ -99,10 +99,11 @@ int hieuChinh_MB(LIST_MB& lstMB, int i) {
 
 	gotoxy(COT + 1, DONGNHAP4 + 2);
 	Nhap_SO(lstMB.nodeMB[i]->data.soDong, 11);
-	return TRUE;
+	return 1;
 }
+
 void show_MB(LIST_MB lstMB) {
-	veKhungDS(DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 70, 93);
+	veKhungDS(NHAP_MB, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 70, 93);
 
 	for (int i = 0; i < lstMB.n; i++) {
 		//5, 25, 70, 93
@@ -121,9 +122,87 @@ void show_MB(LIST_MB lstMB) {
 }
 
 // ============== ham xu ly danh sach chuyen bay ============//
+void initCB(PTRChuyenBay& lstCB) {
+	lstCB = NULL;
+}
 
 CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB) {
+	khungNhap(NHAP_CB, "THEM CHUYEN BAY", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
+
+	*cb.maChuyenBay = { '\0' };
+	*cb.soHieuMayBay = { '\0' };
+	*cb.sanBayDen = { '\0' };
+
+	gotoxy(COT + 1, DONGNHAP1 + 2);
+	NhapMA(cb.maChuyenBay, 20);
+
+	gotoxy(COT + 1, DONGNHAP2 + 2);
+	NhapMA(cb.soHieuMayBay, 20);
+
+	gotoxy(COT + 1, DONGNHAP3 + 2);
+	NhapCHUOI_SO(cb.sanBayDen, 50);
+
+	gotoxy(COT + 1, DONGNHAP4 + 2);
+	Nhap_SO(cb.tgKhoiHanh.ngay, 2);
+
+	gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP4 + 2);
+	Nhap_SO(cb.tgKhoiHanh.thang, 2);
+
+	gotoxy(COT + DAIKHUNGNHO * 2 + 1, DONGNHAP4 + 2);
+	Nhap_SO(cb.tgKhoiHanh.nam, 4);
+
+	gotoxy(COT + 1, DONGNHAP5 + 2);
+	Nhap_SO(cb.tgKhoiHanh.gio, 2);
+
+	gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP5 + 2);
+	Nhap_SO(cb.tgKhoiHanh.phut, 2);
+
+	cb.trangThai = CONVE;
+
 	return cb;
+}
+
+void insert_OrderNodeCB(PTRChuyenBay& lstCB, CHUYENBAY cb) {
+	PTRChuyenBay p, t, s;
+	p = new NodeChuyenBay;
+	p->data = cb;
+	for (s = lstCB; s != NULL && stricmp(s->data.maChuyenBay, cb.maChuyenBay) > 0; s = s->next);
+}
+
+void insertNodeCB(PTRChuyenBay& lstCB, CHUYENBAY cb) {
+	PTRChuyenBay p = new NodeChuyenBay;
+	p->data = cb;
+	p->next = NULL;
+	if (lstCB == NULL)
+		lstCB = p;
+	else {
+		PTRChuyenBay last;
+		for (last = lstCB; last->next != NULL; last = last->next);
+		last->next = p;
+	}
+}
+
+void showCB(PTRChuyenBay lstCB) {
+	veKhungDS(NHAP_CB, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 45, 80, 100);
+
+	int i = 0;
+	for (PTRChuyenBay p = lstCB; p != NULL; p = p->next) {
+		gotoxy(COTDS_L + 1, DONGDS_U + 3 + i);
+		cout << i + 1;
+		gotoxy(COTDS_L + 6, DONGDS_U + 3 + i);
+		cout << p->data.maChuyenBay;
+		gotoxy(COTDS_L + 26, DONGDS_U + 3 + i);
+		cout << p->data.soHieuMayBay;
+		gotoxy(COTDS_L + 46, DONGDS_U + 3 + i);
+		cout << p->data.sanBayDen;
+		gotoxy(COTDS_L + 81, DONGDS_U + 3 + i);
+		cout << p->data.tgKhoiHanh.ngay << "/" << p->data.tgKhoiHanh.thang << "/" << p->data.tgKhoiHanh.nam
+			<< " " << p->data.tgKhoiHanh.gio << ":" << p->data.tgKhoiHanh.phut;
+		gotoxy(COTDS_L + 101, DONGDS_U + 3 + i);
+		cout << p->data.trangThai;
+		i++;
+	}
+	
 }
 //========== doc xuat file ===============
 int loadMB(LIST_MB& mb) {
@@ -167,7 +246,37 @@ int saveMB(LIST_MB mb) {
 	outFile.close();
 	return 1;
 }
+int loadCB(PTRChuyenBay& lstCB) {
+	ChuyenBay cb;
+	fstream inFile;
+	inFile.open("C:/Users/lamho/source/repos/MayBay/MayBay/DATA/ChuyenBay.txt", ios::in);
+	string temp;
+	int slCB;
+	if (inFile.is_open()) {
+		getline(inFile, temp);
+		inFile >> slCB;
+		for (int i = 0; i < slCB; i++) {
+			getline(inFile, temp);
+			inFile.getline(cb.maChuyenBay, 20);
+			inFile.getline(cb.soHieuMayBay, 20);
+			inFile.getline(cb.sanBayDen, 50);
+			inFile >> cb.tgKhoiHanh.ngay;
+			inFile >> cb.tgKhoiHanh.thang;
+			inFile >> cb.tgKhoiHanh.nam;
+			inFile >> cb.tgKhoiHanh.gio;
+			inFile >> cb.tgKhoiHanh.phut;
+			inFile >> cb.trangThai;
 
+			insertNodeCB(lstCB, cb);
+			
+		}
+	}
+	else {
+		return 0;
+	}
+	inFile.close();
+	return 1;
+}
 //========== xu ly nhap chuoi ===========
 void NhapMA(char var[], int len) {
 	int maxInput = len;
@@ -416,7 +525,7 @@ void veKhungNhap(int dai, int rong, int posx, int posy, string source)
 	cout << source;
 }
 
-void veKhungDS(int rong, int dai, int colump1, int colump2, int colump3, int colump4,
+void veKhungDS(int type, int rong, int dai, int colump1, int colump2, int colump3, int colump4,
 	int colump5, int posx, int posy) {
 	if (posx == 0 || posy == 0)
 	{
@@ -468,17 +577,34 @@ void veKhungDS(int rong, int dai, int colump1, int colump2, int colump3, int col
 		gotoxy(posx + colump5, posy + 2);
 		cout << char(197);
 	}
-	//5, 25, 70, 93
-	gotoxy(COTDS_L + 1, DONGDS_U + 1);
-	cout << "STT";
-	gotoxy(COTDS_L + 6, DONGDS_U + 1);
-	cout << "SO HIEU MAY BAY";
-	gotoxy(COTDS_L + 26, DONGDS_U + 1);
-	cout << "LOAI MAY BAY";
-	gotoxy(COTDS_L + 71, DONGDS_U + 1);
-	cout << "SO DAY";
-	gotoxy(COTDS_L + 94, DONGDS_U + 1);
-	cout << "SO DONG";
+	if (type == NHAP_MB) {
+		//5, 25, 70, 93
+		gotoxy(COTDS_L + 1, DONGDS_U + 1);
+		cout << "STT";
+		gotoxy(COTDS_L + 6, DONGDS_U + 1);
+		cout << "SO HIEU MAY BAY";
+		gotoxy(COTDS_L + 26, DONGDS_U + 1);
+		cout << "LOAI MAY BAY";
+		gotoxy(COTDS_L + 71, DONGDS_U + 1);
+		cout << "SO DAY";
+		gotoxy(COTDS_L + 94, DONGDS_U + 1);
+		cout << "SO DONG";
+	}
+	else if (type == NHAP_CB) {
+		// 5, 25, 45, 80, 100
+		gotoxy(COTDS_L + 1, DONGDS_U + 1);
+		cout << "STT";
+		gotoxy(COTDS_L + 6, DONGDS_U + 1);
+		cout << "MA CHUYEN BAY";
+		gotoxy(COTDS_L + 26, DONGDS_U + 1);
+		cout << "SO HIEU MAY BAY";
+		gotoxy(COTDS_L + 46, DONGDS_U + 1);
+		cout << "SAN BAY DEN";
+		gotoxy(COTDS_L + 81, DONGDS_U + 1);
+		cout << "NGAY GIO KHOI HANH";
+		gotoxy(COTDS_L + 101, DONGDS_U + 1);
+		cout << "TRANG THAI";
+	}
 }
 void Normal() {
 	SetColor(15);
@@ -654,7 +780,7 @@ void khungNhap(int type, string title, string s1, string s2, string s3, string s
 			veKhungNhap(DAIKHUNGNHO + DAIKHUNGNHO, RONGKHUNG, COT, DONGNHAP4 + 1);
 
 			gotoxy(COT + DAIKHUNGNHO + DAIKHUNGNHO, DONGNHAP4);
-			veKhungNhap(DAIKHUNGNHO + DAIKHUNGNHO + DAIKHUNGNHO, RONGKHUNG, COT, DONGNHAP4 + 1);
+			veKhungNhap(DAIKHUNGNHO + DAIKHUNGNHO * 2, RONGKHUNG, COT, DONGNHAP4 + 1);
 
 			// khung nhap gio
 			gotoxy(COT, DONGNHAP5);

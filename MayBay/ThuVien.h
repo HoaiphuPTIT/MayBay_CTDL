@@ -11,10 +11,14 @@
 #include <cstring>
 #include <fstream>
 
-#define TRUE 1
-#define FALSE 0
 #define MAXLIST 300
 #define MAX_INPUT 255
+
+#define HUYCHUYEN 0
+#define CONVE 1
+#define HETVE 2
+#define HOANTAT 3
+
 using namespace std;
 // 1800 <  NAM < 9999
 const int MAX_NAM = 9999;
@@ -76,6 +80,8 @@ struct ListVe {
 	NODEVEMB nodeVeMB;
 };
 typedef ListVe lstVEMB;
+//======= ham xu ly ve =====
+void initVe();
 
 // cau truc chuyen bay
 struct ChuyenBay {
@@ -95,7 +101,11 @@ typedef struct NodeChuyenBay {
 typedef struct NodeChuyenBay* PTRChuyenBay;
 
 //============ cac ham xu ly chuyen bay ===============//
+void initCB(PTRChuyenBay &lstCB);
 CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB);
+void insert_OrderNodeCB(PTRChuyenBay & lstCB, CHUYENBAY cb);
+void insertNodeCB(PTRChuyenBay& lstCB, CHUYENBAY cb);
+void showCB(PTRChuyenBay lstCB);
 
 // cau truc hanh khach
 struct HanhKhach {
@@ -121,6 +131,7 @@ struct NhapChuoi {
 //============= doc xuat file ================//
 int loadMB(LIST_MB &mb);
 int saveMB(LIST_MB mb);
+int loadCB(PTRChuyenBay& lstCB);
 //========= cac ham xu ly nhap chuoi ==========//
 void NhapMA(char var[], int len);
 void NhapCHUOI_SO(char var[], int len);
@@ -136,7 +147,7 @@ void veKhungGiaoDIen();
 void khungNhap(int type, string title = "", string s1 = "", string s2 = "", string s3 = "", string s4 = "",
 	string s5 = "", string s6 = "", string s7 = "", string s8 = "", string s9 = "");
 void veKhungNhap(int dai, int rong, int posx, int posy, string source = "");
-void veKhungDS(int rong, int dai, int colump1 = 0, int colump2 = 0, int colump3 = 0, int colump4 = 0, 
+void veKhungDS(int type, int rong, int dai, int colump1 = 0, int colump2 = 0, int colump3 = 0, int colump4 = 0, 
 	int colump5 = 0, int posx = 0, int posy = 0);
 void Normal();
 void Highlight();
