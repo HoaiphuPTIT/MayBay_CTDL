@@ -1,15 +1,4 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (MayBay.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Ham.cpp
+  Main.cpp
 C:\Users\lamho\source\repos\MayBay\MayBay\ThuVien.h(100,2): warning C4091: 'typedef ': ignored on left of 'NodeChuyenBay' when no variable is declared
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(166,18): warning C4101: 't': unreferenced local variable
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(287,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(339,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(399,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(493,27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(524,40): warning C4244: 'argument': conversion from 'double' to 'short', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(622,6): warning C4101: 'i': unreferenced local variable
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(665,6): warning C4101: 'i': unreferenced local variable
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(708,6): warning C4101: 'i': unreferenced local variable
-C:\Users\lamho\source\repos\MayBay\MayBay\mylib.h(71): warning C4172: returning address of local variable or temporary: S
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(81): warning C4172: returning address of local variable or temporary: temp
   MayBay.vcxproj -> C:\Users\lamho\source\repos\MayBay\x64\Debug\QLChuyenBay.exe

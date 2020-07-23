@@ -52,7 +52,7 @@ int main() {
 					mayBay mb = createMB(lstMB, mb);
 					int a = insert_MB(lstMB, mb);
 					if (a == 1) {
-						cout << "Them thanh cong!";
+						hienThongBao("Them thanh cong!");
 						int x = saveMB(lstMB);
 					}
 					char c = getch();
@@ -71,12 +71,12 @@ int main() {
 					int i = search_MB(lstMB, x);
 					int xoa = delete_MB(lstMB, i);
 					if (xoa == 1) {
-						cout << "Xoa thanh cong";
+						hienThongBao("Xoa thanh cong!");
 						int save = saveMB(lstMB);
 					}
 					else
 					{
-						cout << "Xoa that bai";
+						hienThongBao("Xoa that bai!");
 					}
 					char c = getch();
 					if (c == 13) {
@@ -92,12 +92,12 @@ int main() {
 					int i = search_MB(lstMB, x);
 					int sua = hieuChinh_MB(lstMB, i);
 					if (sua == 1) {
-						cout << "Hieu chinh thanh cong";
+						hienThongBao("Hieu chinh thanh cong!");
 						int save = saveMB(lstMB);
 					}
 					else
 					{
-						cout << "that bai";
+						hienThongBao("Hieu chinh that bai!");
 					}
 					char c = getch();
 					if (c == 13) {
@@ -132,7 +132,9 @@ int main() {
 				{
 					CHUYENBAY cb;
 					cb = createCB(lstCB, cb, lstMB);
-					insertNodeCB(lstCB, cb);
+					insert_OrderNodeCB(lstCB, cb);
+					int save = saveCB(lstCB);
+					
 					char c = getch();
 					if (c == 13) {
 						Normal();

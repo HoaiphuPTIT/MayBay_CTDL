@@ -79,9 +79,10 @@ struct ListVe {
 	int n = 0;
 	NODEVEMB nodeVeMB;
 };
-typedef ListVe lstVEMB;
+typedef ListVe LIST_VE;
 //======= ham xu ly ve =====
 void initVe();
+int createDsVe(LIST_MB lstMB, LIST_VE &lstVe);
 
 // cau truc chuyen bay
 struct ChuyenBay {
@@ -90,7 +91,7 @@ struct ChuyenBay {
 	char sanBayDen[50];
 	int trangThai;
 	char soHieuMayBay[20];
-	lstVEMB dsVe;
+	LIST_VE dsVe;
 };
 typedef ChuyenBay CHUYENBAY;
 
@@ -104,7 +105,7 @@ typedef struct NodeChuyenBay* PTRChuyenBay;
 void initCB(PTRChuyenBay &lstCB);
 CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB);
 void insert_OrderNodeCB(PTRChuyenBay & lstCB, CHUYENBAY cb);
-void insertNodeCB(PTRChuyenBay& lstCB, CHUYENBAY cb);
+int insertNodeCB(PTRChuyenBay& lstCB, CHUYENBAY cb);
 void showCB(PTRChuyenBay lstCB);
 
 // cau truc hanh khach
@@ -132,6 +133,7 @@ struct NhapChuoi {
 int loadMB(LIST_MB &mb);
 int saveMB(LIST_MB mb);
 int loadCB(PTRChuyenBay& lstCB);
+int saveCB(PTRChuyenBay lstCB);
 //========= cac ham xu ly nhap chuoi ==========//
 void NhapMA(char var[], int len);
 void NhapCHUOI_SO(char var[], int len);
@@ -143,12 +145,16 @@ const int soItem_MenuCB = 4;
 const int soItem_MenuDV = 3;
 
 char* gdTimMa(LIST_MB lstMB, int type, string title);
-void veKhungGiaoDIen();
-void khungNhap(int type, string title = "", string s1 = "", string s2 = "", string s3 = "", string s4 = "",
-	string s5 = "", string s6 = "", string s7 = "", string s8 = "", string s9 = "");
+void khungGiaoDien();
 void veKhungNhap(int dai, int rong, int posx, int posy, string source = "");
-void veKhungDS(int type, int rong, int dai, int colump1 = 0, int colump2 = 0, int colump3 = 0, int colump4 = 0, 
+void khungNhapThongTin(int type, string title = "", string s1 = "", string s2 = "", string s3 = "", string s4 = "",
+	string s5 = "", string s6 = "", string s7 = "", string s8 = "", string s9 = "");
+
+void khungXuatDS(int type, int rong, int dai, int colump1 = 0, int colump2 = 0, int colump3 = 0, int colump4 = 0, 
 	int colump5 = 0, int posx = 0, int posy = 0);
+void khungThongBao();
+void hienThongBao(string notif);
+
 void Normal();
 void Highlight();
 int menuDong_Prim(char td[soItem_MenuChinh][100]);
