@@ -49,10 +49,22 @@
 #define BACKSPACE 8
 #define UP 72
 #define DOWN 80
+#define ESC 27
+#define TAB 9
+#define LEFT 75
+#define RIGHT 77
+#define SPACE 32
+#define F2 60
+#define F7 65
+#define F8 66
+#define F9 67
+#define F10 68
+#define PU 73
+#define PD 81
 //const int WHITE=15;
 #define PASSWORD "abcdef"
 //const int WHITE=15;
-
+#define TIM_MA 0
 #define NHAP_MB 1
 #define XOA_MB 2
 #define SUA_MB 3

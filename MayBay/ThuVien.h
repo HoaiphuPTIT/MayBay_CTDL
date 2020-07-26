@@ -13,7 +13,6 @@
 
 #define MAXLIST 300
 #define MAX_INPUT 255
-
 #define HUYCHUYEN 0
 #define CONVE 1
 #define HETVE 2
@@ -23,6 +22,8 @@ using namespace std;
 // 1800 <  NAM < 9999
 const int MAX_NAM = 9999;
 const int MIN_NAM = 1800;
+const int MAX_DAY = 9;
+const int MAX_DONG = 15;
 // cau truc thoi gian
 struct ThoiGian
 {
@@ -55,9 +56,10 @@ struct ListMayBay {
 	NODEMAYBAY nodeMB[MAXLIST];
 };
 typedef ListMayBay LIST_MB;
+
 // cac ham xu ly ds may bay
-int empty(LIST_MB lstMB);
-int full(LIST_MB lstMB);
+int emptyMB(LIST_MB lstMB);
+int fullMB(LIST_MB lstMB);
 mayBay createMB(LIST_MB& lstMB, mayBay& mb);
 int insert_MB(LIST_MB& lstMB, mayBay mb);
 int delete_MB(LIST_MB& lstMB, int i);
@@ -70,19 +72,20 @@ struct VeMayBay{
 	char CMND[12];
 };
 typedef VeMayBay VeMB;
-struct nodeVe {
+struct nodeVeMayBay {
 	VeMB data;
 };
-typedef nodeVe nodeVeMB;
-typedef nodeVe* NODEVEMB;
+typedef nodeVeMayBay nodeVeMB;
+//typedef nodeVe* NODEVEMB;
 struct ListVe {
 	int n = 0;
-	NODEVEMB nodeVeMB;
+	nodeVeMB *nodeVe;
 };
 typedef ListVe LIST_VE;
 //======= ham xu ly ve =====
-void initVe();
-int createDsVe(LIST_MB lstMB, LIST_VE &lstVe);
+int emptyVe(LIST_VE lstVe);
+int fullVe(LIST_VE lstVe, nodeMB mb);
+int createDsVe(nodeMB mb, LIST_VE &lstVe);
 
 // cau truc chuyen bay
 struct ChuyenBay {
@@ -106,6 +109,7 @@ void initCB(PTRChuyenBay &lstCB);
 CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB);
 void insert_OrderNodeCB(PTRChuyenBay & lstCB, CHUYENBAY cb);
 int insertNodeCB(PTRChuyenBay& lstCB, CHUYENBAY cb);
+PTRChuyenBay searchBin_CB(PTRChuyenBay lstCB, char ma[]);
 void showCB(PTRChuyenBay lstCB);
 
 // cau truc hanh khach
@@ -160,3 +164,5 @@ void Highlight();
 int menuDong_Prim(char td[soItem_MenuChinh][100]);
 int menuDong_MayBay(char td[soItem_MenuMB][100]);
 int menuDong_ChuyenBay(char td[soItem_MenuCB][100]);
+mayBay menuDong_ChonMB(LIST_MB lstMB);
+void xoaKhungDS();

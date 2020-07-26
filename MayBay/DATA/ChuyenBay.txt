@@ -53,6 +53,24 @@ Ha Noi
 12
 12
 1
+CB07
+VN07
+Da Nang
+12
+12
+2020
+12
+30
+1
+CB08
+VN12
+Ho Chi Minh
+12
+12
+12
+12
+20
+1
 VN06
 VN05
 Fahsjk

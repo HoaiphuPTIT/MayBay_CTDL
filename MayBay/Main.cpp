@@ -53,58 +53,64 @@ int main() {
 					int a = insert_MB(lstMB, mb);
 					if (a == 1) {
 						hienThongBao("Them thanh cong!");
-						int x = saveMB(lstMB);
+						int save = saveMB(lstMB);
 					}
-					char c = getch();
-					if (c == 13) {
-						Normal();
-						system("cls");
-						break;
-					}
-						
+					Normal();
+					system("cls");
+					break;
 					
 				}
 				case 2:
 				{
-					char x[] = {'\0'};
-					strcpy(x, gdTimMa(lstMB, 2, "XOA MAY BAY"));
-					int i = search_MB(lstMB, x);
-					int xoa = delete_MB(lstMB, i);
+					char ma[20] = {'\0'};
+					int tontai = -1;
+					do
+					{
+						strcpy(ma, gdTimMa(lstMB, 0, "XOA MAY BAY"));
+						tontai = search_MB(lstMB, ma);
+						if (tontai == -1)
+							hienThongBao("Khong tim thay so hieu nay!");
+						else break;
+					} while (true);
+					
+					int xoa = delete_MB(lstMB, tontai);
 					if (xoa == 1) {
 						hienThongBao("Xoa thanh cong!");
 						int save = saveMB(lstMB);
 					}
-					else
-					{
+					else {
 						hienThongBao("Xoa that bai!");
 					}
-					char c = getch();
-					if (c == 13) {
-						Normal();
-						system("cls");
-						break;
-					}
+					Normal();
+					system("cls");
+					break;
+					
 				}
 				case 3:
 				{
-					char x[] = { '\0' };
-					strcpy(x, gdTimMa(lstMB, 3, "HIEU CHINH MAY BAY"));
-					int i = search_MB(lstMB, x);
-					int sua = hieuChinh_MB(lstMB, i);
+					char ma[20] = { '\0' };
+					int tontai = -1;
+					do
+					{
+						strcpy(ma, gdTimMa(lstMB, 0, "HIEU CHINH MAY BAY"));
+						tontai = search_MB(lstMB, ma);
+						if (tontai == -1)
+							hienThongBao("Khong tim thay so hieu nay!");
+						else break;
+					} while (true);
+
+					int sua = hieuChinh_MB(lstMB, tontai);
 					if (sua == 1) {
 						hienThongBao("Hieu chinh thanh cong!");
 						int save = saveMB(lstMB);
 					}
-					else
-					{
+					else {
 						hienThongBao("Hieu chinh that bai!");
 					}
-					char c = getch();
-					if (c == 13) {
-						Normal();
-						system("cls");
-						break;
-					}
+					Normal();
+					system("cls");
+					break;
+					
 				}
 				case soItem_MenuMB:
 				{
