@@ -66,6 +66,7 @@ int delete_MB(LIST_MB& lstMB, int i);
 void show_MB(LIST_MB lstMB);
 int search_MB(LIST_MB lstMB, char ma[]);
 int hieuChinh_MB(LIST_MB& lstMB, int i);
+void show_1_MB(LIST_MB lstMB, int chon);
 // cau truc ve
 struct VeMayBay{
 	char soVe[5];
@@ -111,7 +112,7 @@ void insert_OrderNodeCB(PTRChuyenBay & lstCB, CHUYENBAY cb);
 int insertNodeCB(PTRChuyenBay& lstCB, CHUYENBAY cb);
 PTRChuyenBay searchBin_CB(PTRChuyenBay lstCB, char ma[]);
 void showCB(PTRChuyenBay lstCB);
-
+void show_1_CB(CHUYENBAY* cb, int chon);
 // cau truc hanh khach
 struct HanhKhach {
 	int CMND;
@@ -165,4 +166,8 @@ int menuDong_Prim(char td[soItem_MenuChinh][100]);
 int menuDong_MayBay(char td[soItem_MenuMB][100]);
 int menuDong_ChuyenBay(char td[soItem_MenuCB][100]);
 mayBay menuDong_ChonMB(LIST_MB lstMB);
+PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chon);
 void xoaKhungDS();
+
+void QLMB(LIST_MB& lstMB, char tdMayBay[soItem_MenuMB][100]);
+void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& lstMB);

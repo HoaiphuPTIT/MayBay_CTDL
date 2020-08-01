@@ -36,126 +36,12 @@ int main() {
 		switch (chon) {
 		case 1:
 		{
-			int chonMB;
-			int exit1 = 1;
-			Normal();
-			system("cls");
-			
-			while (exit1) {
-				show_MB(lstMB);
-				chonMB = menuDong_MayBay(tdMayBay);
-				
-				switch (chonMB)
-				{
-				case 1:
-				{
-					mayBay mb = createMB(lstMB, mb);
-					int a = insert_MB(lstMB, mb);
-					if (a == 1) {
-						hienThongBao("Them thanh cong!");
-						int save = saveMB(lstMB);
-					}
-					Normal();
-					system("cls");
-					break;
-					
-				}
-				case 2:
-				{
-					char ma[20] = {'\0'};
-					int tontai = -1;
-					do
-					{
-						strcpy(ma, gdTimMa(lstMB, 0, "XOA MAY BAY"));
-						tontai = search_MB(lstMB, ma);
-						if (tontai == -1)
-							hienThongBao("Khong tim thay so hieu nay!");
-						else break;
-					} while (true);
-					
-					int xoa = delete_MB(lstMB, tontai);
-					if (xoa == 1) {
-						hienThongBao("Xoa thanh cong!");
-						int save = saveMB(lstMB);
-					}
-					else {
-						hienThongBao("Xoa that bai!");
-					}
-					Normal();
-					system("cls");
-					break;
-					
-				}
-				case 3:
-				{
-					char ma[20] = { '\0' };
-					int tontai = -1;
-					do
-					{
-						strcpy(ma, gdTimMa(lstMB, 0, "HIEU CHINH MAY BAY"));
-						tontai = search_MB(lstMB, ma);
-						if (tontai == -1)
-							hienThongBao("Khong tim thay so hieu nay!");
-						else break;
-					} while (true);
-
-					int sua = hieuChinh_MB(lstMB, tontai);
-					if (sua == 1) {
-						hienThongBao("Hieu chinh thanh cong!");
-						int save = saveMB(lstMB);
-					}
-					else {
-						hienThongBao("Hieu chinh that bai!");
-					}
-					Normal();
-					system("cls");
-					break;
-					
-				}
-				case soItem_MenuMB:
-				{
-					exit1 = 0;
-					break;
-				}
-					
-				}
-			}
+			QLMB(lstMB, tdMayBay);
 			break;
 		}
 		case 2:
 		{
-			int chonCB;
-			int exit2 = 1;
-			Normal();
-			system("cls");
-			while (exit2)
-			{
-				showCB(lstCB);
-				chonCB = menuDong_ChuyenBay(tdChuyenBay);
-				switch (chonCB)
-				{
-				case 1:
-				{
-					CHUYENBAY cb;
-					cb = createCB(lstCB, cb, lstMB);
-					insert_OrderNodeCB(lstCB, cb);
-					int save = saveCB(lstCB);
-					
-					char c = getch();
-					if (c == 13) {
-						Normal();
-						system("cls");
-						break;
-					}
-					break;
-				}
-				case soItem_MenuCB:
-				{
-					exit2 = 0;
-					break;
-				}
-				}
-			}
+			QLCB(lstCB, tdChuyenBay, lstMB);
 			break;
 		}
 		case soItem_MenuChinh:

@@ -193,6 +193,33 @@ int hieuChinh_MB(LIST_MB& lstMB, int i) {
 	return 1;
 }
 
+void show_1_MB(LIST_MB lstMB, int chon) {
+	gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
+	cout << "                                                                                                                 ";
+	gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
+	cout << chon + 1;
+
+	gotoxy(COTDS_L + 6, DONGDS_U + 3 + chon);
+	cout << lstMB.nodeMB[chon]->data.soHieuMayBay;
+	gotoxy(COTDS_L + 5, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+
+	gotoxy(COTDS_L + 26, DONGDS_U + 3 + chon);
+	cout << lstMB.nodeMB[chon]->data.loaiMayBay;
+	gotoxy(COTDS_L + 25, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+
+	gotoxy(COTDS_L + 71, DONGDS_U + 3 + chon);
+	cout << lstMB.nodeMB[chon]->data.soDay;
+	gotoxy(COTDS_L + 70, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+
+	gotoxy(COTDS_L + 94, DONGDS_U + 3 + chon);
+	cout << lstMB.nodeMB[chon]->data.soDong;
+	gotoxy(COTDS_L + 93, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+}
+
 void show_MB(LIST_MB lstMB) {
 	khungXuatDS(NHAP_MB, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 70, 93);
 
@@ -426,7 +453,75 @@ void showCB(PTRChuyenBay lstCB) {
 	}
 	
 }
+void show_1_CB(CHUYENBAY *cb, int chon) {
+	gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
+	cout << "                                                                                                                 ";
+	gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
+	cout << chon + 1;
+	gotoxy(COTDS_L + 5, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+	gotoxy(COTDS_L + 6, DONGDS_U + 3 + chon);
+	cout << cb->maChuyenBay;
+	gotoxy(COTDS_L + 25, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+	gotoxy(COTDS_L + 26, DONGDS_U + 3 + chon);
+	cout << cb->soHieuMayBay;
+	gotoxy(COTDS_L + 45, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+	gotoxy(COTDS_L + 46, DONGDS_U + 3 + chon);
+	cout << cb->sanBayDen;
+	gotoxy(COTDS_L + 80, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+	gotoxy(COTDS_L + 81, DONGDS_U + 3 + chon);
+	cout << cb->tgKhoiHanh.ngay << "/" << cb->tgKhoiHanh.thang << "/" << cb->tgKhoiHanh.nam
+		<< " " << cb->tgKhoiHanh.gio << ":" << cb->tgKhoiHanh.phut;
+	gotoxy(COTDS_L + 100, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+	gotoxy(COTDS_L + 101, DONGDS_U + 3 + chon);
+	if (cb->trangThai == 0)
+		cout << "Da huy";
+	else if (cb->trangThai == 1)
+		cout << "Con ve";
+	else if (cb->trangThai == 2)
+		cout << "Het ve";
+	else if (cb->trangThai == 3)
+		cout << "Hoan tat";
+	
+	Normal();
 
+	gotoxy(COT + 1, DONGNHAP1 + 2);
+	cout << "                                     ";
+	gotoxy(COT + 1, DONGNHAP1 + 2);
+	cout << cb->maChuyenBay;
+	gotoxy(COT + 1, DONGNHAP2 + 2);
+	cout << "                                     ";
+	gotoxy(COT + 1, DONGNHAP2 + 2);
+	cout << cb->soHieuMayBay;
+	gotoxy(COT + 1, DONGNHAP3 + 2);
+	cout << "                                     ";
+	gotoxy(COT + 1, DONGNHAP3 + 2);
+	cout << cb->sanBayDen;
+	gotoxy(COT + 1, DONGNHAP4 + 2);
+	cout << "    ";
+	gotoxy(COT + 1, DONGNHAP4 + 2);
+	cout << cb->tgKhoiHanh.ngay;
+	gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP4 + 2);
+	cout << "    ";
+	gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP4 + 2);
+	cout << cb->tgKhoiHanh.thang;
+	gotoxy(COT + DAIKHUNGNHO * 2 + 1, DONGNHAP4 + 2);
+	cout << "    ";
+	gotoxy(COT + DAIKHUNGNHO * 2 + 1, DONGNHAP4 + 2);
+	cout << cb->tgKhoiHanh.nam;
+	gotoxy(COT + 1, DONGNHAP5 + 2);
+	cout << "    ";
+	gotoxy(COT + 1, DONGNHAP5 + 2);
+	cout << cb->tgKhoiHanh.gio;
+	gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP5 + 2);
+	cout << "    ";
+	gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP5 + 2);
+	cout << cb->tgKhoiHanh.phut;
+}
 //========== doc xuat file ===============
 int loadMB(LIST_MB& mb) {
 	fstream inFile;
@@ -999,18 +1094,7 @@ mayBay menuDong_ChonMB(LIST_MB lstMB) {
 	int i;
 	show_MB(lstMB);
 	Highlight();
-	gotoxy(COTDS_L + 1, DONGDS_U + 3);
-	cout << "                                                                                                                 ";
-	gotoxy(COTDS_L + 1, DONGDS_U + 3);
-	cout << chon + 1;
-	gotoxy(COTDS_L + 6, DONGDS_U + 3);
-	cout << lstMB.nodeMB[chon]->data.soHieuMayBay;
-	gotoxy(COTDS_L + 26, DONGDS_U + 3);
-	cout << lstMB.nodeMB[chon]->data.loaiMayBay;
-	gotoxy(COTDS_L + 71, DONGDS_U + 3);
-	cout << lstMB.nodeMB[chon]->data.soDay;
-	gotoxy(COTDS_L + 94, DONGDS_U + 3);
-	cout << lstMB.nodeMB[chon]->data.soDong;
+	show_1_MB(lstMB, chon);
 	char kytu;
 	do
 	{
@@ -1022,109 +1106,21 @@ mayBay menuDong_ChonMB(LIST_MB lstMB) {
 		case UP:
 			if (chon > 0) {
 				Normal();
-				gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
-				cout << "                                                                                                                 ";
-				gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
-				cout << chon + 1;
-
-				gotoxy(COTDS_L + 6, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soHieuMayBay;
-				gotoxy(COTDS_L + 5, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 26, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.loaiMayBay;
-				gotoxy(COTDS_L + 25, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 71, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soDay;
-				gotoxy(COTDS_L + 70, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 94, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soDong;
-				gotoxy(COTDS_L + 93, DONGDS_U + 3 + chon);
-				cout << char(DOC);
+				show_1_MB(lstMB, chon);
 
 				chon--;
 				Highlight();
-				gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
-				cout << "                                                                                                                 ";				gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
-				cout << chon + 1;
-
-				gotoxy(COTDS_L + 6, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soHieuMayBay;
-				gotoxy(COTDS_L + 5, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 26, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.loaiMayBay;
-				gotoxy(COTDS_L + 25, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 71, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soDay;
-				gotoxy(COTDS_L + 70, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 94, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soDong;
-				gotoxy(COTDS_L + 93, DONGDS_U + 3 + chon);
-				cout << char(DOC);
+				show_1_MB(lstMB, chon);
 			}
 			break;
 		case DOWN:
 			if (chon + 1 < lstMB.n) {
 				Normal();
-				gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
-				cout << "                                                                                                                 ";				gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
-				cout << chon + 1;
+				show_1_MB(lstMB, chon);
 
-				gotoxy(COTDS_L + 6, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soHieuMayBay;
-				gotoxy(COTDS_L + 5, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 26, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.loaiMayBay;
-				gotoxy(COTDS_L + 25, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 71, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soDay;
-				gotoxy(COTDS_L + 70, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 94, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soDong;
-				gotoxy(COTDS_L + 93, DONGDS_U + 3 + chon);
-				cout << char(DOC);
 				chon++;
 				Highlight();
-				gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
-				cout << "                                                                                                                 ";				gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
-				cout << chon + 1;
-
-				gotoxy(COTDS_L + 6, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soHieuMayBay;
-				gotoxy(COTDS_L + 5, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 26, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.loaiMayBay;
-				gotoxy(COTDS_L + 25, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 71, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soDay;
-				gotoxy(COTDS_L + 70, DONGDS_U + 3 + chon);
-				cout << char(DOC);
-
-				gotoxy(COTDS_L + 94, DONGDS_U + 3 + chon);
-				cout << lstMB.nodeMB[chon]->data.soDong;
-				gotoxy(COTDS_L + 93, DONGDS_U + 3 + chon);
-				cout << char(DOC);
+				show_1_MB(lstMB, chon);
 			}
 			break;
 		case ESC:
@@ -1137,6 +1133,74 @@ mayBay menuDong_ChonMB(LIST_MB lstMB) {
 		case ENTER:   
 			Normal();
 			return lstMB.nodeMB[chon]->data;
+		}
+	} while (true);
+}
+PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chon) {
+	PTRChuyenBay p = lstCB;
+	Normal();
+	khungGiaoDien();
+	khungNhapThongTin(NHAP_CB, "THEM CHUYEN BAY", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
+
+	//int chon = 0;
+	int i = 0;
+	showCB(lstCB);
+
+	CHUYENBAY* tmpCB[300];
+	
+	for (p; p != NULL; p = p->next) {
+		tmpCB[i] = new CHUYENBAY;
+		strcpy(tmpCB[i]->maChuyenBay, p->data.maChuyenBay);
+		strcpy(tmpCB[i]->soHieuMayBay, p->data.soHieuMayBay);
+		strcpy(tmpCB[i]->sanBayDen, p->data.sanBayDen);
+		tmpCB[i]->tgKhoiHanh.ngay = p->data.tgKhoiHanh.ngay;
+		tmpCB[i]->tgKhoiHanh.thang = p->data.tgKhoiHanh.thang;
+		tmpCB[i]->tgKhoiHanh.nam = p->data.tgKhoiHanh.nam;
+		tmpCB[i]->tgKhoiHanh.gio = p->data.tgKhoiHanh.gio;
+		tmpCB[i]->tgKhoiHanh.phut = p->data.tgKhoiHanh.phut;
+		tmpCB[i]->trangThai = p->data.trangThai;
+		i++;
+	}
+	Highlight();
+	show_1_CB(tmpCB[chon], chon);
+	char kytu;
+	do
+	{
+		kytu = getch();
+		if (kytu == -32)
+			kytu = getch();
+		switch (kytu)
+		{
+		case UP:
+			if (chon > 0) {
+				Normal();
+				show_1_CB(tmpCB[chon], chon);
+
+				chon--;
+				Highlight();
+				show_1_CB(tmpCB[chon], chon);
+			}
+			break;
+		case DOWN:
+			if (chon + 1 < i) {
+				Normal();
+				show_1_CB(tmpCB[chon], chon);
+
+				chon++;
+				Highlight();
+				show_1_CB(tmpCB[chon], chon);
+			}
+			break;
+		case ESC:
+		{
+			Normal();
+			//tmp.soHieuMayBay[0] = '\0';
+			//return tmp;
+		}
+
+		case ENTER:
+			Normal();
+			//return lstMB.nodeMB[chon]->data;
 		}
 	} while (true);
 }
@@ -1223,5 +1287,129 @@ void xoaKhungDS() {
 	for (int i = 0; i < DONGDS_D - 2; i++) {
 		gotoxy(COTDS_L, DONGDS_U + i);
 		cout << "                                                                                                                   ";
+	}
+}
+
+void QLMB(LIST_MB &lstMB, char tdMayBay[soItem_MenuMB][100]) {
+	int chonMB;
+	int exit1 = 1;
+	Normal();
+	system("cls");
+
+	while (exit1) {
+		show_MB(lstMB);
+		chonMB = menuDong_MayBay(tdMayBay);
+
+		switch (chonMB)
+		{
+		case 1:
+		{
+			mayBay mb = createMB(lstMB, mb);
+			int a = insert_MB(lstMB, mb);
+			if (a == 1) {
+				hienThongBao("Them thanh cong!");
+				int save = saveMB(lstMB);
+			}
+			Normal();
+			system("cls");
+			break;
+
+		}
+		case 2:
+		{
+			char ma[20] = { '\0' };
+			int tontai = -1;
+			do
+			{
+				strcpy(ma, gdTimMa(lstMB, 0, "XOA MAY BAY"));
+				tontai = search_MB(lstMB, ma);
+				if (tontai == -1)
+					hienThongBao("Khong tim thay so hieu nay!");
+				else break;
+			} while (true);
+
+			int xoa = delete_MB(lstMB, tontai);
+			if (xoa == 1) {
+				hienThongBao("Xoa thanh cong!");
+				int save = saveMB(lstMB);
+			}
+			else {
+				hienThongBao("Xoa that bai!");
+			}
+			Normal();
+			system("cls");
+			break;
+
+		}
+		case 3:
+		{
+			char ma[20] = { '\0' };
+			int tontai = -1;
+			do
+			{
+				strcpy(ma, gdTimMa(lstMB, 0, "HIEU CHINH MAY BAY"));
+				tontai = search_MB(lstMB, ma);
+				if (tontai == -1)
+					hienThongBao("Khong tim thay so hieu nay!");
+				else break;
+			} while (true);
+
+			int sua = hieuChinh_MB(lstMB, tontai);
+			if (sua == 1) {
+				hienThongBao("Hieu chinh thanh cong!");
+				int save = saveMB(lstMB);
+			}
+			else {
+				hienThongBao("Hieu chinh that bai!");
+			}
+			Normal();
+			system("cls");
+			break;
+
+		}
+		case soItem_MenuMB:
+		{
+			exit1 = 0;
+			break;
+		}
+
+		}
+	}
+}
+
+void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& lstMB) {
+	int chonCB;
+	int exit2 = 1;
+	Normal();
+	system("cls");
+	while (exit2)
+	{
+		showCB(lstCB);
+		//chonCB = menuDong_ChuyenBay(tdChuyenBay);
+		chonCB = 0;
+		PTRChuyenBay p = menuDong_ChonCB(lstCB, chonCB);
+		switch (chonCB)
+		{
+		case 1:
+		{
+			CHUYENBAY cb;
+			cb = createCB(lstCB, cb, lstMB);
+			insert_OrderNodeCB(lstCB, cb);
+			int save = saveCB(lstCB);
+
+			char c = getch();
+			if (c == 13) {
+				Normal();
+				system("cls");
+				break;
+			}
+			break;
+		}
+		case soItem_MenuCB:
+		{
+			exit2 = 0;
+			break;
+		}
+		}
 	}
 }

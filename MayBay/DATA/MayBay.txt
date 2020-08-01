@@ -39,7 +39,7 @@ VN13
 Boeing
 4
 2
-VN12
+VN11
 Boeing
-4
-10
+5
+12
