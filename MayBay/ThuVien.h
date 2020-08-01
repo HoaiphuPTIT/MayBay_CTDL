@@ -159,15 +159,17 @@ void khungXuatDS(int type, int rong, int dai, int colump1 = 0, int colump2 = 0, 
 	int colump5 = 0, int posx = 0, int posy = 0);
 void khungThongBao();
 void hienThongBao(string notif);
+void hienHuongDan();
 
 void Normal();
 void Highlight();
 int menuDong_Prim(char td[soItem_MenuChinh][100]);
 int menuDong_MayBay(char td[soItem_MenuMB][100]);
 int menuDong_ChuyenBay(char td[soItem_MenuCB][100]);
-mayBay menuDong_ChonMB(LIST_MB lstMB);
+mayBay menuDong_ChonMB(LIST_MB lstMB, int& chonMB);
 PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chon);
 void xoaKhungDS();
 
 void QLMB(LIST_MB& lstMB, char tdMayBay[soItem_MenuMB][100]);
 void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& lstMB);
+int confirm(string chose1, string chose2);

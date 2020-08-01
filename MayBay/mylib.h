@@ -55,6 +55,7 @@
 #define RIGHT 77
 #define SPACE 32
 #define F2 60
+#define F3 61
 #define F7 65
 #define F8 66
 #define F9 67
