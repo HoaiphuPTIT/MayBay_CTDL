@@ -10,6 +10,7 @@
 #include <string>
 #include <cstring>
 #include <fstream>
+#include <math.h>
 
 #define MAXLIST 300
 #define MAX_INPUT 255
@@ -66,7 +67,7 @@ int delete_MB(LIST_MB& lstMB, int i);
 void show_MB(LIST_MB lstMB);
 int search_MB(LIST_MB lstMB, char ma[]);
 int hieuChinh_MB(LIST_MB& lstMB, int i);
-void show_1_MB(LIST_MB lstMB, int chon);
+void show_1_MB(LIST_MB lstMB, int chon, bool type);
 // cau truc ve
 struct VeMayBay{
 	char soVe[5];
@@ -111,6 +112,7 @@ CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB);
 void insert_OrderNodeCB(PTRChuyenBay & lstCB, CHUYENBAY cb);
 int insertNodeCB(PTRChuyenBay& lstCB, CHUYENBAY cb);
 PTRChuyenBay searchBin_CB(PTRChuyenBay lstCB, char ma[]);
+int hieuChinh_CB(PTRChuyenBay& lstCB, PTRChuyenBay p, LIST_MB lstMB);
 void showCB(PTRChuyenBay lstCB);
 void show_1_CB(CHUYENBAY* cb, int chon);
 // cau truc hanh khach
@@ -143,13 +145,15 @@ int saveCB(PTRChuyenBay lstCB);
 void NhapMA(char var[], int len);
 void NhapCHUOI_SO(char var[], int len);
 void Nhap_SO(int &var, int len);
+int rangBuocThoiGian(THOI_GIAN tg);
+int rangBuocGio(THOI_GIAN h);
 //============= Xu ly Giao dien ==============//
 const int soItem_MenuChinh = 7;
 const int soItem_MenuMB = 4;
 const int soItem_MenuCB = 4;
 const int soItem_MenuDV = 3;
 
-char* gdTimMa(LIST_MB lstMB, int type, string title);
+char* gdTimMa(int type, string title);
 void khungGiaoDien();
 void veKhungNhap(int dai, int rong, int posx, int posy, string source = "");
 void khungNhapThongTin(int type, string title = "", string s1 = "", string s2 = "", string s3 = "", string s4 = "",
@@ -166,6 +170,7 @@ void Highlight();
 int menuDong_Prim(char td[soItem_MenuChinh][100]);
 int menuDong_MayBay(char td[soItem_MenuMB][100]);
 int menuDong_ChuyenBay(char td[soItem_MenuCB][100]);
+mayBay ChonMB(LIST_MB lstMB);
 mayBay menuDong_ChonMB(LIST_MB lstMB, int& chonMB);
 PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chon);
 void xoaKhungDS();
