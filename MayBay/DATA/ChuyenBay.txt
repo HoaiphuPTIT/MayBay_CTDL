@@ -1,13 +1,23 @@
-
 CB01
-VN01
-Ha Noi
-5
+VN10
+Da Nang
 12
+8
 2020
 12
-50
+30
 1
+1-1234567
+2-123456789
+3-000000014
+4-000000015
+5-000000016
+6-000000017
+7-000000018
+8-000000019
+9-000000020
+
+
 CB02
 VN02
 Ho Chi Minh
@@ -17,15 +27,19 @@ Ho Chi Minh
 13
 30
 1
+
+
 CB03
 VN01
-Da Nang
-17
+Sfsdf
 12
-2020
-7
-15
+3
+2021
+12
+2
 1
+
+
 CB04
 VN03
 Nha Trang
@@ -35,6 +49,8 @@ Nha Trang
 12
 15
 1
+
+
 CB05
 VN03
 Ho Chi Minh
@@ -44,6 +60,8 @@ Ho Chi Minh
 12
 30
 1
+
+
 CB06
 VN02
 Ha Noi
@@ -53,6 +71,8 @@ Ha Noi
 12
 12
 1
+
+
 CB07
 VN07
 Da Nang
@@ -62,6 +82,8 @@ Da Nang
 12
 30
 1
+
+
 CB08
 VN12
 Ho Chi Minh
@@ -71,6 +93,8 @@ Ho Chi Minh
 12
 20
 1
+
+
 CB09
 VN06
 Ha Noi
@@ -80,6 +104,8 @@ Ha Noi
 1
 30
 1
+
+
 CB11
 VN01
 Da Lat
@@ -89,6 +115,8 @@ Da Lat
 12
 12
 1
+
+
 CB12
 VN06
 Da Lat
@@ -98,6 +126,8 @@ Da Lat
 2
 4
 1
+
+
 CB13
 VN10
 Nha Trang
@@ -106,22 +136,4 @@ Nha Trang
 2020
 12
 12
-1
-GHKSG
-VN06
-Da Lat
-12
-23
-32
-32
-23
-1
-VN06
-VN05
-Da Nang
-12
-8
-2020
-12
-40
 1

@@ -47,6 +47,7 @@
 
 #define ENTER 13
 #define BACKSPACE 8
+#define DELETE 83
 #define UP 72
 #define DOWN 80
 #define ESC 27

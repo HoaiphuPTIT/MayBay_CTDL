@@ -106,6 +106,14 @@ int search_MB(LIST_MB lstMB, char ma[]) {
 	return -1;
 }
 
+mayBay getMB(LIST_MB lstMB, char ma[]) {
+	for (int i = 0; i < lstMB.n; i++) {
+		if (stricmp(lstMB.nodeMB[i]->data.soHieuMayBay, ma) == 0) {
+			return lstMB.nodeMB[i]->data;
+		}
+	}
+}
+
 int delete_MB(LIST_MB& lstMB, int i){
 	int j;
 	if (emptyMB(lstMB)) {
@@ -267,29 +275,38 @@ int emptyVe(LIST_VE lstVe) {
 	return lstVe.n == 0;
 }
 
-int fullVe(LIST_VE lstVe, nodeMB mb) {
-	int tmpSoDay = mb.data.soDay;
-	int tmpSoDong = mb.data.soDong;
+int fullVe(LIST_VE lstVe, mayBay mb) {
+	int tmpSoDay = mb.soDay;
+	int tmpSoDong = mb.soDong;
 	int soVe = tmpSoDay * tmpSoDong;
 	return lstVe.n == soVe;
 }
-int createDsVe(nodeMB mb, LIST_VE &lstVe) {
+
+int getSLVe(mayBay mb) {
+	int tmpSoDay = mb.soDay;
+	int tmpSoDong = mb.soDong;
+	return tmpSoDay * tmpSoDong;
+}
+
+void insertVe(LIST_VE& lstVe, int vitri, char cmnd[]) {
+	strcpy(lstVe.nodeVe[vitri].data.CMND, cmnd);
+}
+
+int createDsVe(mayBay mb, LIST_VE &lstVe) {
 	if (fullVe(lstVe, mb)) {
 		return 0;
 	}
 	char day[] = "ABCDEFGHIJKLMN";
 	char temp[4];
-	int tmpSoDay = mb.data.soDay;
-	int tmpSoDong = mb.data.soDong;
-	int soVe = tmpSoDay * tmpSoDong;
-	lstVe.nodeVe = new nodeVeMB[soVe];
-	for (int i = 0; i < tmpSoDay; i++) {
+	char tmpCMND[12];
+	int slVe = getSLVe(mb);
+	lstVe.nodeVe = new nodeVeMB[slVe];
+	for (int i = 0; i < mb.soDay; i++) {
 		temp[0] = day[i];
-		for (int j = 1; j <= tmpSoDong; j++) {
+		for (int j = 1; j <= mb.soDong; j++) {
 			if (j < 10) {
 
 				char array[3];
-				temp[1] = '\0';
 				strcat(temp, "0");
 				itoa(j, array, 10);
 				strcat(temp, array);
@@ -297,12 +314,11 @@ int createDsVe(nodeMB mb, LIST_VE &lstVe) {
 			else {
 
 				char array[3];
-				temp[1] = '\0';
 				itoa(j, array, 10);
 				strcat(temp, array);
 			}
 			strcpy(lstVe.nodeVe[lstVe.n].data.soVe, temp);
-			lstVe.nodeVe[lstVe.n].data.CMND[0] = '\0';
+			insertVe(lstVe, lstVe.n, tmpCMND);
 			lstVe.n++;
 		}
 	}
@@ -311,6 +327,10 @@ int createDsVe(nodeMB mb, LIST_VE &lstVe) {
 // ============== ham xu ly danh sach chuyen bay ============//
 void initCB(PTRChuyenBay& lstCB) {
 	lstCB = NULL;
+}
+
+int empty_CB(PTRChuyenBay lstCB) {
+	return (lstCB == NULL);
 }
 
 PTRChuyenBay searchBin_CB(PTRChuyenBay lstCB, char ma[]) {
@@ -403,7 +423,6 @@ CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB) {
 		
 		if (rangBuocThoiGian(cb.tgKhoiHanh) == -1)
 		{
-			hienThongBao("Rang buoc dung");
 			break;
 		}
 		else
@@ -438,7 +457,9 @@ CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB) {
 		}
 	} while (true);
 
-	cb.trangThai = CONVE;
+	int taoDSVe = createDsVe(chonMB, cb.dsVe);
+	if (taoDSVe == 1)
+		cb.trangThai = CONVE;
 
 	return cb;
 }
@@ -577,6 +598,43 @@ int hieuChinh_CB(PTRChuyenBay& lstCB, PTRChuyenBay p, LIST_MB lstMB) {
 
 	return 1;
 }
+
+int xoa_CB(PTRChuyenBay& lstCB, char ma[]) {
+	PTRChuyenBay p = lstCB;
+	if (empty_CB(lstCB))
+		return 0;
+	if (stricmp(lstCB->data.maChuyenBay, ma) == 0) {
+		p = lstCB;
+		lstCB = p->next;
+		delete p;
+		return 1;
+	}
+	else {
+		for (p = lstCB; p->next != NULL && stricmp(p->next->data.maChuyenBay, ma) != 0; p = p->next);
+		if (p->next != NULL) {
+			PTRChuyenBay q = p->next;
+			p->next = q->next;
+			delete q;
+			return 1;
+		}
+		else return 0;
+	}
+	
+}
+
+int huy_CB(PTRChuyenBay& lstCB, char ma[]) {
+	PTRChuyenBay p = lstCB;
+	if (empty_CB(lstCB))
+		return 0;
+	else {
+		if (lstCB->data.trangThai == HETVE || lstCB->data.trangThai == HOANTAT)
+			hienThongBao("Khong the huy chuyen bay nay!");
+		else {
+			lstCB->data.trangThai = HUYCHUYEN;
+		}
+	}
+}
+
 void showCB(PTRChuyenBay lstCB) {
 	khungXuatDS(NHAP_CB, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 45, 80, 100);
 
@@ -717,26 +775,41 @@ int saveMB(LIST_MB mb) {
 	outFile.close();
 	return 1;
 }
-int loadCB(PTRChuyenBay& lstCB) {
-	ChuyenBay cb;
+int loadCB(PTRChuyenBay& lstCB, LIST_MB lstMB) {
+	//ChuyenBay cb;
 	fstream inFile;
 	inFile.open("C:/Users/lamho/source/repos/MayBay/MayBay/DATA/ChuyenBay.txt", ios::in);
 	string temp;
 	int slCB;
 	if (inFile.is_open()) {
 		while (!inFile.eof()) {
+			ChuyenBay cb;
 			getline(inFile, temp);
-			inFile.getline(cb.maChuyenBay, 20);
-			inFile.getline(cb.soHieuMayBay, 20);
-			inFile.getline(cb.sanBayDen, 50);
-			inFile >> cb.tgKhoiHanh.ngay;
-			inFile >> cb.tgKhoiHanh.thang;
-			inFile >> cb.tgKhoiHanh.nam;
-			inFile >> cb.tgKhoiHanh.gio;
-			inFile >> cb.tgKhoiHanh.phut;
-			inFile >> cb.trangThai;
-
-			insertNodeCB(lstCB, cb);
+			if (temp != "") {
+				inFile.getline(cb.maChuyenBay, 20);
+				inFile.getline(cb.soHieuMayBay, 20);
+				inFile.getline(cb.sanBayDen, 50);
+				inFile >> cb.tgKhoiHanh.ngay;
+				inFile >> cb.tgKhoiHanh.thang;
+				inFile >> cb.tgKhoiHanh.nam;
+				inFile >> cb.tgKhoiHanh.gio;
+				inFile >> cb.tgKhoiHanh.phut;
+				inFile >> cb.trangThai;
+				mayBay mb = getMB(lstMB, cb.soHieuMayBay);
+				int dsve = createDsVe(mb, cb.dsVe);
+				string temp1 = "";
+				getline(inFile, temp1);
+				while (temp1 != "") {
+					string* arr = catChuoi(temp1, '-');
+					string vitri = arr[0];
+					string cmnd = arr[1];
+					insertVe(cb.dsVe, atoi(vitri.c_str()), stringToChar(cmnd));
+					getline(inFile, temp1);
+				}
+				insert_OrderNodeCB(lstCB, cb);
+				temp = "";
+			}
+			
 
 		}
 	}
@@ -1011,6 +1084,27 @@ int rangBuocGio(THOI_GIAN h)
 		return 1;
 	}
 	return -1;
+}
+
+string* catChuoi(string chuoi, char splitChar) {
+	string* arr = new string[2];
+	for (int i = 0; i < chuoi.length(); i++) {
+		if (chuoi.at(i) == splitChar) {
+			arr[0] = chuoi.substr(0, i);
+			arr[1] = chuoi.substr(i + 1);
+		}
+	}
+	return arr;
+}
+
+char* stringToChar(string chuoi) {
+	char tmp[12];
+	int len = chuoi.length();
+	for (int i = 0; i < len; i++) {
+		tmp[i] = chuoi[0];
+	}
+	tmp[len] = '\0';
+	return tmp;
 }
 //========== giao dien =============
 
@@ -1428,7 +1522,7 @@ mayBay menuDong_ChonMB(LIST_MB lstMB, int& chonMB) {
 				}
 				else break;
 			} while (true);
-			chonMB = confirm("HIEU CHINH", "XOA");
+			chonMB = confirm("HIEU CHINH", "XOA", false);
 			if (chonMB == 0)
 				break;
 			Normal();
@@ -1446,7 +1540,7 @@ mayBay menuDong_ChonMB(LIST_MB lstMB, int& chonMB) {
 			
 		case ENTER:   
 			Normal();
-			chonMB = confirm("HIEU CHINH", "XOA");
+			chonMB = confirm("HIEU CHINH", "XOA", false);
 			if (chonMB == 0)
 				break;
 			return lstMB.nodeMB[chon]->data;
@@ -1529,11 +1623,25 @@ PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chonCB) {
 					hienThongBao("Khong tim thay chuyen bay nay!");
 				else break;
 			} while (true);
-			chonCB = confirm("HIEU CHINH", "XOA");
+			chonCB = confirm("HIEU CHINH", "XOA", false);
 			if (chonCB == 0)
 				break;
 			Normal();
 			return q;
+		}
+		case DELETE:
+		{
+			q = searchBin_CB(lstCB, tmpCB[chon]->maChuyenBay);
+			if (q != NULL) {
+				int chon = confirm("CO", "KHONG", false);
+				if (chon == 3) {
+					chonCB = 2;
+					Normal();
+					return q;
+				}
+				else
+					break;
+			}
 		}
 		case ESC:
 		{
@@ -1545,7 +1653,7 @@ PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chonCB) {
 		}
 
 		case ENTER:
-			chonCB = confirm("HIEU CHINH", "XOA");
+			chonCB = confirm("HIEU CHINH", "HUY CHUYEN", true);
 			if (chonCB == 0)
 				break;
 			q = searchBin_CB(lstCB, tmpCB[chon]->maChuyenBay);
@@ -1658,7 +1766,9 @@ void hienHuongDan() {
 	gotoxy(COT, DONG + 2);
 	cout << "ENTER: Chon";
 	gotoxy(COT, DONG + 3);
-	cout << "ESC: Huy";
+	cout << "DELETE: Xoa";
+	gotoxy(COT, DONG + 4);
+	cout << "ESC: Huy/Tro ve";
 }
 
 void xoaKhungDS() {
@@ -1766,8 +1876,19 @@ void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& ls
 			break;
 		}
 		case 2:
-			hienThongBao("Xoa thanh cong!");
+		{
+			int xoa = xoa_CB(lstCB, p->data.maChuyenBay);
+			if (xoa == 1) {
+				hienThongBao("Xoa thanh cong!");
+				int save = saveCB(lstCB);
+			}
+			else
+				hienThongBao("Xoa that bai!");
+			Normal();
+			system("cls");
 			break;
+		}
+			
 		case 3:
 		{
 			int fix = hieuChinh_CB(lstCB, p, lstMB);
@@ -1784,7 +1905,11 @@ void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& ls
 			system("cls");
 			break;
 		}
-			
+		case 4:
+		{
+
+			break;
+		}
 		case soItem_MenuCB:
 		{
 			exit2 = 0;
@@ -1794,7 +1919,7 @@ void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& ls
 	}
 }
 
-int confirm(string chose1, string chose2) {
+int confirm(string chose1, string chose2, bool huyCB) {
 	char key;
 	int chon = 3;
 	
@@ -1827,14 +1952,20 @@ int confirm(string chose1, string chose2) {
 			Highlight();
 			gotoxy(COT + DAIKHUNGNHO + 28, DONGNHAP7);
 			cout << chose2;
-			chon = 2;
+			if (huyCB == true)
+				chon = 4;
+			else 
+				chon = 2;
 			break;
 		case ENTER:
+			Normal();
+			gotoxy(COT + 10, DONGNHAP7);
+			cout << "                                       ";
 			return chon;
 		case ESC:
 			Normal();
 			gotoxy(COT + 10, DONGNHAP7);
-			cout << "                                   ";
+			cout << "                                       ";
 			return 0;
 		}
 		

@@ -66,6 +66,7 @@ int insert_MB(LIST_MB& lstMB, mayBay mb);
 int delete_MB(LIST_MB& lstMB, int i);
 void show_MB(LIST_MB lstMB);
 int search_MB(LIST_MB lstMB, char ma[]);
+mayBay getMB(LIST_MB lstMB, char ma[]);
 int hieuChinh_MB(LIST_MB& lstMB, int i);
 void show_1_MB(LIST_MB lstMB, int chon, bool type);
 // cau truc ve
@@ -86,8 +87,10 @@ struct ListVe {
 typedef ListVe LIST_VE;
 //======= ham xu ly ve =====
 int emptyVe(LIST_VE lstVe);
-int fullVe(LIST_VE lstVe, nodeMB mb);
-int createDsVe(nodeMB mb, LIST_VE &lstVe);
+int fullVe(LIST_VE lstVe, mayBay mb);
+int getSLVe(mayBay mb);
+void insertVe(LIST_VE& lstVe, int vitri, char cmnd[]);
+int createDsVe(mayBay mb, LIST_VE &lstVe);
 
 // cau truc chuyen bay
 struct ChuyenBay {
@@ -108,11 +111,14 @@ typedef struct NodeChuyenBay* PTRChuyenBay;
 
 //============ cac ham xu ly chuyen bay ===============//
 void initCB(PTRChuyenBay &lstCB);
+int empty_CB(PTRChuyenBay lstCB);
 CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB);
 void insert_OrderNodeCB(PTRChuyenBay & lstCB, CHUYENBAY cb);
 int insertNodeCB(PTRChuyenBay& lstCB, CHUYENBAY cb);
 PTRChuyenBay searchBin_CB(PTRChuyenBay lstCB, char ma[]);
 int hieuChinh_CB(PTRChuyenBay& lstCB, PTRChuyenBay p, LIST_MB lstMB);
+int xoa_CB(PTRChuyenBay& lstCB, char ma[]);
+int huy_CB(PTRChuyenBay& lstCB, char ma[]);
 void showCB(PTRChuyenBay lstCB);
 void show_1_CB(CHUYENBAY* cb, int chon);
 // cau truc hanh khach
@@ -139,7 +145,7 @@ struct NhapChuoi {
 //============= doc xuat file ================//
 int loadMB(LIST_MB &mb);
 int saveMB(LIST_MB mb);
-int loadCB(PTRChuyenBay& lstCB);
+int loadCB(PTRChuyenBay& lstCB, LIST_MB mb);
 int saveCB(PTRChuyenBay lstCB);
 //========= cac ham xu ly nhap chuoi ==========//
 void NhapMA(char var[], int len);
@@ -147,10 +153,12 @@ void NhapCHUOI_SO(char var[], int len);
 void Nhap_SO(int &var, int len);
 int rangBuocThoiGian(THOI_GIAN tg);
 int rangBuocGio(THOI_GIAN h);
+string* catChuoi(string chuoi, char splitChar);
+char* stringToChar(string chuoi);
 //============= Xu ly Giao dien ==============//
 const int soItem_MenuChinh = 7;
 const int soItem_MenuMB = 4;
-const int soItem_MenuCB = 4;
+const int soItem_MenuCB = 5;
 const int soItem_MenuDV = 3;
 
 char* gdTimMa(int type, string title);
@@ -177,4 +185,4 @@ void xoaKhungDS();
 
 void QLMB(LIST_MB& lstMB, char tdMayBay[soItem_MenuMB][100]);
 void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& lstMB);
-int confirm(string chose1, string chose2);
+int confirm(string chose1, string chose2, bool huyCB);

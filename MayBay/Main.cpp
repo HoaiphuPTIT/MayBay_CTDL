@@ -26,7 +26,7 @@ int main() {
 	initCB(lstCB);
 
 	int loadmb = loadMB(lstMB);
-	int loadcb = loadCB(lstCB);
+	int loadcb = loadCB(lstCB, lstMB);
 	int chon;
 	int exit = 1;
 	while (exit) {
