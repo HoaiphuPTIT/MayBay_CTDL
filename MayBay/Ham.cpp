@@ -815,9 +815,7 @@ int loadCB(PTRChuyenBay& lstCB, LIST_MB lstMB) {
 						
 					getline(inFile, temp1);
 				}
-				cout << cb.dsVe.n;
-				cout << cb.dsVe.nodeVe[0].data.soVe;
-				cout << cb.dsVe.nodeVe[0].data.CMND;
+				
 
 				insertNodeCB(lstCB, cb);
 			}
@@ -845,6 +843,15 @@ int saveCB(PTRChuyenBay lstCB) {
 			outFile << endl << p->data.tgKhoiHanh.gio;
 			outFile << endl << p->data.tgKhoiHanh.phut;
 			outFile << endl << p->data.trangThai;
+			for (int i = 0; i < p->data.dsVe.n; i++) {
+				if(stricmp(p->data.dsVe.nodeVe[i].data.CMND, "") != 0)
+					outFile << endl << p->data.dsVe.nodeVe[i].data.soVe << "," << i << "-" << p->data.dsVe.nodeVe[i].data.CMND;
+			}
+			if (p->next != NULL) {
+				outFile << endl;
+				outFile << endl;
+			}
+			
 		}
 	}
 	else
@@ -1101,7 +1108,7 @@ void catChuoi(string chuoi, char splitChar, int &vtri, char cmnd[]) {
 	int k = 0;
 	for (int i = 0; i < len; i++) {
 		if (chuoi.at(i) == splitChar) {
-			vtri = atoi(chuoi.substr(0, i).c_str());
+			vtri = atoi(chuoi.substr(4, i).c_str());
 			for (int j = i + 1; j < len; j++) {
 				cmnd[k] = chuoi[j];
 				k++;
