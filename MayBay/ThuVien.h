@@ -153,7 +153,7 @@ void NhapCHUOI_SO(char var[], int len);
 void Nhap_SO(int &var, int len);
 int rangBuocThoiGian(THOI_GIAN tg);
 int rangBuocGio(THOI_GIAN h);
-string* catChuoi(string chuoi, char splitChar);
+void catChuoi(string chuoi, char splitChar, int &vtri, char cmnd[]);
 char* stringToChar(string chuoi);
 //============= Xu ly Giao dien ==============//
 const int soItem_MenuChinh = 7;

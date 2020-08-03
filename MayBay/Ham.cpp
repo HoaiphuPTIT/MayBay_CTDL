@@ -296,17 +296,19 @@ int createDsVe(mayBay mb, LIST_VE &lstVe) {
 	if (fullVe(lstVe, mb)) {
 		return 0;
 	}
-	char day[] = "ABCDEFGHIJKLMN";
-	char temp[4];
-	char tmpCMND[12];
+	char day[] = "ABCDEFGHIJKLMNO";
+	char temp[5] = "";
+	char tmpCMND[12] = { '\0' };
 	int slVe = getSLVe(mb);
 	lstVe.nodeVe = new nodeVeMB[slVe];
 	for (int i = 0; i < mb.soDay; i++) {
+		temp[0] = '\0';
 		temp[0] = day[i];
 		for (int j = 1; j <= mb.soDong; j++) {
 			if (j < 10) {
-
+				
 				char array[3];
+				temp[1] = '\0';
 				strcat(temp, "0");
 				itoa(j, array, 10);
 				strcat(temp, array);
@@ -314,6 +316,7 @@ int createDsVe(mayBay mb, LIST_VE &lstVe) {
 			else {
 
 				char array[3];
+				temp[1] = '\0';
 				itoa(j, array, 10);
 				strcat(temp, array);
 			}
@@ -780,12 +783,15 @@ int loadCB(PTRChuyenBay& lstCB, LIST_MB lstMB) {
 	fstream inFile;
 	inFile.open("C:/Users/lamho/source/repos/MayBay/MayBay/DATA/ChuyenBay.txt", ios::in);
 	string temp;
+	string temp1 = "";
+	string ve;
 	int slCB;
 	if (inFile.is_open()) {
 		while (!inFile.eof()) {
 			ChuyenBay cb;
 			getline(inFile, temp);
-			if (temp != "") {
+			if (temp == "") {
+				
 				inFile.getline(cb.maChuyenBay, 20);
 				inFile.getline(cb.soHieuMayBay, 20);
 				inFile.getline(cb.sanBayDen, 50);
@@ -795,22 +801,26 @@ int loadCB(PTRChuyenBay& lstCB, LIST_MB lstMB) {
 				inFile >> cb.tgKhoiHanh.gio;
 				inFile >> cb.tgKhoiHanh.phut;
 				inFile >> cb.trangThai;
+
 				mayBay mb = getMB(lstMB, cb.soHieuMayBay);
 				int dsve = createDsVe(mb, cb.dsVe);
-				string temp1 = "";
+				
+				getline(inFile, temp1);
 				getline(inFile, temp1);
 				while (temp1 != "") {
-					string* arr = catChuoi(temp1, '-');
-					string vitri = arr[0];
-					string cmnd = arr[1];
-					insertVe(cb.dsVe, atoi(vitri.c_str()), stringToChar(cmnd));
+					int vitri;
+					char cmnd[12] = { '\0' };
+					catChuoi(temp1, '-', vitri, cmnd);
+					insertVe(cb.dsVe, vitri, cmnd);
+						
 					getline(inFile, temp1);
 				}
-				insert_OrderNodeCB(lstCB, cb);
-				temp = "";
-			}
-			
+				cout << cb.dsVe.n;
+				cout << cb.dsVe.nodeVe[0].data.soVe;
+				cout << cb.dsVe.nodeVe[0].data.CMND;
 
+				insertNodeCB(lstCB, cb);
+			}
 		}
 	}
 	else {
@@ -1086,22 +1096,29 @@ int rangBuocGio(THOI_GIAN h)
 	return -1;
 }
 
-string* catChuoi(string chuoi, char splitChar) {
-	string* arr = new string[2];
-	for (int i = 0; i < chuoi.length(); i++) {
+void catChuoi(string chuoi, char splitChar, int &vtri, char cmnd[]) {
+	int len = chuoi.length();
+	int k = 0;
+	for (int i = 0; i < len; i++) {
 		if (chuoi.at(i) == splitChar) {
-			arr[0] = chuoi.substr(0, i);
-			arr[1] = chuoi.substr(i + 1);
+			vtri = atoi(chuoi.substr(0, i).c_str());
+			for (int j = i + 1; j < len; j++) {
+				cmnd[k] = chuoi[j];
+				k++;
+			}
+			cmnd[k + 1] = '\0';
+			break;
 		}
 	}
-	return arr;
 }
 
+
 char* stringToChar(string chuoi) {
-	char tmp[12];
+	char *tmp;
 	int len = chuoi.length();
+	tmp = new char[len];
 	for (int i = 0; i < len; i++) {
-		tmp[i] = chuoi[0];
+		tmp[i] = chuoi[i];
 	}
 	tmp[len] = '\0';
 	return tmp;

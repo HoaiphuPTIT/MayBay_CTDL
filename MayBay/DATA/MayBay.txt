@@ -1,9 +1,13 @@
 
 VN01
 Boeing
-15
+14
 20
 VN02
+Boeing
+6
+1
+VN03
 Boeing
 6
 1
@@ -11,10 +15,18 @@ VN04
 Boeing
 15
 20
+VN05
+Viet Nam
+7
+15
 VN06
 Boeing
 15
 20
+VN07
+Viet Nam
+7
+15
 VN08
 Boeing
 3
@@ -27,15 +39,15 @@ VN10
 Conan
 3
 4
-VN13
-Boeing
-4
-2
 VN11
 Boeing
 5
 12
-VN05
-Viet Nam
-7
-15
+VN12
+Boeing
+6
+1
+VN13
+Boeing
+4
+2
