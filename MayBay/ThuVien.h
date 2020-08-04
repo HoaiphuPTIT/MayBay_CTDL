@@ -82,6 +82,8 @@ typedef nodeVeMayBay nodeVeMB;
 //typedef nodeVe* NODEVEMB;
 struct ListVe {
 	int n = 0;
+	int soDay;
+	int soDong;
 	nodeVeMB *nodeVe;
 };
 typedef ListVe LIST_VE;
@@ -121,22 +123,34 @@ int xoa_CB(PTRChuyenBay& lstCB, char ma[]);
 int huy_CB(PTRChuyenBay& lstCB, char ma[]);
 void showCB(PTRChuyenBay lstCB);
 void show_1_CB(CHUYENBAY* cb, int chon);
+void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int &n);
 // cau truc hanh khach
 struct HanhKhach {
-	int CMND;
-	char ho[8];
-	char tendem[8];
-	char ten[8];
+	char CMND[12];
+	char ho[50];
+	char ten[10];
 	int phai;
 };
 typedef HanhKhach HANHKHACH;
 
-struct NodeHanhKhach {
+struct nodeHanhKhach {
 	HANHKHACH data;
-	struct NodeHanhKhach* Left;
-	struct NodeHanhKhach* Right;
+	struct nodeHanhKhach* Left;
+	struct nodeHanhKhach* Right;
 };
-typedef NodeHanhKhach NodeHanhKhach;
+typedef struct nodeHanhKhach NodeHanhKhach;
+typedef struct nodeHanhKhach* TREEHanhKhach;
+//============= cac ham xu ly hanh khach ===================//
+void init_HK(TREEHanhKhach& lstHK);
+int empty_HK(TREEHanhKhach lstHK);
+int timTrung_HK(TREEHanhKhach lstHK, char soCMND[]);
+TREEHanhKhach timKiem_HK(TREEHanhKhach lstHK, char cmnd[]);
+void insertNode_HK(TREEHanhKhach& lstHK, HANHKHACH p);
+void create_HK(TREEHanhKhach& lstHK);
+void xuat_HK(TREEHanhKhach lstHK, int& stt); // theo thu tu NLR
+void timNodeTheMang(TREEHanhKhach& lstHK, TREEHanhKhach& r);
+void remove_HK(TREEHanhKhach& lstHK, char soCMND[]);
+void hieuChinh_HK(TREEHanhKhach& lstHK, char soCMND[]);
 
 struct NhapChuoi {
 	int n = 0;
@@ -169,20 +183,25 @@ void khungNhapThongTin(int type, string title = "", string s1 = "", string s2 = 
 
 void khungXuatDS(int type, int rong, int dai, int colump1 = 0, int colump2 = 0, int colump3 = 0, int colump4 = 0, 
 	int colump5 = 0, int posx = 0, int posy = 0);
+void xoaKhungDS();
+
 void khungThongBao();
 void hienThongBao(string notif);
 void hienHuongDan();
 
 void Normal();
 void Highlight();
+void Red_Highlight();
 int menuDong_Prim(char td[soItem_MenuChinh][100]);
 int menuDong_MayBay(char td[soItem_MenuMB][100]);
 int menuDong_ChuyenBay(char td[soItem_MenuCB][100]);
 mayBay ChonMB(LIST_MB lstMB);
 mayBay menuDong_ChonMB(LIST_MB lstMB, int& chonMB);
-PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chon);
-void xoaKhungDS();
+PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chonCB);
+PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int& chonCB);
+int chonVe(PTRChuyenBay& lstCB);
 
 void QLMB(LIST_MB& lstMB, char tdMayBay[soItem_MenuMB][100]);
 void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& lstMB);
+void DatHuyVe(PTRChuyenBay& lstCB, LIST_MB lstMB);
 int confirm(string chose1, string chose2, bool huyCB);

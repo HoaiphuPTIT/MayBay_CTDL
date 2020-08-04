@@ -44,6 +44,11 @@ int main() {
 			QLCB(lstCB, tdChuyenBay, lstMB);
 			break;
 		}
+		case 3:
+		{
+			DatHuyVe(lstCB, lstMB);
+			//break;
+		}
 		case soItem_MenuChinh:
 		{
 			return 0;
