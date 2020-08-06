@@ -23,6 +23,8 @@ char tdChuyenBay[soItem_MenuCB][100] = { "1. Them chuyen bay",
 int main() {
 	LIST_MB lstMB;
 	PTRChuyenBay lstCB;
+	TREEHanhKhach lstHK;
+	init_HK(lstHK);
 	initCB(lstCB);
 
 	int loadmb = loadMB(lstMB);
@@ -46,8 +48,8 @@ int main() {
 		}
 		case 3:
 		{
-			DatHuyVe(lstCB, lstMB);
-			//break;
+			DatHuyVe(lstCB, lstMB, lstHK);
+			break;
 		}
 		case soItem_MenuChinh:
 		{

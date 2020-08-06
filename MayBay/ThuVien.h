@@ -146,7 +146,7 @@ int empty_HK(TREEHanhKhach lstHK);
 int timTrung_HK(TREEHanhKhach lstHK, char soCMND[]);
 TREEHanhKhach timKiem_HK(TREEHanhKhach lstHK, char cmnd[]);
 void insertNode_HK(TREEHanhKhach& lstHK, HANHKHACH p);
-void create_HK(TREEHanhKhach& lstHK);
+HANHKHACH create_HK(TREEHanhKhach& lstHK);
 void xuat_HK(TREEHanhKhach lstHK, int& stt); // theo thu tu NLR
 void timNodeTheMang(TREEHanhKhach& lstHK, TREEHanhKhach& r);
 void remove_HK(TREEHanhKhach& lstHK, char soCMND[]);
@@ -199,9 +199,10 @@ mayBay ChonMB(LIST_MB lstMB);
 mayBay menuDong_ChonMB(LIST_MB lstMB, int& chonMB);
 PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chonCB);
 PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int& chonCB);
+void show_1_Ve(LIST_VE lstVe, int cot, int dong, int chon, int kc);
 int chonVe(PTRChuyenBay& lstCB);
 
 void QLMB(LIST_MB& lstMB, char tdMayBay[soItem_MenuMB][100]);
 void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& lstMB);
-void DatHuyVe(PTRChuyenBay& lstCB, LIST_MB lstMB);
+void DatHuyVe(PTRChuyenBay& lstCB, LIST_MB lstMB, TREEHanhKhach& lstHK);
 int confirm(string chose1, string chose2, bool huyCB);
