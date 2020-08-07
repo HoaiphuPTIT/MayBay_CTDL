@@ -18,6 +18,8 @@
 #define CONVE 1
 #define HETVE 2
 #define HOANTAT 3
+#define NAM 0
+#define NU 1
 
 using namespace std;
 // 1800 <  NAM < 9999
@@ -93,6 +95,7 @@ int fullVe(LIST_VE lstVe, mayBay mb);
 int getSLVe(mayBay mb);
 void insertVe(LIST_VE& lstVe, int vitri, char cmnd[]);
 int createDsVe(mayBay mb, LIST_VE &lstVe);
+int cancleVe(LIST_VE& lstVe, int vitri);
 
 // cau truc chuyen bay
 struct ChuyenBay {
@@ -161,6 +164,9 @@ int loadMB(LIST_MB &mb);
 int saveMB(LIST_MB mb);
 int loadCB(PTRChuyenBay& lstCB, LIST_MB mb);
 int saveCB(PTRChuyenBay lstCB);
+int loadHK(TREEHanhKhach& lstHK);
+void duyetCay(TREEHanhKhach lstHK, fstream& file);
+int saveHK(TREEHanhKhach lstHK);
 //========= cac ham xu ly nhap chuoi ==========//
 void NhapMA(char var[], int len);
 void NhapCHUOI_SO(char var[], int len);
