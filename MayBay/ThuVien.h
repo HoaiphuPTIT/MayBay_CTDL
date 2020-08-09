@@ -20,6 +20,8 @@
 #define HOANTAT 3
 #define NAM 0
 #define NU 1
+#define MAX_PAGE 35
+#define MAX_PAGE_SMALL 15
 
 using namespace std;
 // 1800 <  NAM < 9999
@@ -190,6 +192,7 @@ void khungNhapThongTin(int type, string title = "", string s1 = "", string s2 = 
 void khungXuatDS(int type, int rong, int dai, int colump1 = 0, int colump2 = 0, int colump3 = 0, int colump4 = 0, 
 	int colump5 = 0, int posx = 0, int posy = 0);
 void xoaKhungDS();
+void xoaThongTin(int type);
 
 void khungThongBao();
 void hienThongBao(string notif);
@@ -207,6 +210,8 @@ PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chonCB);
 PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int& chonCB);
 void show_1_Ve(LIST_VE lstVe, int cot, int dong, int chon, int kc);
 int chonVe(PTRChuyenBay& lstCB);
+PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB);
+void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK);
 
 void QLMB(LIST_MB& lstMB, char tdMayBay[soItem_MenuMB][100]);
 void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& lstMB);

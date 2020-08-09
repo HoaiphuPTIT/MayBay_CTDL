@@ -52,6 +52,15 @@ int main() {
 			DatHuyVe(lstCB, lstMB, lstHK);
 			break;
 		}
+		case 4:
+		{
+			
+				dsHK_1_CB(lstCB, lstHK);
+				
+			
+			
+			//break;
+		}
 		case soItem_MenuChinh:
 		{
 			return 0;
