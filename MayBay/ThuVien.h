@@ -210,7 +210,7 @@ PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chonCB);
 PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int& chonCB);
 void show_1_Ve(LIST_VE lstVe, int cot, int dong, int chon, int kc);
 int chonVe(PTRChuyenBay& lstCB);
-PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB);
+PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, TREEHanhKhach lstHK);
 void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK);
 
 void QLMB(LIST_MB& lstMB, char tdMayBay[soItem_MenuMB][100]);

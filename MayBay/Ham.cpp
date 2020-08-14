@@ -782,6 +782,7 @@ int timTrung_HK(TREEHanhKhach lstHK, char soCMND[]) {
 TREEHanhKhach timKiem_HK(TREEHanhKhach lstHK, char cmnd[]) {
 	TREEHanhKhach p;
 	p = lstHK;
+	
 	while (p != NULL && stricmp(p->data.CMND, cmnd) != 0)
 	{
 		if (stricmp(p->data.CMND, cmnd) > 0)
@@ -793,6 +794,7 @@ TREEHanhKhach timKiem_HK(TREEHanhKhach lstHK, char cmnd[]) {
 			p = p->Right;
 		}
 	}
+	
 	return p;
 }
 
@@ -2019,6 +2021,7 @@ void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int &n, int trangThai) {
 			cb[n]->tgKhoiHanh.gio = p->data.tgKhoiHanh.gio;
 			cb[n]->tgKhoiHanh.phut = p->data.tgKhoiHanh.phut;
 			cb[n]->trangThai = p->data.trangThai;
+			
 			n++;
 		}
 	}
@@ -2231,7 +2234,7 @@ PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int &chonCB) {
 	} while (true);
 }
 
-PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB) {
+PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, TREEHanhKhach lstHK) {
 
 	Normal();
 	khungGiaoDien();
@@ -2255,6 +2258,28 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB) {
 	dem = 0;
 	Highlight();
 	show_1_CB(tmpCB[chon], chon);
+	// tim hanh khach
+	for (int j = 0; j < 15; j++) {
+		if (stricmp(lstCB->data.dsVe.nodeVe[1].data.CMND, "") != 0) {
+			TREEHanhKhach t = timKiem_HK(lstHK, lstCB->data.dsVe.nodeVe[dem].data.CMND);
+			gotoxy(COTDS_L + 1, DONGDS_U + 27 + dem);
+			cout << 1;
+			gotoxy(COTDS_L + 6, DONGDS_U + 27 + dem);
+			cout << lstCB->data.dsVe.nodeVe[1].data.soVe;
+			gotoxy(COTDS_L + 26, DONGDS_U + 27 + dem);
+			cout << t->data.CMND;
+			gotoxy(COTDS_L + 46, DONGDS_U + 27 + dem);
+			cout << t->data.ho << " " << t->data.ten;
+			gotoxy(COTDS_L + 94, DONGDS_U + 27 + dem);
+			cout << t->data.phai;
+		}
+		
+
+		if (dem == MAX_PAGE_SMALL - 1) {
+			break;
+		}
+		dem++;
+	}
 	char tmp[20];
 	char kytu;
 	do
@@ -2269,7 +2294,7 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB) {
 		case UP:
 			if (chon > 0 && dem > 0) {
 				Normal();
-				show_1_CB(tmpCB[chon], dem);
+				show_1_CB(tmpCB[chon], chon);
 
 				chon--;
 				dem--;
@@ -2508,7 +2533,7 @@ void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK) {
 	while (exit)
 	{
 		chon = 0;
-		PTRChuyenBay p = ChonCB_Xuat_DSHK(lstCB, chon);
+		PTRChuyenBay p = ChonCB_Xuat_DSHK(lstCB, chon, lstHK);
 
 		switch (chon)
 		{

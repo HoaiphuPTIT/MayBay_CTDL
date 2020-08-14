@@ -3,20 +3,20 @@
 C:\Users\lamho\source\repos\MayBay\MayBay\ThuVien.h(116,2): warning C4091: 'typedef ': ignored on left of 'NodeChuyenBay' when no variable is declared
 C:\Users\lamho\source\repos\MayBay\MayBay\mylib.h(50,1): warning C4005: 'DELETE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winnt.h(8943): message : see previous definition of 'DELETE'
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(991,6): warning C4101: 'slCB': unreferenced local variable
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1127,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1180,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1241,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1365,26): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1383,26): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1444,27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1475,40): warning C4244: 'argument': conversion from 'double' to 'short', possible loss of data
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1748,6): warning C4101: 'i': unreferenced local variable
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1791,6): warning C4101: 'i': unreferenced local variable
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1841,6): warning C4101: 'i': unreferenced local variable
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1884,6): warning C4101: 'i': unreferenced local variable
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1930,6): warning C4101: 'i': unreferenced local variable
-C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(2506,6): warning C4101: 'vitri': unreferenced local variable
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(993,6): warning C4101: 'slCB': unreferenced local variable
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1129,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1182,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1243,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1367,26): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1385,26): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1446,27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1477,40): warning C4244: 'argument': conversion from 'double' to 'short', possible loss of data
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1750,6): warning C4101: 'i': unreferenced local variable
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1793,6): warning C4101: 'i': unreferenced local variable
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1843,6): warning C4101: 'i': unreferenced local variable
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1886,6): warning C4101: 'i': unreferenced local variable
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(1932,6): warning C4101: 'i': unreferenced local variable
+C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(2531,6): warning C4101: 'vitri': unreferenced local variable
 C:\Users\lamho\source\repos\MayBay\MayBay\mylib.h(85): warning C4172: returning address of local variable or temporary: S
 C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(115): warning C4715: 'getMB': not all control paths return a value
 C:\Users\lamho\source\repos\MayBay\MayBay\Ham.cpp(140): warning C4172: returning address of local variable or temporary: temp
