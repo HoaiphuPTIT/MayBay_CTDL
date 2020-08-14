@@ -928,6 +928,32 @@ void remove_HK(TREEHanhKhach& lstHK, char soCMND[]) {
 	}
 }
 
+void xuatHK_1_CB(CHUYENBAY *cb[], TREEHanhKhach lstHK, int chon) {
+	int j = 0, pageHK = 0, dem = 0;
+	for (j, pageHK; pageHK < cb[chon]->dsVe.n; pageHK++, j++) {
+		if (stricmp(cb[chon]->dsVe.nodeVe[j].data.CMND, "") != 0) {
+			TREEHanhKhach t = timKiem_HK(lstHK, cb[chon]->dsVe.nodeVe[j].data.CMND);
+
+			gotoxy(COTDS_L + 1, DONGDS_U + 27 + dem);
+			cout << dem + 1;
+			gotoxy(COTDS_L + 6, DONGDS_U + 27 + dem);
+			cout << cb[chon]->dsVe.nodeVe[j].data.soVe;
+			gotoxy(COTDS_L + 26, DONGDS_U + 27 + dem);
+			cout << t->data.CMND;
+			gotoxy(COTDS_L + 46, DONGDS_U + 27 + dem);
+			cout << t->data.ho << " " << t->data.ten;
+			gotoxy(COTDS_L + 94, DONGDS_U + 27 + dem);
+			cout << (t->data.phai == NAM ? "Nam" : "Nu");
+			dem++;
+		}
+
+		if (j == MAX_PAGE_SMALL - 1) {
+			break;
+		}
+
+	}
+}
+
 void hieuChinh_HK(TREEHanhKhach& lstHK, char soCMND[]) {
 
 }
@@ -1740,6 +1766,28 @@ void xoaThongTin(int type) {
 		}
 		
 	}
+	else if (type == SUA_HK) {
+		for (int i = 0; i < 15; i++) {
+			gotoxy(COTDS_L + 1, DONGDS_U + 27 + i);
+			cout << "    ";
+			gotoxy(COTDS_L + 5, DONGDS_U + 27 + i);
+			cout << char(DOC);
+			gotoxy(COTDS_L + 6, DONGDS_U + 27 + i);
+			cout << "                   ";
+			gotoxy(COTDS_L + 25, DONGDS_U + 27 + i);
+			cout << char(DOC);
+			gotoxy(COTDS_L + 26, DONGDS_U + 27 + i);
+			cout << "                   ";
+			gotoxy(COTDS_L + 45, DONGDS_U + 27 + i);
+			cout << char(DOC);
+			gotoxy(COTDS_L + 46, DONGDS_U + 27 + i);
+			cout << "                                   ";
+			gotoxy(COTDS_L + 93, DONGDS_U + 27 + i);
+			cout << char(DOC);
+			gotoxy(COTDS_L + 94, DONGDS_U + 27 + i);
+			cout << "   ";
+		}
+	}
 }
 
 int menuDong_Prim(char td[soItem_MenuChinh][100]) {
@@ -2007,7 +2055,7 @@ mayBay menuDong_ChonMB(LIST_MB lstMB, int& chonMB) {
 	} while (true);
 }
 
-void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int &n, int trangThai) {
+void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int &n, LIST_MB lstMB, int trangThai) {
 	PTRChuyenBay p = lstCB;
 	if (trangThai == 0) {
 		for (p; p != NULL; p = p->next) {
@@ -2022,6 +2070,17 @@ void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int &n, int trangThai) {
 			cb[n]->tgKhoiHanh.phut = p->data.tgKhoiHanh.phut;
 			cb[n]->trangThai = p->data.trangThai;
 			
+			mayBay mb = getMB(lstMB, cb[n]->soHieuMayBay);
+			int dsve = createDsVe(mb, cb[n]->dsVe);
+			for (int k = 0; k < cb[n]->dsVe.n; k++) {
+			//	hienThongBao(string(cb[n]->dsVe.nodeVe[k].data.CMND));
+				if (stricmp(p->data.dsVe.nodeVe[k].data.CMND, "") != 0) {
+					strcpy(cb[n]->dsVe.nodeVe[k].data.CMND, p->data.dsVe.nodeVe[k].data.CMND);
+					insertVe(cb[n]->dsVe, k, cb[n]->dsVe.nodeVe[k].data.CMND);
+				}
+				
+			}
+
 			n++;
 		}
 	}
@@ -2038,13 +2097,14 @@ void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int &n, int trangThai) {
 				cb[n]->tgKhoiHanh.gio = p->data.tgKhoiHanh.gio;
 				cb[n]->tgKhoiHanh.phut = p->data.tgKhoiHanh.phut;
 				cb[n]->trangThai = p->data.trangThai;
+				
 				n++;
 			}
 		}
 	}
 }
 
-PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chonCB) {
+PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB) {
 	
 	Normal();
 	khungGiaoDien();
@@ -2055,7 +2115,7 @@ PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chonCB) {
 	showCB(lstCB);
 
 	CHUYENBAY* tmpCB[300];
-	chuyenMang(lstCB, tmpCB, i, 0);
+	chuyenMang(lstCB, tmpCB, i, lstMB, 0);
 	
 	PTRChuyenBay q = new NodeChuyenBay;
 	Highlight();
@@ -2147,7 +2207,7 @@ PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chonCB) {
 	} while (true);
 }
 
-PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int &chonCB) {
+PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int &chonCB, LIST_MB lstMB) {
 
 	Normal();
 	khungGiaoDien();
@@ -2158,7 +2218,7 @@ PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int &chonCB) {
 	
 	showCB(lstCB);
 	CHUYENBAY* tmpCB[300];
-	chuyenMang(lstCB, tmpCB, i, CONVE);
+	chuyenMang(lstCB, tmpCB, i, lstMB, CONVE);
 	PTRChuyenBay q = new NodeChuyenBay;
 	
 	Highlight();
@@ -2234,7 +2294,7 @@ PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int &chonCB) {
 	} while (true);
 }
 
-PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, TREEHanhKhach lstHK) {
+PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB, TREEHanhKhach lstHK) {
 
 	Normal();
 	khungGiaoDien();
@@ -2242,13 +2302,14 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, TREEHanhKhach lst
 	hienHuongDan();
 	int chon = 0;
 	int i = 0;
-	int page = 0;
+	int pageCB = 0;
+	int pageHK = 0;
 	int dem = 0;
 	CHUYENBAY* tmpCB[300];
-	chuyenMang(lstCB, tmpCB, i, CONVE);
+	chuyenMang(lstCB, tmpCB, i, lstMB, 0);
 	PTRChuyenBay q = new NodeChuyenBay;
-	for (page; page < i; page++) {
-		show_1_CB(tmpCB[page], page);
+	for (pageCB; pageCB < i; pageCB++) {
+		show_1_CB(tmpCB[pageCB], pageCB);
 		
 		if (dem == MAX_PAGE_SMALL - 1) {
 			break;
@@ -2256,30 +2317,12 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, TREEHanhKhach lst
 		dem++;
 	}
 	dem = 0;
+
+	xuatHK_1_CB(tmpCB, lstHK, chon);
 	Highlight();
 	show_1_CB(tmpCB[chon], chon);
-	// tim hanh khach
-	for (int j = 0; j < 15; j++) {
-		if (stricmp(lstCB->data.dsVe.nodeVe[1].data.CMND, "") != 0) {
-			TREEHanhKhach t = timKiem_HK(lstHK, lstCB->data.dsVe.nodeVe[dem].data.CMND);
-			gotoxy(COTDS_L + 1, DONGDS_U + 27 + dem);
-			cout << 1;
-			gotoxy(COTDS_L + 6, DONGDS_U + 27 + dem);
-			cout << lstCB->data.dsVe.nodeVe[1].data.soVe;
-			gotoxy(COTDS_L + 26, DONGDS_U + 27 + dem);
-			cout << t->data.CMND;
-			gotoxy(COTDS_L + 46, DONGDS_U + 27 + dem);
-			cout << t->data.ho << " " << t->data.ten;
-			gotoxy(COTDS_L + 94, DONGDS_U + 27 + dem);
-			cout << t->data.phai;
-		}
-		
-
-		if (dem == MAX_PAGE_SMALL - 1) {
-			break;
-		}
-		dem++;
-	}
+	
+	dem = 0;
 	char tmp[20];
 	char kytu;
 	do
@@ -2295,35 +2338,38 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, TREEHanhKhach lst
 			if (chon > 0 && dem > 0) {
 				Normal();
 				show_1_CB(tmpCB[chon], chon);
-
+				xoaThongTin(SUA_HK);
 				chon--;
 				dem--;
 				Highlight();
 				show_1_CB(tmpCB[chon], dem);
+				xuatHK_1_CB(tmpCB, lstHK, chon);
 			}
 			break;
 		case DOWN:
 			if (chon + 1 < i && dem + 1 < MAX_PAGE_SMALL) {
 				Normal();
 				show_1_CB(tmpCB[chon], dem);
-
+				xoaThongTin(SUA_HK);
 				chon++;
 				dem++;
 				Highlight();
 				show_1_CB(tmpCB[chon], dem);
+				xuatHK_1_CB(tmpCB, lstHK, chon);
 			}
 			break;
 		case LEFT:
 			
-			if (page > MAX_PAGE_SMALL) {
+			if (pageCB > MAX_PAGE_SMALL) {
 				Normal();
 				xoaThongTin(NHAP_HK);
-				page -= MAX_PAGE_SMALL*2;
-				chon = page;
+				xoaThongTin(SUA_HK);
+				pageCB -= MAX_PAGE_SMALL*2;
+				chon = pageCB;
 				dem = 0;
 				
-				for (page; page < i; page++) {
-					show_1_CB(tmpCB[page], dem);
+				for (pageCB; pageCB < i; pageCB++) {
+					show_1_CB(tmpCB[pageCB], dem);
 					
 					if (dem == MAX_PAGE_SMALL - 1) {
 						break;
@@ -2333,18 +2379,20 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, TREEHanhKhach lst
 				dem = 0;
 				Highlight();
 				show_1_CB(tmpCB[chon], dem);
+				xuatHK_1_CB(tmpCB, lstHK, chon);
 			}
 			break;
 		case RIGHT:
-			if (page < i) {
+			if (pageCB < i) {
 				Normal();
 				xoaThongTin(NHAP_HK);
-				page ++;
-				chon = page;
+				xoaThongTin(SUA_HK);
+				pageCB ++;
+				chon = pageCB;
 				dem = 0;
 				
-				for (page; page < i; page++) {
-					show_1_CB(tmpCB[page], dem);
+				for (pageCB; pageCB < i; pageCB++) {
+					show_1_CB(tmpCB[pageCB], dem);
 					
 					if (dem == MAX_PAGE_SMALL - 1) {
 						
@@ -2352,10 +2400,11 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, TREEHanhKhach lst
 					}
 					dem++;
 				}
-				page += MAX_PAGE_SMALL - dem;
+				pageCB += MAX_PAGE_SMALL - dem;
 				dem = 0;
 				Highlight();
 				show_1_CB(tmpCB[chon], dem);
+				xuatHK_1_CB(tmpCB, lstHK, chon);
 			}
 			break;
 		case F3:
@@ -2521,7 +2570,7 @@ int chonVe(PTRChuyenBay& lstCB) {
 	return -1;
 }
 
-void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK) {
+void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK, LIST_MB lstMB) {
 	Normal();
 	system("cls");
 	khungXuatDS(NHAP_CB, DONGDS_D - DONGDS_U - 24, COTDS_R - COTDS_L, 5, 25, 45, 80, 100);
@@ -2533,7 +2582,7 @@ void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK) {
 	while (exit)
 	{
 		chon = 0;
-		PTRChuyenBay p = ChonCB_Xuat_DSHK(lstCB, chon, lstHK);
+		PTRChuyenBay p = ChonCB_Xuat_DSHK(lstCB, chon, lstMB, lstHK);
 
 		switch (chon)
 		{
@@ -2635,7 +2684,7 @@ void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& ls
 		//showCB(lstCB);
 		//chonCB = menuDong_ChuyenBay(tdChuyenBay);
 		chonCB = 0;
-		PTRChuyenBay p = menuDong_ChonCB(lstCB, chonCB);
+		PTRChuyenBay p = menuDong_ChonCB(lstCB, lstMB, chonCB);
 		switch (chonCB)
 		{
 		case 1:
@@ -2705,7 +2754,7 @@ void DatHuyVe(PTRChuyenBay& lstCB, LIST_MB lstMB, TREEHanhKhach& lstHK) {
 	while (exit)
 	{
 		chon = 0;
-		PTRChuyenBay p = ChonCB(lstCB, chon);
+		PTRChuyenBay p = ChonCB(lstCB, chon, lstMB);
 		
 		switch (chon)
 		{

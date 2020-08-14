@@ -155,8 +155,7 @@ HANHKHACH create_HK(TREEHanhKhach& lstHK);
 void xuat_HK(TREEHanhKhach lstHK, int& stt); // theo thu tu NLR
 void timNodeTheMang(TREEHanhKhach& lstHK, TREEHanhKhach& r);
 void remove_HK(TREEHanhKhach& lstHK, char soCMND[]);
-void hieuChinh_HK(TREEHanhKhach& lstHK, char soCMND[]);
-
+void xuatHK_1_CB(CHUYENBAY *cb[], TREEHanhKhach lstHK, int chon);
 struct NhapChuoi {
 	int n = 0;
 	char* data[MAX_INPUT];
@@ -206,12 +205,12 @@ int menuDong_MayBay(char td[soItem_MenuMB][100]);
 int menuDong_ChuyenBay(char td[soItem_MenuCB][100]);
 mayBay ChonMB(LIST_MB lstMB);
 mayBay menuDong_ChonMB(LIST_MB lstMB, int& chonMB);
-PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, int& chonCB);
-PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int& chonCB);
+PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB);
+PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB);
 void show_1_Ve(LIST_VE lstVe, int cot, int dong, int chon, int kc);
 int chonVe(PTRChuyenBay& lstCB);
-PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, TREEHanhKhach lstHK);
-void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK);
+PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB, TREEHanhKhach lstHK);
+void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK, LIST_MB lstMB);
 
 void QLMB(LIST_MB& lstMB, char tdMayBay[soItem_MenuMB][100]);
 void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& lstMB);

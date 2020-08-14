@@ -55,7 +55,7 @@ int main() {
 		case 4:
 		{
 			
-				dsHK_1_CB(lstCB, lstHK);
+				dsHK_1_CB(lstCB, lstHK, lstMB);
 				
 			
 			
