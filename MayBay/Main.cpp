@@ -55,11 +55,8 @@ int main() {
 		case 4:
 		{
 			
-				dsHK_1_CB(lstCB, lstHK, lstMB);
-				
-			
-			
-			//break;
+			dsHK_1_CB(lstCB, lstHK, lstMB);
+			break;
 		}
 		case soItem_MenuChinh:
 		{

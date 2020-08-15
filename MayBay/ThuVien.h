@@ -97,7 +97,8 @@ int fullVe(LIST_VE lstVe, mayBay mb);
 int getSLVe(mayBay mb);
 void insertVe(LIST_VE& lstVe, int vitri, char cmnd[]);
 int createDsVe(mayBay mb, LIST_VE &lstVe);
-int cancleVe(LIST_VE& lstVe, int vitri);
+int demSoVe(LIST_VE lstVe);
+int cancelVe(LIST_VE& lstVe, int vitri);
 
 // cau truc chuyen bay
 struct ChuyenBay {
@@ -128,7 +129,8 @@ int xoa_CB(PTRChuyenBay& lstCB, char ma[]);
 int huy_CB(PTRChuyenBay& lstCB, char ma[]);
 void showCB(PTRChuyenBay lstCB);
 void show_1_CB(CHUYENBAY* cb, int chon);
-void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int &n);
+
+void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int &n, LIST_MB lstMB, int trangThai);
 // cau truc hanh khach
 struct HanhKhach {
 	char CMND[12];
@@ -155,7 +157,9 @@ HANHKHACH create_HK(TREEHanhKhach& lstHK);
 void xuat_HK(TREEHanhKhach lstHK, int& stt); // theo thu tu NLR
 void timNodeTheMang(TREEHanhKhach& lstHK, TREEHanhKhach& r);
 void remove_HK(TREEHanhKhach& lstHK, char soCMND[]);
-void xuatHK_1_CB(CHUYENBAY *cb[], TREEHanhKhach lstHK, int chon);
+void xuatHK_1_CB(CHUYENBAY *cb, TREEHanhKhach lstHK, int page);
+void xuatALL_HK_1_CB(CHUYENBAY *cb, TREEHanhKhach lstHK);
+
 struct NhapChuoi {
 	int n = 0;
 	char* data[MAX_INPUT];
