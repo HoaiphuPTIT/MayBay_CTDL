@@ -128,6 +128,7 @@ int hieuChinh_CB(PTRChuyenBay& lstCB, PTRChuyenBay p, LIST_MB lstMB);
 int xoa_CB(PTRChuyenBay& lstCB, char ma[]);
 int huy_CB(PTRChuyenBay& lstCB, char ma[]);
 void showCB(PTRChuyenBay lstCB);
+void showCB_ConVe(PTRChuyenBay lstCB);
 void show_1_CB(CHUYENBAY* cb, int chon);
 
 void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int &n, LIST_MB lstMB, int trangThai);
@@ -207,16 +208,20 @@ void Red_Highlight();
 int menuDong_Prim(char td[soItem_MenuChinh][100]);
 int menuDong_MayBay(char td[soItem_MenuMB][100]);
 int menuDong_ChuyenBay(char td[soItem_MenuCB][100]);
-mayBay ChonMB(LIST_MB lstMB);
-mayBay menuDong_ChonMB(LIST_MB lstMB, int& chonMB);
-PTRChuyenBay menuDong_ChonCB(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB);
-PTRChuyenBay ChonCB(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB);
+mayBay ChonMB_LapCB(LIST_MB lstMB);
+mayBay ChonMB_Edit(LIST_MB lstMB, int& chonMB);
+PTRChuyenBay ChonCB_Edit(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB);
+PTRChuyenBay ChonCB_DatVe_HuyVe(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB);
 void show_1_Ve(LIST_VE lstVe, int cot, int dong, int chon, int kc);
 int chonVe(PTRChuyenBay& lstCB);
 PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB, TREEHanhKhach lstHK);
-void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK, LIST_MB lstMB);
+PTRChuyenBay ChonCB_Loc_NoiDen(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB);
+
 
 void QLMB(LIST_MB& lstMB, char tdMayBay[soItem_MenuMB][100]);
 void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& lstMB);
 void DatHuyVe(PTRChuyenBay& lstCB, LIST_MB lstMB, TREEHanhKhach& lstHK);
+void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK, LIST_MB lstMB);
+void locCB_CoNoiDen(PTRChuyenBay lstCB, LIST_MB lstMB);
+
 int confirm(string chose1, string chose2, bool huyCB);

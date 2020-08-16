@@ -58,6 +58,11 @@ int main() {
 			dsHK_1_CB(lstCB, lstHK, lstMB);
 			break;
 		}
+		case 5:
+		{
+			locCB_CoNoiDen(lstCB, lstMB);
+			break;
+		}
 		case soItem_MenuChinh:
 		{
 			return 0;
