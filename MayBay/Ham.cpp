@@ -349,6 +349,8 @@ int cancelVe(LIST_VE& lstVe, int vitri) {
 	lstVe.n--;
 	return 1;
 }
+
+
 // ============== ham xu ly danh sach chuyen bay ============//
 void initCB(PTRChuyenBay& lstCB) {
 	lstCB = NULL;
@@ -1631,6 +1633,18 @@ void khungXuatDS(int type, int rong, int dai, int colump1, int colump2, int colu
 		gotoxy(COTDS_L + 94, DONGDS_U + 25);
 		cout << "GIOI TINH";
 	}
+	else if (type == THONG_KE)
+	{
+		//5, 25, 70, 93
+		gotoxy(COTDS_L + 1, DONGDS_U + 1);
+		cout << "STT";
+		gotoxy(COTDS_L + 6, DONGDS_U + 1);
+		cout << "SO HIEU MAY BAY";
+		gotoxy(COTDS_L + 26, DONGDS_U + 1);
+		cout << "LOAI MAY BAY";
+		gotoxy(COTDS_L + 71, DONGDS_U + 1);
+		cout << "SO LUOT THUC HIEN BAY";
+	}
 }
 void Normal() {
 	SetColor(15);
@@ -1884,6 +1898,8 @@ int menuDong_Prim(char td[soItem_MenuChinh][100]) {
 			break;
 		case ENTER:
 			return chon + 1;
+		case ESC:
+			return 0;
 		}
 	} while (TRUE);
 }
@@ -2329,8 +2345,8 @@ PTRChuyenBay ChonCB_DatVe_HuyVe(PTRChuyenBay lstCB, int &chonCB, LIST_MB lstMB) 
 		case ESC:
 		{
 			Normal();
-			tmp[0] = '\0';
-			strcpy(q->data.maChuyenBay, tmp);
+			
+			strcpy(q->data.maChuyenBay, "");
 			chonCB = soItem_MenuCB;
 			return q;
 		}
@@ -2605,7 +2621,7 @@ PTRChuyenBay ChonCB_Loc_NoiDen(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB) {
 	for (PTRChuyenBay q = lstCB; q != NULL; q = q->next) {
 		
 		if (q->data.tgKhoiHanh.ngay == tg.ngay && q->data.tgKhoiHanh.thang == tg.thang
-			&& q->data.tgKhoiHanh.nam == tg.nam && stricmp(q->data.sanBayDen, noiDen) == 0) {
+			&& q->data.tgKhoiHanh.nam == tg.nam && stricmp(q->data.sanBayDen, noiDen) == 0 && q->data.trangThai == CONVE) {
 			insert_OrderNodeCB(p, q->data);
 			
 		}
@@ -2692,6 +2708,131 @@ PTRChuyenBay ChonCB_Loc_NoiDen(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB) {
 		}
 	} while (true);
 	
+}
+
+PTRChuyenBay ChonCB_XemVeTrong(PTRChuyenBay lstCB, LIST_MB lstMB, int &chonCB) {
+
+	Normal();
+	khungGiaoDien();
+	khungNhapThongTin(NHAP_CB, "", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
+	hienHuongDan();
+
+	int chon = 0;
+	int i = 0;
+
+	showCB(lstCB);
+	CHUYENBAY* tmpCB[300];
+	chuyenMang(lstCB, tmpCB, i, lstMB, CONVE);
+	PTRChuyenBay q = new NodeChuyenBay;
+
+	Highlight();
+	show_1_CB(tmpCB[chon], chon);
+	char tmp[20];
+	char kytu;
+
+	do
+	{
+		kytu = getch();
+		if (kytu == -32)
+			kytu = getch();
+		if (kytu == 0)
+			kytu = getch();
+		switch (kytu)
+		{
+		case UP:
+			if (chon > 0) {
+				Normal();
+				show_1_CB(tmpCB[chon], chon);
+
+				chon--;
+				Highlight();
+				show_1_CB(tmpCB[chon], chon);
+			}
+			break;
+		case DOWN:
+			if (chon + 1 < i) {
+				Normal();
+				show_1_CB(tmpCB[chon], chon);
+
+				chon++;
+				Highlight();
+				show_1_CB(tmpCB[chon], chon);
+			}
+			break;
+		case F3:
+		{
+			tmp[0] = '\0';
+			do
+			{
+				strcpy(tmp, gdTimMa(0, "TIM CHUYEN BAY"));
+				q = searchBin_CB(lstCB, tmp);
+				if (q == NULL)
+					hienThongBao("Khong tim thay chuyen bay nay!");
+				else break;
+			} while (true);
+			
+			Normal();
+			return q;
+		}
+		case ESC:
+		{
+			Normal();
+			strcpy(q->data.maChuyenBay, {""});
+			chonCB = soItem_MenuCB;
+			return q;
+		}
+
+		case ENTER:
+			Normal();
+			q = searchBin_CB(lstCB, tmpCB[chon]->maChuyenBay);
+			chonCB = 1;
+			return q;
+		}
+	} while (true);
+}
+
+void quickSortTK(int* soLuot, NODEMAYBAY tempMB, int q, int r) {
+	int i, j;
+	i = q;
+	j = r;
+	int x = soLuot[(q + r) / 2];
+	int tam;
+	mayBay temp;
+
+	do
+	{
+		while (soLuot[i] > x)
+		{
+			i++;
+		}
+		while (soLuot[j] < x)
+		{
+			j--;
+		}
+		if (i <= j)
+		{
+			tam = soLuot[i];
+			soLuot[i] = soLuot[j];
+			soLuot[j] = tam;
+
+			temp = tempMB[i].data;
+			tempMB[i].data = tempMB[j].data;
+			tempMB[j].data = temp;
+
+			i++;
+			j--;
+		}
+	} while (i <= j);
+
+	if (q < j)
+	{
+		quickSortTK(soLuot, tempMB, q, j);
+	}
+
+	if (i < r)
+	{
+		quickSortTK(soLuot, tempMB, i, r);
+	}
 }
 
 void show_1_Ve(LIST_VE lstVe, int cot, int dong, int chon, int kc) {
@@ -2816,13 +2957,38 @@ int chonVe(PTRChuyenBay& lstCB) {
 	return -1;
 }
 
+void show_VeTrong(PTRChuyenBay p) {
+	int chon = 0;
+	int kc = 3;
+	int n = 0;
+	for (int i = 0; i < p->data.dsVe.soDay; i++) {
+		for (int j = 0; j < p->data.dsVe.soDong; j++) {
+			if (stricmp(p->data.dsVe.nodeVe[n].data.CMND, "") != 0)
+				Red_Highlight();
+			show_1_Ve(p->data.dsVe, i, j, n, kc);
+			Normal();
+			n++;
+		}
+		kc += 3;
+	}
+	char kytu;
+	do
+	{
+		kytu = getch();
+		if (kytu == ESC) {
+			return;
+		}
+	} while (true);
+	
+}
+
 void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK, LIST_MB lstMB) {
 	Normal();
 	system("cls");
 	
 	int chon;
 	int exit = 1;
-	int vitri;
+	
 
 	while (exit)
 	{
@@ -3031,7 +3197,6 @@ void locCB_CoNoiDen(PTRChuyenBay lstCB, LIST_MB lstMB) {
 
 	int chon;
 	int exit = 1;
-	int vitri;
 	while (exit)
 	{
 		chon = 0;
@@ -3046,6 +3211,76 @@ void locCB_CoNoiDen(PTRChuyenBay lstCB, LIST_MB lstMB) {
 		}
 	}
 }
+
+void dsVeTrong_1_CB(PTRChuyenBay lstCB, LIST_MB lstMB) {
+	Normal();
+	system("cls");
+
+	int chon;
+	int exit = 1;
+	
+	while (exit)
+	{
+		chon = 0;
+		PTRChuyenBay p = ChonCB_XemVeTrong(lstCB, lstMB, chon);
+		switch (chon)
+		{
+		case 1:
+		{
+			xoaKhungDS();
+			show_VeTrong(p);
+			xoaKhungDS();
+			break;
+		}
+		case soItem_MenuCB:
+			exit = 0;
+			break;
+		}
+	}
+}
+
+void thongKeCB(PTRChuyenBay lstCB, LIST_MB lstMB) {
+	int* soLuot = new int[lstMB.n]; // mang luu so luot thuc hien
+	NODEMAYBAY tempMB = new NodeMayBay[lstMB.n]; // mang luu thong tin cua may bay
+	int dem;
+	for (int i = 0; i < lstMB.n; i++)
+	{
+		dem = 0;
+		for (PTRChuyenBay p = lstCB; p != NULL; p = p->next)
+		{
+			if (stricmp(p->data.soHieuMayBay, lstMB.nodeMB[i]->data.soHieuMayBay) == 0)
+			{
+				dem++;//so luong thuc hien cua may bay
+			}
+		}
+		soLuot[i] = dem;
+		tempMB[i].data = lstMB.nodeMB[i]->data;
+	}
+
+	Normal();
+	xoaKhungDS();
+	khungXuatDS(THONG_KE, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 70);
+
+	for (int i = 0; i < lstMB.n; i++) {
+		//5, 25, 70, 93
+		gotoxy(COTDS_L + 1, DONGDS_U + 3 + i);
+		cout << i + 1;
+		gotoxy(COTDS_L + 6, DONGDS_U + 3 + i);
+		cout << tempMB[i].data.soHieuMayBay;
+		gotoxy(COTDS_L + 26, DONGDS_U + 3 + i);
+		cout << tempMB[i].data.loaiMayBay;
+		gotoxy(COTDS_L + 71, DONGDS_U + 3 + i);
+		cout << soLuot[i];
+	}
+	char key;
+	do
+	{
+		key = getch();
+		if (key == ESC)
+			return;
+	} while (true);
+}
+
 int confirm(string chose1, string chose2, bool huyCB) {
 	char key;
 	int chon = 3;

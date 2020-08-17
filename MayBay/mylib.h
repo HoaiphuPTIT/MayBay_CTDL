@@ -77,6 +77,7 @@
 #define XOA_HK 8
 #define SUA_HK 9
 #define LOC_CB 10
+#define THONG_KE 11
 char* Pwd () {
      char S[40]; int i=0;
      while ((S[i]= getch()) != ENTER ) 

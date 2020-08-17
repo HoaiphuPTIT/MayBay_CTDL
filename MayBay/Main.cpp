@@ -7,7 +7,7 @@ char tdChinh[soItem_MenuChinh][100] = { "1. Quan ly may bay                     
 										 "4. Danh sach hanh khach thuoc 1 chuyen bay            " ,
 										 "5. Danh sach cac chuyen bay khoi hanh trong dd/mm/yyyy",
 										 "6. Danh sach ve con trong cua chuyen bay X            ",
-										 "7. Ket thuc"
+										 "7. Thong ke so luot thuc hien chuyen bay"
 };
 char tdMayBay[soItem_MenuMB][100] = { "1. Them may bay",
 										 "2. Xoa may bay",
@@ -63,11 +63,19 @@ int main() {
 			locCB_CoNoiDen(lstCB, lstMB);
 			break;
 		}
-		case soItem_MenuChinh:
+		case 6:
 		{
-			return 0;
+			dsVeTrong_1_CB(lstCB, lstMB);
+			break;
 		}
+		case 7:
+		{
+			thongKeCB(lstCB, lstMB);
+			break;
 			
+		}
+		case 0:
+			return 0;
 		}
 	}
 	return 0;
