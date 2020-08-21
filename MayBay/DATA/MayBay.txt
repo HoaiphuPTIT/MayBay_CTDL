@@ -1,8 +1,8 @@
 
 VN01
-Boeing
-14
-20
+Vietjet
+9
+15
 VN02
 Boeing
 6
@@ -13,16 +13,16 @@ Boeing
 1
 VN04
 Boeing
+8
 15
-20
 VN05
 Viet Nam
 7
 15
 VN06
 Boeing
-15
-20
+4
+8
 VN07
 Viet Nam
 7
@@ -33,10 +33,10 @@ Boeing
 8
 VN09
 Boeing
+5
 15
-20
 VN10
-Conan
+Vietjet
 3
 4
 VN11
@@ -51,3 +51,11 @@ VN13
 Boeing
 4
 2
+VN14
+Vietjet
+5
+2
+ERW
+Fds
+10
+20

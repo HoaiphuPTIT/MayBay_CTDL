@@ -13,6 +13,7 @@
 #include <math.h>
 
 #define MAXLIST 300
+#define MAXVE 200
 #define MAX_INPUT 255
 #define HUYCHUYEN 0
 #define CONVE 1
@@ -27,8 +28,10 @@ using namespace std;
 // 1800 <  NAM < 9999
 const int MAX_NAM = 9999;
 const int MIN_NAM = 1800;
-const int MAX_DAY = 9;
-const int MAX_DONG = 15;
+const int MAX_DAY = 10;
+const int MAX_DONG = 20;
+const int KC_GIO = 5;
+const int KC_GIOAM = 19;
 // cau truc thoi gian
 struct ThoiGian
 {
@@ -60,37 +63,27 @@ struct ListMayBay {
 	int n = 0;
 	NODEMAYBAY nodeMB[MAXLIST];
 };
-typedef ListMayBay LIST_MB;
+typedef struct ListMayBay LIST_MB;
 
-// cac ham xu ly ds may bay
-int emptyMB(LIST_MB lstMB);
-int fullMB(LIST_MB lstMB);
-mayBay createMB(LIST_MB& lstMB, mayBay& mb);
-int insert_MB(LIST_MB& lstMB, mayBay mb);
-int delete_MB(LIST_MB& lstMB, int i);
-void show_MB(LIST_MB lstMB);
-int search_MB(LIST_MB lstMB, char ma[]);
-mayBay getMB(LIST_MB lstMB, char ma[]);
-int hieuChinh_MB(LIST_MB& lstMB, int i);
-void show_1_MB(LIST_MB lstMB, int chon, bool type);
+
 // cau truc ve
 struct VeMayBay{
 	char soVe[5];
 	char CMND[12];
 };
-typedef VeMayBay VeMB;
+typedef struct VeMayBay VeMB;
 struct nodeVeMayBay {
 	VeMB data;
 };
-typedef nodeVeMayBay nodeVeMB;
-//typedef nodeVe* NODEVEMB;
+typedef struct nodeVeMayBay nodeVeMB;
+typedef struct nodeVeMayBay* NODEVEMB;
 struct ListVe {
 	int n = 0;
 	int soDay;
 	int soDong;
-	nodeVeMB *nodeVe;
+	NODEVEMB nodeVe[MAXVE];
 };
-typedef ListVe LIST_VE;
+typedef struct ListVe LIST_VE;
 //======= ham xu ly ve =====
 int emptyVe(LIST_VE lstVe);
 int fullVe(LIST_VE lstVe, mayBay mb);
@@ -99,6 +92,7 @@ void insertVe(LIST_VE& lstVe, int vitri, char cmnd[]);
 int createDsVe(mayBay mb, LIST_VE &lstVe);
 int demSoVe(LIST_VE lstVe);
 int cancelVe(LIST_VE& lstVe, int vitri);
+void themSLVe(LIST_VE& lstVe, maybay mb, LIST_VE lstVeCu);
 
 // cau truc chuyen bay
 struct ChuyenBay {
@@ -109,7 +103,7 @@ struct ChuyenBay {
 	char soHieuMayBay[20];
 	LIST_VE dsVe;
 };
-typedef ChuyenBay CHUYENBAY;
+typedef struct ChuyenBay CHUYENBAY;
 
 typedef struct NodeChuyenBay {
 	CHUYENBAY data;
@@ -120,14 +114,22 @@ typedef struct NodeChuyenBay* PTRChuyenBay;
 //============ cac ham xu ly chuyen bay ===============//
 void initCB(PTRChuyenBay &lstCB);
 int empty_CB(PTRChuyenBay lstCB);
-CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB);
+CHUYENBAY createCB(PTRChuyenBay lstCB, LIST_MB lstMB);
 void insert_OrderNodeCB(PTRChuyenBay & lstCB, CHUYENBAY cb);
 int insertNodeCB(PTRChuyenBay& lstCB, CHUYENBAY cb);
 PTRChuyenBay searchBin_CB(PTRChuyenBay lstCB, char ma[]);
 int hieuChinh_CB(PTRChuyenBay& lstCB, PTRChuyenBay p, LIST_MB lstMB);
 int xoa_CB(PTRChuyenBay& lstCB, char ma[]);
-int huy_CB(PTRChuyenBay& lstCB, char ma[]);
+int huy_CB(PTRChuyenBay& lstCB, PTRChuyenBay p);
+int checkStatus_CB(CHUYENBAY cb);
+int checkBooked(LIST_VE lstVe);
+int checkTime_HoanTat(THOI_GIAN tg1, THOI_GIAN tg2);
+int checkHoanTat_CB(PTRChuyenBay& lstCB);
+int checkTimeHienTai(THOI_GIAN tg);
+int checkSoDay_SoDong(mayBay mbCu, mayBay mbMoi);
 void showCB(PTRChuyenBay lstCB);
+void showCB_DatVe(PTRChuyenBay lstCB);
+void show_1_CB_DatVe(CHUYENBAY* cb, int chon);
 void showCB_ConVe(CHUYENBAY* p, int& i);
 void show_1_CB(CHUYENBAY* cb, int chon);
 
@@ -139,7 +141,7 @@ struct HanhKhach {
 	char ten[10];
 	int phai;
 };
-typedef HanhKhach HANHKHACH;
+typedef struct HanhKhach HANHKHACH;
 
 struct nodeHanhKhach {
 	HANHKHACH data;
@@ -154,17 +156,39 @@ int empty_HK(TREEHanhKhach lstHK);
 int timTrung_HK(TREEHanhKhach lstHK, char soCMND[]);
 TREEHanhKhach timKiem_HK(TREEHanhKhach lstHK, char cmnd[]);
 void insertNode_HK(TREEHanhKhach& lstHK, HANHKHACH p);
-HANHKHACH create_HK(TREEHanhKhach& lstHK);
+HANHKHACH create_HK(TREEHanhKhach& lstHK, PTRChuyenBay &lstCB);
+int hieuChinh_HK(TREEHanhKhach& lstHK, TREEHanhKhach t, PTRChuyenBay& lstCB);
 void xuat_HK(TREEHanhKhach lstHK, int& stt); // theo thu tu NLR
 void timNodeTheMang(TREEHanhKhach& lstHK, TREEHanhKhach& r);
 void remove_HK(TREEHanhKhach& lstHK, char soCMND[]);
+void showHK(TREEHanhKhach lstHK);
 void xuatHK_1_CB(CHUYENBAY *cb, TREEHanhKhach lstHK, int page);
 void xuatALL_HK_1_CB(CHUYENBAY *cb, TREEHanhKhach lstHK);
-
+int checkHK_HuyVe(PTRChuyenBay p);
+int checkVeCung_CB(PTRChuyenBay p, HANHKHACH hk);
+PTRChuyenBay checkVeCungTime(PTRChuyenBay lstCB, PTRChuyenBay p, HANHKHACH hk);
 struct NhapChuoi {
 	int n = 0;
 	char* data[MAX_INPUT];
 };
+
+//============= CAC HAM XU LY ===============//
+// cac ham xu ly ds may bay
+int emptyMB(LIST_MB lstMB);
+int fullMB(LIST_MB lstMB);
+mayBay createMB(LIST_MB& lstMB);
+int insert_MB(LIST_MB& lstMB, mayBay mb);
+int delete_MB(LIST_MB& lstMB, int i, PTRChuyenBay lstCB);
+void show_MB(LIST_MB lstMB);
+int search_MB(LIST_MB lstMB, char ma[]);
+mayBay getMB(LIST_MB lstMB, char ma[]);
+int hieuChinh_MB(LIST_MB& lstMB, int i);
+void show_1_MB(LIST_MB lstMB, int chon, bool type);
+void show_MB(LIST_MB lstMB);
+int checkMB_DaBay(mayBay mb, PTRChuyenBay lstCB);
+int checkTime_LapCB(CHUYENBAY cb, PTRChuyenBay lstCB);
+int toTime(THOI_GIAN tg);
+int checkKC_5Gio(THOI_GIAN tg1, THOI_GIAN tg2);
 //============= doc xuat file ================//
 int loadMB(LIST_MB &mb);
 int saveMB(LIST_MB mb);
@@ -175,8 +199,19 @@ void duyetCay(TREEHanhKhach lstHK, fstream& file);
 int saveHK(TREEHanhKhach lstHK);
 //========= cac ham xu ly nhap chuoi ==========//
 void NhapMA(char var[], int len);
+void NhapCHUOI(char var[], int len);
 void NhapCHUOI_SO(char var[], int len);
 void Nhap_SO(int &var, int len);
+void NhapNGAY(int&var, int len);
+void NhapTHANG(int& var, int len);
+void NhapNAM(int& var, int len);
+void NhapGIO(int& var, int len);
+void NhapPHUT(int& var, int len);
+char* CheckInputStr(bool nhapMa, int DongInfo);
+char* CheckInputCMND(int DongInfo);
+int CheckInputNum(int DongInfo);
+THOI_GIAN CheckInputDate(THOI_GIAN& tg, int DongInfo);
+THOI_GIAN CheckInputTime(THOI_GIAN& tg, int DongInfo);
 int rangBuocThoiGian(THOI_GIAN tg);
 int rangBuocGio(THOI_GIAN h);
 void catChuoi(string chuoi, char splitChar, int &vtri, char cmnd[]);
@@ -199,12 +234,13 @@ void xoaKhungDS();
 void xoaThongTin(int type);
 
 void khungThongBao();
-void hienThongBao(string notif);
+void hienThongBao(string notif, string notif2 = "", string notif3 = "", string NoiDen = "");
 void hienHuongDan();
 
 void Normal();
 void Highlight();
 void Red_Highlight();
+void Green_Highlight();
 int menuDong_Prim(char td[soItem_MenuChinh][100]);
 int menuDong_MayBay(char td[soItem_MenuMB][100]);
 int menuDong_ChuyenBay(char td[soItem_MenuCB][100]);
@@ -220,8 +256,8 @@ PTRChuyenBay ChonCB_Loc_NoiDen(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB);
 PTRChuyenBay ChonCB_XemVeTrong(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB);
 void quickSortTK(int* soLuot, NODEMAYBAY tempMB, int q, int r);
 
-void QLMB(LIST_MB& lstMB, char tdMayBay[soItem_MenuMB][100]);
-void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& lstMB);
+void QLMB(LIST_MB& lstMB, PTRChuyenBay lstCB);
+void QLCB(PTRChuyenBay& lstCB, LIST_MB& lstMB);
 void DatHuyVe(PTRChuyenBay& lstCB, LIST_MB lstMB, TREEHanhKhach& lstHK);
 void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK, LIST_MB lstMB);
 void locCB_CoNoiDen(PTRChuyenBay lstCB, LIST_MB lstMB);

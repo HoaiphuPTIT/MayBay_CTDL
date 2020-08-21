@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ThuVien.h"
 #include "mylib.h"
 
@@ -13,74 +13,58 @@ int fullMB(LIST_MB lstMB) {
 	return lstMB.n == MAXLIST;
 }
 
-maybay createMB(LIST_MB& lstMB, mayBay &mb) {
-	khungNhapThongTin(NHAP_MB, "THEM MAY BAY", "So hieu may bay:", "Loai may bay:", "So day:", "So dong:");
-
+maybay createMB(LIST_MB& lstMB) {
+	khungNhapThongTin(THEM_MB, "THEM MAY BAY", "So hieu may bay:", "Loai may bay:", "So day:", "So dong:");
+	mayBay mb;
 	do {
-		mb.soHieuMayBay[0] = '\0';
-		gotoxy(COT + 1, DONGNHAP1 + 2);
-		cout << "                      ";
-		gotoxy(COT + 1, DONGNHAP1 + 2);
-		rewind(stdin);
-		NhapMA(mb.soHieuMayBay, 20);
+		strcpy(mb.soHieuMayBay, CheckInputStr(true, DONGNHAP1));
+		// kiem tra so hieu may bay da co chua
 		int tontai = search_MB(lstMB, mb.soHieuMayBay);
 		if (tontai != -1) {
-			hienThongBao("So hieu may bay da ton tai!");
+			hienThongBao("So hieu may bay da ton tai, nhap lai!");
 		}
 		else {
-			if (mb.soHieuMayBay[0] == '\0') {
-				hienThongBao("Chua nhap thong tin!");
+			if (mb.soHieuMayBay[0] == ESC) {
+				return mb;
 			}
 			else break;
 		}
 	} while (true);
 
 	do {
-		gotoxy(COT + 1, DONGNHAP2 + 2);
-		cout << "                      ";
-		mb.loaiMayBay[0] = '\0';
-		gotoxy(COT + 1, DONGNHAP2 + 2);
-		rewind(stdin);
-		NhapCHUOI_SO(mb.loaiMayBay, 45);
-		if (mb.loaiMayBay[0] == '\0') {
-			hienThongBao("Chua nhap thong tin!");
+		strcpy(mb.loaiMayBay, CheckInputStr(false, DONGNHAP2));
+		
+		if (mb.loaiMayBay[0] == ESC) {
+			mb.soHieuMayBay[0] = ESC;
+			return mb;
+		}		
+		else break;
+	} while (true);
+
+	do
+	{
+		mb.soDay = CheckInputNum(DONGNHAP3);
+		if (mb.soDay == -1) {
+			mb.soHieuMayBay[0] = ESC;
+			return mb;
+		}
+		else if (mb.soDay > MAX_DAY || mb.soDay < 0) {
+			hienThongBao("So day phai < 9 va > 0");
 		}
 		else break;
 	} while (true);
 
 	do
 	{
-		gotoxy(COT + 1, DONGNHAP3 + 2);
-		cout << "                      ";
-		gotoxy(COT + 1, DONGNHAP3 + 2);
-		Nhap_SO(mb.soDay, 11);
-		if (mb.soDay == 0) {
-			hienThongBao("Chua nhap thong tin!");
+		mb.soDong = CheckInputNum(DONGNHAP4);
+		if (mb.soDong == -1) {
+			mb.soHieuMayBay[0] = ESC;
+			return mb;
 		}
-		else {
-			if (mb.soDay > MAX_DAY || mb.soDay < 0) {
-				hienThongBao("So day phai < 9 va > 0");
-			}
-			else break;
+		else if (mb.soDong > MAX_DONG || mb.soDay < 0) {
+			hienThongBao("So dong phai < 20 va > 0");
 		}
-		
-	} while (true);
-
-	do
-	{
-		gotoxy(COT + 1, DONGNHAP4 + 2);
-		cout << "                      ";
-		gotoxy(COT + 1, DONGNHAP4 + 2);
-		Nhap_SO(mb.soDong, 11);
-		if (mb.soDong == 0) {
-			hienThongBao("Chua nhap thong tin!");
-		}
-		else {
-			if (mb.soDong > MAX_DONG || mb.soDay < 0) {
-				hienThongBao("So dong phai < 20 va > 0");
-			}
-			else break;
-		}
+		else break;
 	} while (true);
 
 	return mb;
@@ -112,15 +96,21 @@ mayBay getMB(LIST_MB lstMB, char ma[]) {
 			return lstMB.nodeMB[i]->data;
 		}
 	}
+	maybay m;
+	m.soHieuMayBay[0] = '\0';
+	return m;
 }
 
-int delete_MB(LIST_MB& lstMB, int i){
+int delete_MB(LIST_MB& lstMB, int i, PTRChuyenBay lstCB){
 	int j;
 	if (emptyMB(lstMB)) {
 		return 0;
 	}
 	if (i == -1)
 		return 0;
+	if (checkMB_DaBay(lstMB.nodeMB[i]->data, lstCB) == 1) {
+		return 0;
+	}
 	for (j = i + 1; j < lstMB.n; j++){
 		lstMB.nodeMB[j - 1] = lstMB.nodeMB[j];
 	}
@@ -141,63 +131,54 @@ char* gdTimMa(int type, string title) {
 }
 
 int hieuChinh_MB(LIST_MB& lstMB, int i) {
-	khungNhapThongTin(SUA_MB, "HIEU CHINH MAY BAY", "So hieu may bay:", "Sua loai may bay:", "Sua so day:", "Sua so dong:");
-	
+	khungNhapThongTin(HIEUCHINH_MB, "HIEU CHINH MAY BAY", "So hieu may bay:", "Sua loai may bay:", "Sua so day:", "Sua so dong:");
+	mayBay mb;
 	if (i == -1)
 		return 0;
 	gotoxy(COT + 1, DONGNHAP1 + 2);
 	rewind(stdin);
 	cout << lstMB.nodeMB[i]->data.soHieuMayBay;
+	strcpy(mb.soHieuMayBay, lstMB.nodeMB[i]->data.soHieuMayBay);
+	gotoxy(COT + 1, DONGNHAP2 + 2);
+	cout << lstMB.nodeMB[i]->data.loaiMayBay;
+	strcpy(mb.loaiMayBay, lstMB.nodeMB[i]->data.loaiMayBay);
 
-	do {
-		gotoxy(COT + 1, DONGNHAP2 + 2);
-		cout << "                      ";
-		lstMB.nodeMB[i]->data.loaiMayBay[0] = '\0';
-		gotoxy(COT + 1, DONGNHAP2 + 2);
-		rewind(stdin);
-		NhapCHUOI_SO(lstMB.nodeMB[i]->data.loaiMayBay, 45);
-		if (lstMB.nodeMB[i]->data.loaiMayBay[0] == '\0') {
-			hienThongBao("Chua nhap thong tin!");
+	/*do {
+		strcpy(mb.loaiMayBay, CheckInputStr(false, DONGNHAP2));
+
+		if (mb.loaiMayBay[0] == ESC) {
+			return CANCEL;
+		}
+		else break;
+	} while (true);*/
+	
+	do
+	{
+		mb.soDay = CheckInputNum(DONGNHAP3);
+		if (mb.soDay == -1) {
+			return CANCEL;
+		}
+		else if (mb.soDay > MAX_DAY || mb.soDay < 0) {
+			hienThongBao("So day phai < 9 va > 0");
+		}
+		else break;
+
+	} while (true);
+
+	do
+	{
+		mb.soDong = CheckInputNum(DONGNHAP4);
+		if (mb.soDong == -1) {
+			mb.soHieuMayBay[0] = ESC;
+			return CANCEL;
+		}
+		else if (mb.soDong > MAX_DONG || mb.soDay < 0) {
+			hienThongBao("So dong phai < 20 va > 0");
 		}
 		else break;
 	} while (true);
-	
-	do
-	{
-		gotoxy(COT + 1, DONGNHAP3 + 2);
-		cout << "                      ";
-		gotoxy(COT + 1, DONGNHAP3 + 2);
-		Nhap_SO(lstMB.nodeMB[i]->data.soDay, 11);
-		if (lstMB.nodeMB[i]->data.soDay == 0) {
-			hienThongBao("Chua nhap thong tin!");
-		}
-		else {
-			if (lstMB.nodeMB[i]->data.soDay > MAX_DAY || lstMB.nodeMB[i]->data.soDay < 0) {
-				hienThongBao("So day phai < 9 va > 0");
-			}
-			else break;
-		}
 
-	} while (true);
-
-	do
-	{
-		gotoxy(COT + 1, DONGNHAP4 + 2);
-		cout << "                      ";
-		gotoxy(COT + 1, DONGNHAP4 + 2);
-		Nhap_SO(lstMB.nodeMB[i]->data.soDong, 11);
-		if (lstMB.nodeMB[i]->data.soDong == 0) {
-			hienThongBao("Chua nhap thong tin!");
-		}
-		else {
-			if (lstMB.nodeMB[i]->data.soDong > MAX_DONG || lstMB.nodeMB[i]->data.soDong < 0) {
-				hienThongBao("So day phai < 20 va > 0");
-			}
-			else break;
-		}
-	} while (true);
-
-	
+	lstMB.nodeMB[i]->data = mb;
 	return 1;
 }
 
@@ -252,7 +233,7 @@ void show_1_MB(LIST_MB lstMB, int chon, bool type) {
 }
 
 void show_MB(LIST_MB lstMB) {
-	khungXuatDS(NHAP_MB, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 70, 93);
+	khungXuatDS(XUAT_MB, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 70, 93);
 
 	for (int i = 0; i < lstMB.n; i++) {
 		//5, 25, 70, 93
@@ -268,6 +249,168 @@ void show_MB(LIST_MB lstMB) {
 		cout << lstMB.nodeMB[i]->data.soDong;
 	}
 	
+}
+
+int checkMB_DaBay(mayBay mb, PTRChuyenBay lstCB) {
+	for (PTRChuyenBay p = lstCB; p != NULL; p = p->next) {
+		if (stricmp(mb.soHieuMayBay, p->data.soHieuMayBay) == 0) {
+			return 1;
+		}
+	}
+}
+
+int checkTime_LapCB(CHUYENBAY cb, PTRChuyenBay lstCB) {
+	for (PTRChuyenBay p = lstCB; p != NULL; p = p->next) {
+		if (stricmp(p->data.soHieuMayBay, cb.soHieuMayBay) == 0) {
+			if (!checkKC_5Gio(cb.tgKhoiHanh, p->data.tgKhoiHanh)) {
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
+int toTime(THOI_GIAN tg) {
+	int sumyear = 0;
+	int summonth = 0;
+	for (int i = 1999; i < tg.nam; i++)
+	{
+		if ((i % 4 == 0 && i % 100 != 0) || i % 400 == 0)
+		{
+			sumyear = sumyear + 366;
+		}
+		else
+		{
+			sumyear = sumyear + 365;
+		}
+	}
+	for (int j = 1; j < tg.thang; j++)
+	{
+		if (j == 2)
+		{
+			if ((tg.nam % 4 == 0 && tg.nam % 100 != 0) || tg.nam % 400 == 0)
+			{
+				summonth = summonth + 29;
+			}
+			else
+			{
+				summonth = summonth + 28;
+			}
+		}
+		if (j == 1 || j == 3 || j == 5 || j == 7 || j == 8 || j == 10 || j == 12)
+		{
+			summonth = summonth + 31;
+		}
+		if (j == 4 || j == 6 || j == 9 || j == 11)
+		{
+			summonth = summonth + 30;
+		}
+	}
+	return sumyear + summonth + tg.ngay;
+}
+
+int checkKC_5Gio(THOI_GIAN tg1, THOI_GIAN tg2) {
+	// truong hop trong cung 1 ngay
+	if (toTime(tg1) - toTime(tg2) == 0) {
+		//hienThongBao("Xet dieu kien 1");
+		if (abs(tg1.gio - tg2.gio) >= KC_GIO) {
+			if (abs(tg1.gio - tg2.gio) == KC_GIO) {
+				if (tg1.phut - tg2.phut >= 0)
+					return 1;
+				else
+					return 0;
+			}
+			return 1;
+		}
+		return 0;
+	}
+	// truong hop cach nhau 1 ngay (0h==24h)
+	if (abs(toTime(tg1) - toTime(tg2)) == 1) {
+		//hienThongBao("Xet dieu kien 2");
+		// truong hop chuyen bay cach nhau giua moc 0h
+		if (0 + tg1.gio <= KC_GIO && 24 - tg2.gio <= KC_GIO) {
+			if (abs(tg1.gio - tg2.gio) <= KC_GIOAM) {
+				if (abs(tg1.gio - tg2.gio) == KC_GIOAM) {
+					if (tg1.phut - tg2.phut >= 0)
+						return 1;
+					else
+						return 0;
+				}
+				return 1;
+			}
+			return 0;
+		}
+		if (24 - tg1.gio <= KC_GIO && 0 + tg2.gio <= KC_GIO) {
+			if (abs(tg1.gio - tg2.gio) >= KC_GIO) {
+				if (abs(tg1.gio - tg2.gio) == KC_GIO) {
+					if (tg1.phut - tg2.phut >= 0)
+						return 1;
+					else
+						return 0;
+				}
+				return 1;
+			}
+			return 0;
+		}
+		return 1;
+	}
+	// truong hop cach nhau nhieu ngay
+	if (abs(toTime(tg1) - toTime(tg2)) > 1) {
+		//hienThongBao("Xet dieu kien 3");
+		return 1;
+	}
+	
+	return 0;
+}
+
+int checkTime_HoanTat(THOI_GIAN tg1, THOI_GIAN tg2) {
+	if (toTime(tg1) - toTime(tg2) == 0) {
+		//hienThongBao("Xet dieu kien 1");
+		if (abs(tg1.gio - tg2.gio) >= KC_GIO) {
+			if (abs(tg1.gio - tg2.gio) == KC_GIO) {
+				if (tg1.phut - tg2.phut >= 0)
+					return 1;
+				else
+					return 0;
+			}
+			return 1;
+		}
+		return 0;
+	}
+	// truong hop cach nhau 1 ngay (0h==24h)
+	if (toTime(tg1) - toTime(tg2) == -1) {
+		//hienThongBao("Xet dieu kien 2");
+		// truong hop chuyen bay cach nhau giua moc 0h
+		if (0 + tg1.gio <= KC_GIO && 24 - tg2.gio <= KC_GIO) {
+			if (abs(tg1.gio - tg2.gio) <= KC_GIOAM) {
+				if (abs(tg1.gio - tg2.gio) == KC_GIOAM) {
+					if (tg1.phut - tg2.phut >= 0)
+						return 1;
+					else
+						return 0;
+				}
+				return 1;
+			}
+			return 0;
+		}
+		if (24 - tg1.gio <= KC_GIO && 0 + tg2.gio <= KC_GIO) {
+			if (abs(tg1.gio - tg2.gio) >= KC_GIO) {
+				if (abs(tg1.gio - tg2.gio) == KC_GIO) {
+					if (tg1.phut - tg2.phut >= 0)
+						return 1;
+					else
+						return 0;
+				}
+				return 1;
+			}
+			return 0;
+		}
+		return 1;
+	}
+	if (toTime(tg1) - toTime(tg2) < -1) {
+		//hienThongBao("Xet dieu kien 3");
+		return 1;
+	}
 }
 
 //============= ham xu ly danh sach ve ================//
@@ -289,7 +432,7 @@ int getSLVe(mayBay mb) {
 }
 
 void insertVe(LIST_VE& lstVe, int vitri, char cmnd[]) {
-	strcpy(lstVe.nodeVe[vitri].data.CMND, cmnd);
+	strcpy(lstVe.nodeVe[vitri]->data.CMND, cmnd);
 }
 
 int createDsVe(mayBay mb, LIST_VE &lstVe) {
@@ -298,9 +441,8 @@ int createDsVe(mayBay mb, LIST_VE &lstVe) {
 	}
 	char day[] = "ABCDEFGHIJKLMNO";
 	char temp[5] = "";
-	char tmpCMND[12] = { '\0' };
-	int slVe = getSLVe(mb);
-	lstVe.nodeVe = new nodeVeMB[slVe];
+	char tmpCMND[12] = "";
+	
 	lstVe.soDay = mb.soDay;
 	lstVe.soDong = mb.soDong;
 
@@ -323,7 +465,8 @@ int createDsVe(mayBay mb, LIST_VE &lstVe) {
 				itoa(j, array, 10);
 				strcat(temp, array);
 			}
-			strcpy(lstVe.nodeVe[lstVe.n].data.soVe, temp);
+			lstVe.nodeVe[lstVe.n] = new nodeVeMayBay;
+			strcpy(lstVe.nodeVe[lstVe.n]->data.soVe, temp);
 			insertVe(lstVe, lstVe.n, tmpCMND);
 			lstVe.n++;
 		}
@@ -334,7 +477,7 @@ int createDsVe(mayBay mb, LIST_VE &lstVe) {
 int demSoVe(LIST_VE lstVe) {
 	int dem = 0;
 	for (int i = 0; i < lstVe.n; i++) {
-		if (stricmp(lstVe.nodeVe[i].data.CMND, "") != 0)
+		if (stricmp(lstVe.nodeVe[i]->data.CMND, "") != 0)
 			dem++;
 	}
 	return dem;
@@ -348,6 +491,63 @@ int cancelVe(LIST_VE& lstVe, int vitri) {
 	}
 	lstVe.n--;
 	return 1;
+}
+
+void themSLVe(LIST_VE& lstVe, maybay mb, LIST_VE lstVeCu) {
+
+	char day[] = "ABCDEFGHIJKLMNO";
+	char temp[5] = ""; // de luu so ve vd A01, A02,..
+	char tmpCMND[12] = ""; // khoi tao cmnd rong khi tao ds ve
+	int slVeCu = lstVeCu.soDay * lstVeCu.soDong;
+	int dem = 0;
+	bool daThem = false;
+	char soVeCu[MAXLIST][4];
+	char cmndCu[MAXLIST][12];
+	for (int i = 0; i < lstVeCu.n; i++) {
+		if (stricmp(lstVeCu.nodeVe[i]->data.CMND, "") != 0) {
+			strcpy(soVeCu[dem], lstVeCu.nodeVe[i]->data.soVe);
+			strcpy(cmndCu[dem], lstVeCu.nodeVe[i]->data.CMND);
+			
+			dem++;
+		}
+	}
+	lstVe.soDay = mb.soDay;
+	lstVe.soDong = mb.soDong;
+	for (int i = 0; i < mb.soDay; i++) {
+		temp[0] = '\0';
+		temp[0] = day[i];
+		for (int j = 1; j <= mb.soDong; j++) {
+			if (j < 10) {
+
+				char array[3];
+				temp[1] = '\0';
+				strcat(temp, "0");
+				itoa(j, array, 10);
+				strcat(temp, array);
+			}
+			else {
+
+				char array[3];
+				temp[1] = '\0';
+				itoa(j, array, 10);
+				strcat(temp, array);
+			}
+			lstVe.nodeVe[lstVe.n] = new nodeVeMayBay;
+			strcpy(lstVe.nodeVe[lstVe.n]->data.soVe, temp);
+			daThem = false;
+			for (int k = 0; k < dem; k++) {
+				if (stricmp(lstVe.nodeVe[lstVe.n]->data.soVe, soVeCu[k]) == 0) {
+					insertVe(lstVe, lstVe.n, cmndCu[k]);
+					daThem = true;
+					break;
+				}
+			}
+			if(!daThem)
+				insertVe(lstVe, lstVe.n, tmpCMND);
+			lstVe.n++;
+		}
+	}
+	
 }
 
 
@@ -370,68 +570,64 @@ PTRChuyenBay searchBin_CB(PTRChuyenBay lstCB, char ma[]) {
 
 }
 
-CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB) {
-	khungNhapThongTin(NHAP_CB, "THEM CHUYEN BAY", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
-
+CHUYENBAY createCB(PTRChuyenBay lstCB, LIST_MB lstMB) {
+	khungNhapThongTin(THEM_CB, "THEM CHUYEN BAY", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
+	CHUYENBAY cb;
 	PTRChuyenBay p;
+
 	do
 	{
-		cb.maChuyenBay[0] = { '\0' };
-		gotoxy(COT + 1, DONGNHAP1 + 2);
-		cout << "                            ";
-		gotoxy(COT + 1, DONGNHAP1 + 2);
-		rewind(stdin);
-		NhapMA(cb.maChuyenBay, 20);
+		strcpy(cb.maChuyenBay, CheckInputStr(true, DONGNHAP1));
 		p = searchBin_CB(lstCB, cb.maChuyenBay);
 		if (p != NULL) {
 			hienThongBao("Ma chuyen bay da ton tai!");
 		}
 		else {
-			if (cb.maChuyenBay[0] == '\0') {
-				hienThongBao("Chua nhap thong tin!");
+			if (cb.maChuyenBay[0] == ESC) {
+				return cb;
 			}
 			else break;
 		}
 	} while (true);
 
-	mayBay chonMB;
-	do
-	{
-		gotoxy(COT + 1, DONGNHAP2 + 2);
-		cout << "                           ";
-		chonMB = ChonMB_LapCB(lstMB);
-		strcpy(cb.soHieuMayBay, chonMB.soHieuMayBay);
-		if (chonMB.soHieuMayBay[0] == '\0') {
-			cb.soHieuMayBay[0] = { '\0' };
-			gotoxy(COT + 1, DONGNHAP2 + 2);
-			rewind(stdin);
-			NhapMA(cb.soHieuMayBay, 20);
-			int tontai = search_MB(lstMB, cb.soHieuMayBay);
-			if (tontai == -1) {
-				hienThongBao("Khong co may bay nao mang so hieu nay!");
+	ChonMayBay:
+		mayBay chonMB;
+		do
+		{
+
+			// chon may bay tren giao dien
+			chonMB = ChonMB_LapCB(lstMB);
+			strcpy(cb.soHieuMayBay, chonMB.soHieuMayBay);
+			// tim may bay bang cach nhap
+			if (chonMB.soHieuMayBay[0] == '\0') {
+				strcpy(cb.soHieuMayBay, CheckInputStr(true, DONGNHAP2));
+				if (cb.soHieuMayBay[0] == ESC) {
+					cb.maChuyenBay[0] = ESC;
+					return cb;
+				}
+				int tontai = search_MB(lstMB, cb.soHieuMayBay);
+				if (tontai == -1) {
+					hienThongBao("Khong co may bay nao mang so hieu nay!");
+					continue;
+				}
+				else 
+					break;
+			
 			}
-			else if (cb.soHieuMayBay[0] == '\0') {
-				hienThongBao("Chua nhap thong tin!");
+			else {
+				gotoxy(COT + 1, DONGNHAP2 + 2);
+				cout << cb.soHieuMayBay;
+				break;
 			}
-			else break;
-		}
-		else {
-			gotoxy(COT + 1, DONGNHAP2 + 2);
-			cout << cb.soHieuMayBay;
-			break;
-		}
 		
-	} while (true);
+		} while (true);
 	
 	do
 	{
-		cb.sanBayDen[0] = { '\0' };
-		gotoxy(COT + 1, DONGNHAP3 + 2);
-		cout << "                                     ";
-		gotoxy(COT + 1, DONGNHAP3 + 2);
-		NhapCHUOI_SO(cb.sanBayDen, 50);
-		if (cb.sanBayDen[0] == '\0') {
-			hienThongBao("Chua nhap thong tin!");
+		strcpy(cb.sanBayDen, CheckInputStr(false, DONGNHAP3));
+		if (cb.sanBayDen[0] == ESC) {
+			cb.maChuyenBay[0] = ESC;
+			return cb;
 		}
 		else
 			break;
@@ -439,15 +635,13 @@ CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB) {
 	
 	do
 	{
-		gotoxy(COT + 1, DONGNHAP4 + 2);
-		Nhap_SO(cb.tgKhoiHanh.ngay, 2);
-
-		gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP4 + 2);
-		Nhap_SO(cb.tgKhoiHanh.thang, 2);
-
-		gotoxy(COT + DAIKHUNGNHO * 2 + 1, DONGNHAP4 + 2);
-		Nhap_SO(cb.tgKhoiHanh.nam, 4);
-		
+		char tmp[3];
+		cb.tgKhoiHanh = CheckInputDate(cb.tgKhoiHanh, DONGNHAP4);
+	
+		if (cb.tgKhoiHanh.ngay == -1 || cb.tgKhoiHanh.thang == -1 || cb.tgKhoiHanh.nam == -1) {
+			cb.maChuyenBay[0] = ESC;
+			return cb;
+		}
 		if (rangBuocThoiGian(cb.tgKhoiHanh) == -1)
 		{
 			break;
@@ -465,12 +659,11 @@ CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB) {
 
 	do
 	{
-		gotoxy(COT + 1, DONGNHAP5 + 2);
-		Nhap_SO(cb.tgKhoiHanh.gio, 2);
-
-		gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP5 + 2);
-		Nhap_SO(cb.tgKhoiHanh.phut, 2);
-
+		cb.tgKhoiHanh = CheckInputTime(cb.tgKhoiHanh, DONGNHAP5);
+		if (cb.tgKhoiHanh.gio == -1 || cb.tgKhoiHanh.phut == -1) {
+			cb.maChuyenBay[0] = ESC;
+			return cb;
+		}
 		if (rangBuocGio(cb.tgKhoiHanh) == -1)
 		{
 			break;
@@ -483,7 +676,13 @@ CHUYENBAY createCB(PTRChuyenBay lstCB, CHUYENBAY cb, LIST_MB lstMB) {
 			cout << "  ";
 		}
 	} while (true);
-
+	// xet gio lap chuyen bay 
+	if (checkTime_LapCB(cb, lstCB)) {
+		Red_Highlight();
+		hienThongBao("May bay nay phai cat canh sau 5h nua! Hay chon may bay khac");
+		goto ChonMayBay;
+	}
+		
 	int taoDSVe = createDsVe(chonMB, cb.dsVe);
 	if (taoDSVe == 1)
 		cb.trangThai = CONVE;
@@ -522,72 +721,83 @@ int insertNodeCB(PTRChuyenBay& lstCB, CHUYENBAY cb) {
 }
 
 int hieuChinh_CB(PTRChuyenBay& lstCB, PTRChuyenBay p, LIST_MB lstMB) {
-	khungNhapThongTin(NHAP_CB, "HIEU CHINH CHUYEN BAY", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
-
+	khungNhapThongTin(THEM_CB, "HIEU CHINH CHUYEN BAY", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
+	ChuyenBay cb;
 	if (p == NULL)
 	{
 		return 0;
 	}
-
+	mayBay mbCu = getMB(lstMB, p->data.soHieuMayBay);
 	gotoxy(COT + 1, DONGNHAP1 + 2);
+	
 	rewind(stdin);
 	cout << p->data.maChuyenBay;
-
+	strcpy(cb.maChuyenBay, p->data.maChuyenBay);
+	gotoxy(COT + 1, DONGNHAP3 + 2);
+	cout << p->data.sanBayDen;
+	strcpy(cb.sanBayDen, p->data.sanBayDen);
+	cb.trangThai = p->data.trangThai;
 	mayBay chonMB;
-	do
-	{
-		gotoxy(COT + 1, DONGNHAP2 + 2);
-		cout << "                           ";
-		chonMB = ChonMB_LapCB(lstMB);
-		strcpy(p->data.soHieuMayBay, chonMB.soHieuMayBay);
-		if (chonMB.soHieuMayBay[0] == '\0') {
-			p->data.soHieuMayBay[0] = { '\0' };
-			gotoxy(COT + 1, DONGNHAP2 + 2);
-			rewind(stdin);
-			NhapMA(p->data.soHieuMayBay, 20);
-			int tontai = search_MB(lstMB, p->data.soHieuMayBay);
-			if (tontai == -1) {
-				hienThongBao("Khong co may bay nao mang so hieu nay!");
+	ChonMayBay:
+		do
+		{
+			// chon may bay tren giao dien
+			chonMB = ChonMB_LapCB(lstMB);
+			strcpy(cb.soHieuMayBay, chonMB.soHieuMayBay);
+			// tim may bay bang cach nhap
+			if (chonMB.soHieuMayBay[0] == '\0') {
+				strcpy(cb.soHieuMayBay, CheckInputStr(true, DONGNHAP2));
+
+				chonMB = getMB(lstMB, cb.soHieuMayBay);
+				if (chonMB.soHieuMayBay[0] == '\0') {
+					hienThongBao("Khong co may bay nao mang so hieu nay!");
+					continue;
+				}
+				else if (cb.soHieuMayBay[0] == ESC) {
+					cb.maChuyenBay[0] = ESC;
+					return 0;
+				}
+				else {
+					if (!checkSoDay_SoDong(mbCu, chonMB)) {
+						themSLVe(cb.dsVe, chonMB, p->data.dsVe);
+						break;
+					}
+					
+				}
+
 			}
-			else if (p->data.soHieuMayBay[0] == '\0') {
-				hienThongBao("Chua nhap thong tin!");
+			else {
+				if (!checkSoDay_SoDong(mbCu, chonMB)) {
+					gotoxy(COT + 1, DONGNHAP2 + 2);
+					cout << cb.soHieuMayBay;
+				
+					themSLVe(cb.dsVe, chonMB, p->data.dsVe);
+					break;
+				}
 			}
-			else break;
-		}
-		else {
-			gotoxy(COT + 1, DONGNHAP2 + 2);
-			cout << p->data.soHieuMayBay;
-			break;
-		}
 
-	} while (true);
+		} while (true);
 
-	do
-	{
-		p->data.sanBayDen[0] = { '\0' };
-		gotoxy(COT + 1, DONGNHAP3 + 2);
-		cout << "                                     ";
-		gotoxy(COT + 1, DONGNHAP3 + 2);
-		NhapCHUOI_SO(p->data.sanBayDen, 50);
-		if (p->data.sanBayDen[0] == '\0') {
-			hienThongBao("Chua nhap thong tin!");
-		}
-		else
-			break;
-	} while (true);
+	if (!checkBooked(p->data.dsVe)) {
+		do
+		{
+			strcpy(cb.sanBayDen, CheckInputStr(false, DONGNHAP3));
+			if (cb.sanBayDen[0] == ESC) {
+				return 0;
+			}
+			else
+				break;
+		} while (true);
+	}
 
 	do
 	{
-		gotoxy(COT + 1, DONGNHAP4 + 2);
-		Nhap_SO(p->data.tgKhoiHanh.ngay, 2);
-
-		gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP4 + 2);
-		Nhap_SO(p->data.tgKhoiHanh.thang, 2);
-
-		gotoxy(COT + DAIKHUNGNHO * 2 + 1, DONGNHAP4 + 2);
-		Nhap_SO(p->data.tgKhoiHanh.nam, 4);
-
-		if (rangBuocThoiGian(p->data.tgKhoiHanh) == -1)
+		cb.tgKhoiHanh = CheckInputDate(cb.tgKhoiHanh, DONGNHAP4);
+		if (cb.tgKhoiHanh.ngay == -1 || cb.tgKhoiHanh.thang == -1 || cb.tgKhoiHanh.nam == -1) {
+			
+			return 0;
+		}
+		if (rangBuocThoiGian(cb.tgKhoiHanh) == -1)
 		{
 			break;
 		}
@@ -604,13 +814,12 @@ int hieuChinh_CB(PTRChuyenBay& lstCB, PTRChuyenBay p, LIST_MB lstMB) {
 
 	do
 	{
-		gotoxy(COT + 1, DONGNHAP5 + 2);
-		Nhap_SO(p->data.tgKhoiHanh.gio, 2);
-
-		gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP5 + 2);
-		Nhap_SO(p->data.tgKhoiHanh.phut, 2);
-
-		if (rangBuocGio(p->data.tgKhoiHanh) == -1)
+		cb.tgKhoiHanh = CheckInputTime(cb.tgKhoiHanh, DONGNHAP5);
+		if (cb.tgKhoiHanh.gio == -1 || cb.tgKhoiHanh.phut == -1) {
+			
+			return 0;
+		}
+		if (rangBuocGio(cb.tgKhoiHanh) == -1)
 		{
 			break;
 		}
@@ -623,6 +832,14 @@ int hieuChinh_CB(PTRChuyenBay& lstCB, PTRChuyenBay p, LIST_MB lstMB) {
 		}
 	} while (true);
 
+	// xet gio lap chuyen bay 
+	if (checkTime_LapCB(cb, lstCB)) {
+		Red_Highlight();
+		hienThongBao("May bay nay phai cat canh sau 5h nua! Hay chon may bay khac");
+		goto ChonMayBay;
+	}
+
+	p->data = cb;
 	return 1;
 }
 
@@ -632,12 +849,12 @@ int xoa_CB(PTRChuyenBay& lstCB, char ma[]) {
 		return 0;
 	if (stricmp(lstCB->data.maChuyenBay, ma) == 0) {
 		p = lstCB;
-		lstCB = p->next;
+		p = p->next;
 		delete p;
 		return 1;
 	}
 	else {
-		for (p = lstCB; p->next != NULL && stricmp(p->next->data.maChuyenBay, ma) != 0; p = p->next);
+		for (p = p; p->next != NULL && stricmp(p->next->data.maChuyenBay, ma) != 0; p = p->next);
 		if (p->next != NULL) {
 			PTRChuyenBay q = p->next;
 			p->next = q->next;
@@ -649,21 +866,98 @@ int xoa_CB(PTRChuyenBay& lstCB, char ma[]) {
 	
 }
 
-int huy_CB(PTRChuyenBay& lstCB, char ma[]) {
-	PTRChuyenBay p = lstCB;
+int huy_CB(PTRChuyenBay& lstCB, PTRChuyenBay p) {
+	
 	if (empty_CB(lstCB))
 		return 0;
 	else {
-		if (lstCB->data.trangThai == HETVE || lstCB->data.trangThai == HOANTAT)
-			hienThongBao("Khong the huy chuyen bay nay!");
+		if (p->data.trangThai == HOANTAT
+			|| p->data.trangThai == HUYCHUYEN) {
+			return 0;
+		}
 		else {
-			lstCB->data.trangThai = HUYCHUYEN;
+			p->data.trangThai = HUYCHUYEN;
+			return 1;
 		}
 	}
 }
 
+int checkStatus_CB(CHUYENBAY cb) {
+	if (cb.trangThai == HOANTAT) {
+		Red_Highlight();
+		hienThongBao("Chuyen bay da hoan tat khong the thao tac!");
+		return 1;
+	}
+	if (cb.trangThai == HUYCHUYEN) {
+		Red_Highlight();
+		hienThongBao("Chuyen bay da bi huy khong the thao tac!");
+		return 1;
+	}
+	if (cb.trangThai == HETVE) {
+		Red_Highlight();
+		hienThongBao("Chuyen bay da het ve!");
+		return 1;
+	}
+	return 0;
+}
+
+int checkBooked(LIST_VE lstVe) {
+	for (int i = 0; i < lstVe.n; i++) {
+		if (stricmp(lstVe.nodeVe[i]->data.CMND, "") != 0) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int checkHoanTat_CB(PTRChuyenBay& lstCB) {
+	time_t baygio = time(0);
+	tm* ltm = localtime(&baygio);
+	THOI_GIAN tg;
+	tg.ngay = ltm->tm_mday;
+	tg.thang = ltm->tm_mon + 1;
+	tg.nam = ltm->tm_year + 1900;
+	tg.gio = ltm->tm_hour;
+	tg.phut = ltm->tm_min;
+	
+	for (PTRChuyenBay p = lstCB; p != NULL; p = p->next) {
+		
+		if (toTime(p->data.tgKhoiHanh) - toTime(tg) <= 0) {
+			if (checkTime_HoanTat(p->data.tgKhoiHanh, tg)) {
+				p->data.trangThai = HOANTAT;
+			}
+		}
+	}
+	
+	return 1;
+}
+
+int checkTimeHienTai(THOI_GIAN tg) {
+	time_t baygio = time(0);
+	tm* ltm = localtime(&baygio);
+	THOI_GIAN t;
+	t.ngay = ltm->tm_mday;
+	t.thang = ltm->tm_mon + 1;
+	t.nam = ltm->tm_year + 1900;
+	t.gio = ltm->tm_hour;
+	t.phut = ltm->tm_min;
+
+	if (toTime(tg) - toTime(t) == 0)
+		return 1;
+	return 0;
+}
+
+int checkSoDay_SoDong(mayBay mbCu, mayBay mbMoi) {
+	if (mbMoi.soDay < mbCu.soDay || mbMoi.soDong < mbCu.soDong) {
+		Red_Highlight();
+		hienThongBao("So day, so dong phai >= so day, so dong may bay cu");
+		return 1;
+	}
+	return 0;
+}
+
 void showCB(PTRChuyenBay lstCB) {
-	khungXuatDS(NHAP_CB, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 45, 80, 100);
+	khungXuatDS(XUAT_CB, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 45, 80, 100);
 
 	int i = 0;
 	for (PTRChuyenBay p = lstCB; p != NULL; p = p->next) {
@@ -692,10 +986,100 @@ void showCB(PTRChuyenBay lstCB) {
 	
 }
 
-void showCB_ConVe(CHUYENBAY* p, int &i) {
-	khungXuatDS(NHAP_CB, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 45, 80, 100);
+void showCB_DatVe(PTRChuyenBay lstCB) {
+	khungXuatDS(XUAT_CB, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 45, 80, 100);
 
-	
+	int i = 0;
+	for (PTRChuyenBay p = lstCB; p != NULL; p = p->next) {
+		if (p->data.trangThai == CONVE) {
+			gotoxy(COTDS_L + 1, DONGDS_U + 3 + i);
+			cout << i + 1;
+			gotoxy(COTDS_L + 6, DONGDS_U + 3 + i);
+			cout << p->data.maChuyenBay;
+			gotoxy(COTDS_L + 26, DONGDS_U + 3 + i);
+			cout << p->data.soHieuMayBay;
+			gotoxy(COTDS_L + 46, DONGDS_U + 3 + i);
+			cout << p->data.sanBayDen;
+			gotoxy(COTDS_L + 81, DONGDS_U + 3 + i);
+			cout << p->data.tgKhoiHanh.ngay << "/" << p->data.tgKhoiHanh.thang << "/" << p->data.tgKhoiHanh.nam
+				<< " " << p->data.tgKhoiHanh.gio << ":" << p->data.tgKhoiHanh.phut;
+			
+			int veTrong = p->data.dsVe.n - demSoVe(p->data.dsVe);
+			gotoxy(COTDS_L + 101, DONGDS_U + 3 + i);
+			cout << "Con " << veTrong << " ve";
+			i++;
+		}
+		
+	}
+
+}
+
+void show_1_CB_DatVe(CHUYENBAY* cb, int chon) {
+	gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
+	cout << "                                                                                                                 ";
+	gotoxy(COTDS_L + 1, DONGDS_U + 3 + chon);
+	cout << chon + 1;
+	gotoxy(COTDS_L + 5, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+	gotoxy(COTDS_L + 6, DONGDS_U + 3 + chon);
+	cout << cb->maChuyenBay;
+	gotoxy(COTDS_L + 25, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+	gotoxy(COTDS_L + 26, DONGDS_U + 3 + chon);
+	cout << cb->soHieuMayBay;
+	gotoxy(COTDS_L + 45, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+	gotoxy(COTDS_L + 46, DONGDS_U + 3 + chon);
+	cout << cb->sanBayDen;
+	gotoxy(COTDS_L + 80, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+	gotoxy(COTDS_L + 81, DONGDS_U + 3 + chon);
+	cout << cb->tgKhoiHanh.ngay << "/" << cb->tgKhoiHanh.thang << "/" << cb->tgKhoiHanh.nam
+		<< " " << cb->tgKhoiHanh.gio << ":" << cb->tgKhoiHanh.phut;
+	gotoxy(COTDS_L + 100, DONGDS_U + 3 + chon);
+	cout << char(DOC);
+	int veTrong = cb->dsVe.n - demSoVe(cb->dsVe);
+	gotoxy(COTDS_L + 101, DONGDS_U + 3 + chon);
+	cout << "Con " << veTrong << " ve";
+
+	Normal();
+
+	gotoxy(COT + 1, DONGNHAP1 + 2);
+	cout << "                                     ";
+	gotoxy(COT + 1, DONGNHAP1 + 2);
+	cout << cb->maChuyenBay;
+	gotoxy(COT + 1, DONGNHAP2 + 2);
+	cout << "                                     ";
+	gotoxy(COT + 1, DONGNHAP2 + 2);
+	cout << cb->soHieuMayBay;
+	gotoxy(COT + 1, DONGNHAP3 + 2);
+	cout << "                                     ";
+	gotoxy(COT + 1, DONGNHAP3 + 2);
+	cout << cb->sanBayDen;
+	gotoxy(COT + 1, DONGNHAP4 + 2);
+	cout << "    ";
+	gotoxy(COT + 1, DONGNHAP4 + 2);
+	cout << cb->tgKhoiHanh.ngay;
+	gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP4 + 2);
+	cout << "    ";
+	gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP4 + 2);
+	cout << cb->tgKhoiHanh.thang;
+	gotoxy(COT + DAIKHUNGNHO * 2 + 1, DONGNHAP4 + 2);
+	cout << "    ";
+	gotoxy(COT + DAIKHUNGNHO * 2 + 1, DONGNHAP4 + 2);
+	cout << cb->tgKhoiHanh.nam;
+	gotoxy(COT + 1, DONGNHAP5 + 2);
+	cout << "    ";
+	gotoxy(COT + 1, DONGNHAP5 + 2);
+	cout << cb->tgKhoiHanh.gio;
+	gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP5 + 2);
+	cout << "    ";
+	gotoxy(COT + DAIKHUNGNHO + 1, DONGNHAP5 + 2);
+	cout << cb->tgKhoiHanh.phut;
+}
+
+void showCB_ConVe(CHUYENBAY* p, int &i) {
+	khungXuatDS(XUAT_CB, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 45, 80, 100);
 
 	gotoxy(COTDS_L + 1, DONGDS_U + 3 + i);
 	cout << i + 1;
@@ -830,7 +1214,6 @@ TREEHanhKhach timKiem_HK(TREEHanhKhach lstHK, char cmnd[]) {
 			p = p->Right;
 		}
 	}
-	
 	return p;
 }
 
@@ -855,24 +1238,43 @@ void insertNode_HK(TREEHanhKhach& lstHK, HANHKHACH p) {
 	}
 }
 
-HANHKHACH create_HK(TREEHanhKhach& lstHK) {
-	khungNhapThongTin(NHAP_HK, "NHAP THONG TIN HANH KHACH", "Nhap CMND", "Nhap ho", "Nhap ten", "Chon phai");
+HANHKHACH create_HK(TREEHanhKhach& lstHK, PTRChuyenBay& lstCB) {
+	khungNhapThongTin(GDTHEM_HK, "NHAP THONG TIN HANH KHACH", "Nhap CMND", "Nhap ho", "Nhap ten", "Chon phai");
 	HANHKHACH hk;
+
 	do
 	{
-		hk.CMND[0] = '\0';
-		gotoxy(COT + 1, DONGNHAP1 + 2);
-		cout << "                            ";
-		gotoxy(COT + 1, DONGNHAP1 + 2);
-		rewind(stdin);
-		NhapCHUOI_SO(hk.CMND, 12);
-		if (timTrung_HK(lstHK, hk.CMND) == 1) {
-			/* ham kiem tra dat ve tren cung 1 chuyen bay hay khong */
-			hienThongBao("Khach hang da co trong csdl");
+		strcpy(hk.CMND, CheckInputCMND(DONGNHAP1));
+		/* kiem tra hanh khach da co hay chua */
+		TREEHanhKhach tmp = timKiem_HK(lstHK, hk.CMND);
+		if (tmp != NULL) {
+			showHK(tmp);
+			DatVe:
+				int sua = confirm("SUA THONG TIN", "DAT VE", false);
+			if (sua == YES) {
+				int hieuChinh = hieuChinh_HK(lstHK, tmp, lstCB);
+				if (hieuChinh) {
+					hienThongBao("Sua thong tin thanh cong!");
+					int datVe = confirm("DAT VE", "TRO VE", false);
+					if (datVe == YES) {
+						return tmp->data;
+					}
+					else {
+						tmp->data.CMND[0] = ESC;
+						return tmp->data;
+					}
+				}
+				else
+					goto DatVe;
+			}
+			else {
+				return tmp->data;
+			}
+			
 		}
 		else {
-			if (hk.CMND[0] == '\0') {
-				hienThongBao("Chua nhap thong tin!");
+			if (hk.CMND[0] == ESC) {
+				return hk;
 			}
 			else break;
 		}
@@ -880,13 +1282,11 @@ HANHKHACH create_HK(TREEHanhKhach& lstHK) {
 
 	do
 	{
-		hk.ho[0] = '\0';
-		gotoxy(COT + 1, DONGNHAP2 + 2);
-		cout << "                           ";
-		gotoxy(COT + 1, DONGNHAP2 + 2);
-		NhapCHUOI_SO(hk.ho, 50);
-		if (hk.ho[0] == '\0') {
-			hienThongBao("Chua nhap thong tin!");
+		strcpy(hk.ho, CheckInputStr(false, DONGNHAP2));
+
+		if (hk.ho[0] == ESC) {
+			hk.CMND[0] = ESC;
+			return hk;
 		}
 		else
 			break;
@@ -894,25 +1294,85 @@ HANHKHACH create_HK(TREEHanhKhach& lstHK) {
 
 	do
 	{
-		hk.ten[0] = { '\0' };
-		gotoxy(COT + 1, DONGNHAP3 + 2);
-		cout << "                                     ";
-		gotoxy(COT + 1, DONGNHAP3 + 2);
-		NhapCHUOI_SO(hk.ten, 10);
-		if (hk.ten[0] == '\0') {
-			hienThongBao("Chua nhap thong tin!");
+		strcpy(hk.ten, CheckInputStr(false, DONGNHAP3));
+
+		if (hk.ten[0] == ESC) {
+			hk.CMND[0] = ESC;
+			return hk;
 		}
 		else
 			break;
 	} while (true);
 
-	
 	int chon = confirm("NAM", "NU", false);
-	if (chon == 2)
-		hk.phai = 1; // nu
-	if (chon == 3)
-		hk.phai = 0; // nam
+	if (chon == YES)
+		hk.phai = NAM; // nam
+	if (chon == NO)
+		hk.phai = NU; // nam
 	return hk;
+}
+
+int hieuChinh_HK(TREEHanhKhach& lstHK, TREEHanhKhach t, PTRChuyenBay &lstCB) {
+	HANHKHACH hk;
+	
+	do
+	{
+		strcpy(hk.CMND, CheckInputCMND(DONGNHAP1));
+
+		if (timTrung_HK(lstHK, hk.CMND)) {
+			/* ham kiem tra dat ve tren cung 1 chuyen bay hay khong */
+			hienThongBao("CMND nay da co!");
+		}
+		else {
+			if (hk.CMND[0] == ESC) {
+				return 0;
+			}
+			else break;
+		}
+	} while (true);
+
+	do
+	{
+		strcpy(hk.ho, CheckInputStr(false, DONGNHAP2));
+
+		if (hk.ho[0] == ESC) {
+			hk.CMND[0] = ESC;
+			return 0;
+		}
+		else
+			break;
+	} while (true);
+
+	do
+	{
+		strcpy(hk.ten, CheckInputStr(false, DONGNHAP3));
+
+		if (hk.ten[0] == ESC) {
+			hk.CMND[0] = ESC;
+			return 0;
+		}
+		else
+			break;
+	} while (true);
+
+	int chon = confirm("NAM", "NU", false);
+	if (chon == YES)
+		hk.phai = NAM; // nam
+	if (chon == NO)
+		hk.phai = NU; // nam
+
+	// doi lai CMND moi trong ds ve cua chuyen bay
+	for (PTRChuyenBay p = lstCB; p != NULL; p = p->next) {
+		for (int i = 0; i < p->data.dsVe.n; i++) {
+			if (stricmp(t->data.CMND, p->data.dsVe.nodeVe[i]->data.CMND) == 0) {
+				strcpy(p->data.dsVe.nodeVe[i]->data.CMND, hk.CMND);
+				break;
+			}
+		}
+	}
+	t->data = hk;
+	
+	return 1;
 }
 
 void xuat_HK(TREEHanhKhach lstHK, int& stt) {
@@ -964,16 +1424,27 @@ void remove_HK(TREEHanhKhach& lstHK, char soCMND[]) {
 	}
 }
 
+void showHK(TREEHanhKhach lstHK) {
+	gotoxy(COT + 1, DONGNHAP1 + 2);
+	cout << lstHK->data.CMND;
+	gotoxy(COT + 1, DONGNHAP2 + 2);
+	cout << lstHK->data.ho;
+	gotoxy(COT + 1, DONGNHAP3 + 2);
+	cout << lstHK->data.ten;
+	gotoxy(COT + 1, DONGNHAP4 + 2);
+	cout << (lstHK->data.phai == NAM ? "Nam" : "Nu");
+}
+
 void xuatHK_1_CB(CHUYENBAY *cb, TREEHanhKhach lstHK, int page) {
 	int j = page, pageHK = page, dem = 0;
 	for (j, pageHK; pageHK < cb->dsVe.n; pageHK++, j++) {
-		if (stricmp(cb->dsVe.nodeVe[j].data.CMND, "") != 0) {
-			TREEHanhKhach t = timKiem_HK(lstHK, cb->dsVe.nodeVe[j].data.CMND);
+		if (stricmp(cb->dsVe.nodeVe[j]->data.CMND, "") != 0) {
+			TREEHanhKhach t = timKiem_HK(lstHK, cb->dsVe.nodeVe[j]->data.CMND);
 
 			gotoxy(COTDS_L + 1, DONGDS_U + 27 + dem);
 			cout << dem + 1;
 			gotoxy(COTDS_L + 6, DONGDS_U + 27 + dem);
-			cout << cb->dsVe.nodeVe[j].data.soVe;
+			cout << cb->dsVe.nodeVe[j]->data.soVe;
 			gotoxy(COTDS_L + 26, DONGDS_U + 27 + dem);
 			cout << t->data.CMND;
 			gotoxy(COTDS_L + 46, DONGDS_U + 27 + dem);
@@ -988,10 +1459,6 @@ void xuatHK_1_CB(CHUYENBAY *cb, TREEHanhKhach lstHK, int page) {
 		}
 
 	}
-}
-
-void hieuChinh_HK(TREEHanhKhach& lstHK, char soCMND[]) {
-
 }
 
 void count_HK(TREEHanhKhach lstHK, int& dem) {
@@ -1046,7 +1513,7 @@ int saveMB(LIST_MB mb) {
 	return 1;
 }
 int loadCB(PTRChuyenBay& lstCB, LIST_MB lstMB) {
-	//ChuyenBay cb;
+	
 	fstream inFile;
 	inFile.open("C:/Users/lamho/source/repos/MayBay/MayBay/DATA/ChuyenBay.txt", ios::in);
 	string temp;
@@ -1055,10 +1522,11 @@ int loadCB(PTRChuyenBay& lstCB, LIST_MB lstMB) {
 	int slCB;
 	if (inFile.is_open()) {
 		while (!inFile.eof()) {
-			ChuyenBay cb;
+			
+
 			getline(inFile, temp);
 			if (temp == "") {
-				
+				CHUYENBAY cb;
 				inFile.getline(cb.maChuyenBay, 20);
 				inFile.getline(cb.soHieuMayBay, 20);
 				inFile.getline(cb.sanBayDen, 50);
@@ -1071,19 +1539,21 @@ int loadCB(PTRChuyenBay& lstCB, LIST_MB lstMB) {
 
 				mayBay mb = getMB(lstMB, cb.soHieuMayBay);
 				int dsve = createDsVe(mb, cb.dsVe);
-				
+			
 				getline(inFile, temp1);
 				getline(inFile, temp1);
 				while (temp1 != "") {
-					int vitri;
-					char cmnd[12] = { '\0' };
+					
+					int vitri = 0;
+					char cmnd[12] = "";
+					
+
 					catChuoi(temp1, '-', vitri, cmnd);
 					insertVe(cb.dsVe, vitri, cmnd);
-						
+					
 					getline(inFile, temp1);
 				}
-				
-
+		
 				insertNodeCB(lstCB, cb);
 			}
 		}
@@ -1091,6 +1561,7 @@ int loadCB(PTRChuyenBay& lstCB, LIST_MB lstMB) {
 	else {
 		return 0;
 	}
+	
 	inFile.close();
 	return 1;
 }
@@ -1111,9 +1582,11 @@ int saveCB(PTRChuyenBay lstCB) {
 			outFile << endl << p->data.tgKhoiHanh.phut;
 			outFile << endl << p->data.trangThai;
 			for (int i = 0; i < p->data.dsVe.n; i++) {
-				if(stricmp(p->data.dsVe.nodeVe[i].data.CMND, "") != 0)
-					outFile << endl << p->data.dsVe.nodeVe[i].data.soVe << "," << i << "-" << p->data.dsVe.nodeVe[i].data.CMND;
+				if(stricmp(p->data.dsVe.nodeVe[i]->data.CMND, "") != 0)
+					outFile << endl << p->data.dsVe.nodeVe[i]->data.soVe << "," << i << "-" << p->data.dsVe.nodeVe[i]->data.CMND;
 			}
+			if (p->next == NULL)
+				outFile << endl;
 			if (p->next != NULL) {
 				outFile << endl;
 				outFile << endl;
@@ -1188,16 +1661,18 @@ void NhapMA(char var[], int len) {
 		maxInput = MAX_INPUT;
 	rewind(stdin);
 	NhapChuoi nhap;
-	nhap.n = strlen(var);
+	
+	nhap.n = 0;
+	
 
-	for (int i = 0; i < nhap.n; i++) {
+	/*for (int i = 0; i < nhap.n; i++) {
 		nhap.data[i] = new char;
 		*nhap.data[i] = var[i];
-	}
+	}*/
 	while (true) {
 		if (kbhit()) {
 			char c = getch();
-			if (!kbhit() && !(!((int)c >= 65 && (int)c <= 90) && !((int)c >= 97 && (int)c <= 122)
+			if (!(!((int)c >= 65 && (int)c <= 90) && !((int)c >= 97 && (int)c <= 122)
 				&& !((int)c >= 48 && (int)c <= 57)) && nhap.n < maxInput) {
 				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ' && c == ' ')
 					continue;
@@ -1226,6 +1701,71 @@ void NhapMA(char var[], int len) {
 				gotoxy(wherex() - 1, wherey());
 				nhap.n--;
 			}
+			if (c == ESC) {
+				var[0] = ESC;
+				return;
+			}
+		}
+	}
+	for (int i = 0; i < nhap.n; i++) {
+		var[i] = *nhap.data[i];
+	}
+	var[nhap.n] = '\0';
+}
+
+void NhapCHUOI(char var[], int len) {
+	int maxInput = len;
+	if (maxInput == 0)
+		maxInput = MAX_INPUT;
+	rewind(stdin);
+	NhapChuoi nhap;
+	
+	nhap.n = 0;
+
+	while (true) {
+		if (kbhit()) {
+			char c = getch();
+			
+			if (!(!((int)c >= A && (int)c <= Z) && !((int)c >= a && (int)c <= z)
+				&& c != ' ') && nhap.n < maxInput) {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ' && c == ' ')
+					continue;
+				if (!(nhap.n == 0 && c == ' ')) {
+					if (nhap.n == 0)
+						c = toupper(c);
+					else {
+						if (*nhap.data[nhap.n - 1] == ' ')
+							c = toupper(c);
+						else
+							c = tolower(c);
+					}
+					nhap.data[nhap.n] = new char;
+					cout << c;
+					*nhap.data[nhap.n] = c;
+					nhap.n++;
+				}
+			}
+			if (c == '\r') {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
+					gotoxy(wherex() - 1, wherey());
+					cout << " ";
+					gotoxy(wherex() - 1, wherey());
+					if (nhap.n > 0)
+						nhap.n--;
+				}
+
+				break;
+			}
+			if (c == BACKSPACE && nhap.n > 0) {
+				gotoxy(wherex() - 1, wherey());
+				cout << " ";
+				gotoxy(wherex() - 1, wherey());
+				nhap.n--;
+			}
+			if (c == ESC) {
+				var[0] = ESC;
+				return;
+			}
 		}
 	}
 	for (int i = 0; i < nhap.n; i++) {
@@ -1241,20 +1781,17 @@ void NhapCHUOI_SO(char var[], int len) {
 		maxInput = MAX_INPUT;
 	rewind(stdin);
 	NhapChuoi nhap;
-	nhap.n = strlen(var);
-	
-	for (int i = 0; i < nhap.n; i++) {
-		nhap.data[i] = new char;
-		*nhap.data[i] = var[i];
-	}
+
+	nhap.n = 0;
+
 	while (true) {
 		if (kbhit()) {
 			char c = getch();
-			if (!kbhit() && !(!((int)c >= 65 && (int)c <= 90) && !((int)c >= 97 && (int)c <= 122)
-				&& c != ' ' && !((int)c >= 48 && (int)c <= 57)) && nhap.n < maxInput) {
+			if (!(!((int)c >= 65 && (int)c <= 90) && !((int)c >= 97 && (int)c <= 122)
+				&& !((int)c >= 48 && (int)c <= 57) && c != ' ') && nhap.n < maxInput) {
 				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ' && c == ' ')
 					continue;
-				if (!(nhap.n == 0 && (c == ' ' || ((int)c >= 48 && (int)c <= 57)))) {
+				if (!(nhap.n == 0 && c == ' ')) {
 					if (nhap.n == 0)
 						c = toupper(c);
 					else {
@@ -1286,6 +1823,10 @@ void NhapCHUOI_SO(char var[], int len) {
 				gotoxy(wherex() - 1, wherey());
 				nhap.n--;
 			}
+			if (c == ESC) {
+				var[0] = ESC;
+				return;
+			}
 		}
 	}
 	for (int i = 0; i < nhap.n; i++) {
@@ -1304,38 +1845,207 @@ void Nhap_SO(int &var, int len) {
 	NhapChuoi nhap;
 	nhap.n = strlen(num);
 
-	for (int i = 0; i < nhap.n; i++) {
-		nhap.data[i] = new char;
-		*nhap.data[i] = num[i];
-	}
 	while (true) {
 		if (kbhit()) {
 			char c = getch();
 			if (nhap.n < 11) {
-				if (!kbhit() && (int)c >= 48 && (int)c <= 57 && nhap.n < maxInput) {
+				if ((int)c >= So0 && (int)c <= So9 && nhap.n < maxInput) {
 
 					nhap.data[nhap.n] = new char;
 					cout << c;
 					*nhap.data[nhap.n] = c;
 					nhap.n++;
 				}
-				if (c == '\r') {
-					if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
-						gotoxy(wherex() - 1, wherey());
-						cout << " ";
-						gotoxy(wherex() - 1, wherey());
-						if (nhap.n > 0)
-							nhap.n--;
-					}
-					
-					break;
-				}
-				if (c == BACKSPACE && nhap.n > 0) {
+			}
+			if (c == '\r') {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
 					gotoxy(wherex() - 1, wherey());
 					cout << " ";
 					gotoxy(wherex() - 1, wherey());
-					nhap.n--;
+					if (nhap.n > 0)
+						nhap.n--;
 				}
+					
+				break;
+			}
+			if (c == BACKSPACE && nhap.n > 0) {
+				gotoxy(wherex() - 1, wherey());
+				cout << " ";
+				gotoxy(wherex() - 1, wherey());
+				nhap.n--;
+			}
+			if (c == ESC) {
+				var = -1;
+				return;
+			}
+			
+		}
+	}
+	for (int i = 0; i < nhap.n; i++) {
+		num[i] = *nhap.data[i];
+	}
+	num[nhap.n] = '\0';
+	var = atoi(num);
+}
+
+void NhapNGAY(int& var, int len) {
+	char num[12] = { '\0' };
+	int maxInput = len;
+	if (maxInput == 0)
+		maxInput = MAX_INPUT;
+
+	rewind(stdin);
+	NhapChuoi nhap;
+	nhap.n = strlen(num);
+
+	while (true) {
+		if (kbhit()) {
+			char c = getch();
+			if (nhap.n < 2) {
+				if ((int)c >= So0 && (int)c <= So9 && nhap.n < maxInput) {
+					if ((nhap.n > 0 && (int)*nhap.data[nhap.n - 1] == So3 && (int)c >= So2)
+						|| (nhap.n > 0 && (int)*nhap.data[nhap.n - 1] >= 52 && c >= So0)
+						|| (nhap.n == 0 && (int)c == So0)) {
+						continue;
+					}
+					nhap.data[nhap.n] = new char;
+					cout << c;
+					*nhap.data[nhap.n] = c;
+					nhap.n++;
+				}
+			}
+			if (c == '\r') {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
+					gotoxy(wherex() - 1, wherey());
+					cout << " ";
+					gotoxy(wherex() - 1, wherey());
+					if (nhap.n > 0)
+						nhap.n--;
+				}
+
+				break;
+			}
+			if (c == BACKSPACE && nhap.n > 0) {
+				gotoxy(wherex() - 1, wherey());
+				cout << " ";
+				gotoxy(wherex() - 1, wherey());
+				nhap.n--;
+			}
+			if (c == ESC) {
+				var = -1;
+				return;
+			}
+			
+		}
+	}
+	for (int i = 0; i < nhap.n; i++) {
+		num[i] = *nhap.data[i];
+	}
+	num[nhap.n] = '\0';
+	var = atoi(num);
+}
+
+void NhapTHANG(int& var, int len) {
+	char num[12] = { '\0' };
+	int maxInput = len;
+	if (maxInput == 0)
+		maxInput = MAX_INPUT;
+
+	rewind(stdin);
+	NhapChuoi nhap;
+	nhap.n = strlen(num);
+
+	while (true) {
+		if (kbhit()) {
+			char c = getch();
+			if (nhap.n < 2) {
+				if ((int)c >= So0 && (int)c <= So9 && nhap.n < maxInput) {
+					if ((nhap.n > 0 && (int)*nhap.data[nhap.n - 1] == So1 && (int)c >= So3)
+						|| (nhap.n > 0 && (int)*nhap.data[nhap.n - 1] >= So2 && c >= So0)
+						|| (nhap.n == 0 && (int)c == So0)) {
+						continue;
+					}
+					nhap.data[nhap.n] = new char;
+					cout << c;
+					*nhap.data[nhap.n] = c;
+					nhap.n++;
+				}
+			}
+			if (c == '\r') {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
+					gotoxy(wherex() - 1, wherey());
+					cout << " ";
+					gotoxy(wherex() - 1, wherey());
+					if (nhap.n > 0)
+						nhap.n--;
+				}
+
+				break;
+			}
+			if (c == BACKSPACE && nhap.n > 0) {
+				gotoxy(wherex() - 1, wherey());
+				cout << " ";
+				gotoxy(wherex() - 1, wherey());
+				nhap.n--;
+			}
+			if (c == ESC) {
+				var = -1;
+				return;
+			}
+			
+		}
+	}
+	for (int i = 0; i < nhap.n; i++) {
+		num[i] = *nhap.data[i];
+	}
+	num[nhap.n] = '\0';
+	var = atoi(num);
+}
+
+void NhapNAM(int& var, int len) {
+	char num[12] = { '\0' };
+	int maxInput = len;
+	if (maxInput == 0)
+		maxInput = MAX_INPUT;
+
+	rewind(stdin);
+	NhapChuoi nhap;
+	nhap.n = strlen(num);
+
+	while (true) {
+		if (kbhit()) {
+			char c = getch();
+			if (nhap.n < 4) {
+				if ((int)c >= So0 && (int)c <= So9 && nhap.n < maxInput) {
+					if ((nhap.n == 0 && (int)c == So0)) {
+						continue;
+					}
+					nhap.data[nhap.n] = new char;
+					cout << c;
+					*nhap.data[nhap.n] = c;
+					nhap.n++;
+				}
+			}
+			if (c == '\r') {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
+					gotoxy(wherex() - 1, wherey());
+					cout << " ";
+					gotoxy(wherex() - 1, wherey());
+					if (nhap.n > 0)
+						nhap.n--;
+				}
+
+				break;
+			}
+			if (c == BACKSPACE && nhap.n > 0) {
+				gotoxy(wherex() - 1, wherey());
+				cout << " ";
+				gotoxy(wherex() - 1, wherey());
+				nhap.n--;
+			}
+			if (c == ESC) {
+				var = -1;
+				return;
 			}
 		}
 	}
@@ -1344,6 +2054,306 @@ void Nhap_SO(int &var, int len) {
 	}
 	num[nhap.n] = '\0';
 	var = atoi(num);
+
+}
+
+void NhapGIO(int& var, int len) {
+	char num[12] = { '\0' };
+	int maxInput = len;
+	if (maxInput == 0)
+		maxInput = MAX_INPUT;
+
+	rewind(stdin);
+	NhapChuoi nhap;
+	nhap.n = strlen(num);
+
+	while (true) {
+		if (kbhit()) {
+			char c = getch();
+			if (nhap.n < 2) {
+				if ((int)c >= So0 && (int)c <= So9 && nhap.n < maxInput) {
+					if ((nhap.n > 0 && (int)*nhap.data[nhap.n - 1] >= So2 && (int)c >= So4)) {
+						continue;
+					}
+					nhap.data[nhap.n] = new char;
+					cout << c;
+					*nhap.data[nhap.n] = c;
+					nhap.n++;
+				}
+			}
+			if (c == '\r') {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
+					gotoxy(wherex() - 1, wherey());
+					cout << " ";
+					gotoxy(wherex() - 1, wherey());
+					if (nhap.n > 0)
+						nhap.n--;
+				}
+
+				break;
+			}
+			if (c == BACKSPACE && nhap.n > 0) {
+				gotoxy(wherex() - 1, wherey());
+				cout << " ";
+				gotoxy(wherex() - 1, wherey());
+				nhap.n--;
+			}
+			if (c == ESC) {
+				var = -1;
+				return;
+			}
+
+		}
+	}
+	for (int i = 0; i < nhap.n; i++) {
+		num[i] = *nhap.data[i];
+	}
+	num[nhap.n] = '\0';
+	var = atoi(num);
+}
+
+void NhapPHUT(int& var, int len) {
+	char num[12] = { '\0' };
+	int maxInput = len;
+	if (maxInput == 0)
+		maxInput = MAX_INPUT;
+
+	rewind(stdin);
+	NhapChuoi nhap;
+	nhap.n = strlen(num);
+
+	while (true) {
+		if (kbhit()) {
+			char c = getch();
+			if (nhap.n < 2) {
+				if ((int)c >= So0 && (int)c <= So9 && nhap.n < maxInput) {
+					if ((nhap.n > 0 && (int)*nhap.data[nhap.n - 1] >= So6 && (int)c >= So0)) {
+						continue;
+					}
+					nhap.data[nhap.n] = new char;
+					cout << c;
+					*nhap.data[nhap.n] = c;
+					nhap.n++;
+				}
+			}
+			if (c == '\r') {
+				if (nhap.n > 0 && *nhap.data[nhap.n - 1] == ' ') {
+					gotoxy(wherex() - 1, wherey());
+					cout << " ";
+					gotoxy(wherex() - 1, wherey());
+					if (nhap.n > 0)
+						nhap.n--;
+				}
+
+				break;
+			}
+			if (c == BACKSPACE && nhap.n > 0) {
+				gotoxy(wherex() - 1, wherey());
+				cout << " ";
+				gotoxy(wherex() - 1, wherey());
+				nhap.n--;
+			}
+			if (c == ESC) {
+				var = -1;
+				return;
+			}
+
+		}
+	}
+	for (int i = 0; i < nhap.n; i++) {
+		num[i] = *nhap.data[i];
+	}
+	num[nhap.n] = '\0';
+	var = atoi(num);
+}
+
+char* CheckInputStr(bool nhapMa, int DongInfo) {
+	char info[50] = { '\0' };
+	do
+	{
+		rewind(stdin);
+		gotoxy(COT + 1, DongInfo + 2);
+		cout << "                                ";
+		gotoxy(COT + 1, DongInfo + 2);
+		if (nhapMa == true) 
+			NhapMA(info, 50);
+		else
+			NhapCHUOI(info, 50);
+		if (info[0] == '\0') {
+			hienThongBao("Chua nhap thong tin!");
+		}
+		// kiem tra nguoi nhap co nhan phim ESC de huy hay khong
+		else if (info[0] == ESC) {
+			int exit = confirm("HUY", "NHAP TIEP", false);
+			if (exit == YES) {
+				return info;
+			}
+			else
+				continue;
+		}
+		else {
+			return info;
+		}
+
+	} while (true);
+}
+
+char* CheckInputCMND(int DongInfo) {
+	char info[50] = { '\0' };
+	do
+	{
+		rewind(stdin);
+		gotoxy(COT + 1, DongInfo + 2);
+		cout << "                                ";
+		gotoxy(COT + 1, DongInfo + 2);
+		NhapCHUOI_SO(info, 50);
+		if (info[0] == '\0') {
+			hienThongBao("Chua nhap thong tin!");
+		}
+		// kiem tra nguoi nhap co nhan phim ESC de huy hay khong
+		else if (info[0] == ESC) {
+			int exit = confirm("HUY", "NHAP TIEP", false);
+			if (exit == YES) {
+				return info;
+			}
+			else
+				continue;
+		}
+		else {
+			return info;
+		}
+
+	} while (true);
+}
+
+int CheckInputNum(int DongInfo) {
+	int var;
+	do
+	{
+		rewind(stdin);
+		gotoxy(COT + 1, DongInfo + 2);
+		cout << "                                ";
+		gotoxy(COT + 1, DongInfo + 2);
+		Nhap_SO(var, 50);
+		if (var == 0) {
+			hienThongBao("Chua nhap thong tin!");
+		}
+		else if (var == -1) {
+			int exit = confirm("HUY", "NHAP TIEP", false);
+			if (exit == YES) {
+				return var;
+			}
+			else
+				continue;
+		}	
+		else {
+			return var;
+		}
+
+	} while (true);
+}
+
+//THOI_GIAN CheckThoiGian() {
+//
+//}
+
+THOI_GIAN CheckInputDate(THOI_GIAN &tg, int DongInfo) {
+	
+	do
+	{
+		Ngay:
+			gotoxy(COT + 1, DongInfo + 2);
+			cout << "    ";
+			gotoxy(COT + 1, DongInfo + 2);
+			NhapNGAY(tg.ngay, 3);
+			if (tg.ngay == 0 || tg.ngay == -1)
+				goto Check;
+		Thang:
+			gotoxy(COT + DAIKHUNGNHO + 1, DongInfo + 2);
+			cout << "   ";
+			gotoxy(COT + DAIKHUNGNHO + 1, DongInfo + 2);
+			NhapTHANG(tg.thang, 3);
+			if (tg.thang == 0 || tg.thang == -1)
+				goto Check;
+		Nam:
+			gotoxy(COT + DAIKHUNGNHO * 2 + 1, DongInfo + 2);
+			cout << "    ";
+			gotoxy(COT + DAIKHUNGNHO * 2 + 1, DongInfo + 2);
+			NhapNAM(tg.nam, 5);
+			if (tg.nam == 0 || tg.nam == -1)
+				goto Check;
+
+		Check:
+			if (tg.ngay == 0 || tg.thang == 0 || tg.nam == 0) {
+				hienThongBao("Chua nhap thong tin!");
+				if (tg.ngay == 0)
+					goto Ngay;
+				if (tg.thang == 0)
+					goto Thang;
+				if (tg.nam == 0)
+					goto Nam;
+				}
+			if (tg.ngay == -1 || tg.thang == -1 || tg.nam == -1) {
+				int exit = confirm("HUY", "NHAP TIEP", false);
+				if (exit == YES) {
+					return tg;
+				}
+				else {
+					if (tg.ngay == -1)
+						goto Ngay;
+					if (tg.thang == -1)
+						goto Thang;
+					if (tg.nam == -1)
+						goto Nam;
+				}
+			}
+		return tg;
+	} while (true);
+}
+
+THOI_GIAN CheckInputTime(THOI_GIAN& tg, int DongInfo) {
+	
+	do
+	{
+		Gio:
+			gotoxy(COT + 1, DongInfo + 2);
+			cout << "    ";
+			gotoxy(COT + 1, DongInfo + 2);
+			NhapGIO(tg.gio, 3);
+			if (tg.gio == -1)
+				goto Check;
+		Phut:
+			gotoxy(COT + DAIKHUNGNHO + 1, DongInfo + 2);
+			cout << "   ";
+			gotoxy(COT + DAIKHUNGNHO + 1, DongInfo + 2);
+			NhapPHUT(tg.phut, 3);
+			if (tg.phut == 0 || tg.phut == -1)
+				goto Check;
+
+		Check:
+			if (tg.phut == 0) {
+				hienThongBao("Chua nhap thong tin!");
+				if (tg.gio == 0)
+					goto Gio;
+				if (tg.phut == 0)
+					goto Phut;
+			}
+			if (tg.gio == -1 || tg.phut == -1) {
+				int exit = confirm("HUY", "NHAP TIEP", false);
+				if (exit == YES) {
+					return tg;
+				}
+				else {
+					if (tg.gio == -1)
+						goto Gio;
+					if (tg.phut == -1)
+						goto Phut;
+				}
+					
+			}
+		return tg;
+
+	} while (true);
 }
 
 int rangBuocThoiGian(THOI_GIAN tg) {
@@ -1592,7 +2602,7 @@ void khungXuatDS(int type, int rong, int dai, int colump1, int colump2, int colu
 		gotoxy(posx + colump5, posy + 2);
 		cout << char(197);
 	}
-	if (type == NHAP_MB) {
+	if (type == XUAT_MB) {
 		//5, 25, 70, 93
 		gotoxy(COTDS_L + 1, DONGDS_U + 1);
 		cout << "STT";
@@ -1605,7 +2615,7 @@ void khungXuatDS(int type, int rong, int dai, int colump1, int colump2, int colu
 		gotoxy(COTDS_L + 94, DONGDS_U + 1);
 		cout << "SO DONG";
 	}
-	else if (type == NHAP_CB) {
+	else if (type == XUAT_CB) {
 		// 5, 25, 45, 80, 100
 		gotoxy(COTDS_L + 1, DONGDS_U + 1);
 		cout << "STT";
@@ -1620,7 +2630,7 @@ void khungXuatDS(int type, int rong, int dai, int colump1, int colump2, int colu
 		gotoxy(COTDS_L + 101, DONGDS_U + 1);
 		cout << "TRANG THAI";
 	}
-	else if (type == NHAP_HK) {
+	else if (type == XUAT_HK) {
 		//5, 25, 45, 93
 		gotoxy(COTDS_L + 1, DONGDS_U + 25);
 		cout << "STT";
@@ -1660,10 +2670,27 @@ void Red_Highlight() {
 	SetBGColor(12);
 }
 
+void Green_Highlight() {
+	SetColor(7);
+	SetBGColor(10);
+}
+
 void khungNhapThongTin(int type, string title, string s1, string s2, string s3, string s4,
 	string s5, string s6, string s7, string s8, string s9) {
 	Normal();
 	//========xoa thong tin cu============
+	gotoxy(COT, DONGNHAP1);
+	cout << "                                    ";
+	gotoxy(COT, DONGNHAP2);
+	cout << "                                    ";
+	gotoxy(COT, DONGNHAP3);
+	cout << "                                    ";
+	gotoxy(COT, DONGNHAP4);
+	cout << "                                    ";
+	gotoxy(COT, DONGNHAP5);
+	cout << "                                    ";
+	gotoxy(COT + 1, DONGNHAP1 + 2);
+	cout << "                                    ";
 	gotoxy(COT + 1, DONGNHAP1 + 2);
 	cout << "                                    ";
 	gotoxy(COT + 1, DONGNHAP2 + 2);
@@ -1730,7 +2757,7 @@ void khungNhapThongTin(int type, string title, string s1, string s2, string s3, 
 		cout << s3;
 		veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGNHAP3 + 1);
 
-		if (type == NHAP_CB) {
+		if (type == GDTHEM_CB) {
 			// khung nhap ngay
 			gotoxy(COT, DONGNHAP4);
 			cout << s4;
@@ -1750,7 +2777,24 @@ void khungNhapThongTin(int type, string title, string s1, string s2, string s3, 
 			gotoxy(COT + DAIKHUNGNHO, DONGNHAP5);
 			veKhungNhap(DAIKHUNGNHO + DAIKHUNGNHO, RONGKHUNG, COT, DONGNHAP5 + 1);
 		}
-		else if (type == NHAP_HK) {
+		else if (type == GDTHEM_HK) {
+			
+			// khung nhap ngay
+			gotoxy(COT, DONGNHAP4 + 1);
+			cout << "                                    ";
+			gotoxy(COT, DONGNHAP4 + 2);
+			cout << "                                    ";
+			gotoxy(COT, DONGNHAP4 + 3);
+			cout << "                                    ";
+
+			// khung nhap gio
+			gotoxy(COT, DONGNHAP5 + 1);
+			cout << "                                    ";
+			gotoxy(COT, DONGNHAP5 + 2);
+			cout << "                                    ";
+			gotoxy(COT, DONGNHAP5 + 3);
+			cout << "                                    ";
+
 			gotoxy(COT, DONGNHAP4);
 			cout << s4;
 		}
@@ -1765,19 +2809,36 @@ void khungNhapThongTin(int type, string title, string s1, string s2, string s3, 
 }
 
 void khungThongBao() {
-	gotoxy(COT, DONGDS_D - 3);
+	gotoxy(COT, DONGDS_D - 5);
 	cout << "Thong bao";
-	veKhungNhap(DAIKHUNG, RONGKHUNG, COT, DONGDS_D - 2);
-
+	veKhungNhap(DAIKHUNG, RONGKHUNG + 2, COT, DONGDS_D - 4);
 
 }
 
-void hienThongBao(string notif) {
-	gotoxy(COT + 1, DONGDS_D - 1);
+void hienThongBao(string notif, string notif2, string notif3, string NoiDen) {
+	gotoxy(COT + 1, DONGDS_D - 3);
 	cout << notif;
+	
+	if (notif2 != "") {
+		gotoxy(COT + 1, DONGDS_D - 2);
+		cout << notif2;
+	}
+	if (NoiDen != "") {
+		gotoxy(COT + 1, DONGDS_D - 1);
+		cout << NoiDen;
+	}
+	if (notif3 != "") {
+		gotoxy(COT + 10, DONGDS_D - 1);
+		cout << notif3;
+	}
 	Sleep(1000);
+	Normal();
+	gotoxy(COT + 1, DONGDS_D - 3);
+	cout << "                                                           ";
+	gotoxy(COT + 1, DONGDS_D - 2);
+	cout << "                                                           ";
 	gotoxy(COT + 1, DONGDS_D - 1);
-	cout << "                                                         ";
+	cout << "                                                           ";
 }
 
 void hienHuongDan() {
@@ -1801,13 +2862,13 @@ void xoaKhungDS() {
 }
 
 void xoaThongTin(int type) {
-	if (type == NHAP_MB) {
+	if (type == XOA_MB) {
 
 	}
-	else if (type == NHAP_CB) {
+	else if (type == XOA_MB) {
 
 	}
-	else if (type == NHAP_HK) {
+	else if (type == XOA_CB) {
 		for (int i = 0; i < 15; i++) {
 			// 5, 25, 45, 80, 100
 			gotoxy(COTDS_L + 1, DONGDS_U + 3 + i);
@@ -1835,7 +2896,7 @@ void xoaThongTin(int type) {
 		}
 		
 	}
-	else if (type == SUA_HK) {
+	else if (type == XOA_HK) {
 		for (int i = 0; i < 15; i++) {
 			gotoxy(COTDS_L + 1, DONGDS_U + 27 + i);
 			cout << "    ";
@@ -2045,7 +3106,7 @@ mayBay ChonMB_Edit(LIST_MB lstMB, int& chonMB) {
 	mayBay tmp;
 	Normal();
 	khungGiaoDien();
-	khungNhapThongTin(NHAP_MB, "THEM MAY BAY", "So hieu may bay:", "Loai may bay:", "So day:", "So dong:");
+	khungNhapThongTin(THEM_MB, "THEM MAY BAY", "So hieu may bay:", "Loai may bay:", "So day:", "So dong:");
 	hienHuongDan();
 	int chon = 0;
 	int i;
@@ -2083,9 +3144,19 @@ mayBay ChonMB_Edit(LIST_MB lstMB, int& chonMB) {
 			}
 			break;
 		case F2:
-			chonMB = 1;
+			chonMB = THEM_MB;
 			tmp.soHieuMayBay[0] = '\0';
 			return tmp;
+		case DELETE:
+		{
+			int xacNhan = confirm("DONG Y", "HUY", false);
+			if (xacNhan == YES) {
+				chonMB = XOA_MB;
+				return lstMB.nodeMB[chon]->data;
+			}
+			else
+				break;
+		}
 		case F3:
 		{
 			tmp.soHieuMayBay[0] =  '\0';
@@ -2101,27 +3172,44 @@ mayBay ChonMB_Edit(LIST_MB lstMB, int& chonMB) {
 				else break;
 			} while (true);
 			chonMB = confirm("HIEU CHINH", "XOA", false);
-			if (chonMB == 0)
+			if (chonMB == XOA_MB) {
+				int xacNhan = confirm("DONG Y", "HUY", false);
+				if (xacNhan == YES) {
+					chonMB = XOA_MB;
+					return tmp;
+				}
+				else
+					break;
+			}
+			else if (chonMB == CANCEL)
 				break;
 			Normal();
 			return tmp;
-			
 		}
-			
 		case ESC:
 		{
 			Normal();
 			tmp.soHieuMayBay[0] = '\0';
 			chonMB = soItem_MenuMB;
 			return tmp;
-		}
-			
-		case ENTER:   
+		}	
+		case ENTER:  
+		{
 			Normal();
 			chonMB = confirm("HIEU CHINH", "XOA", false);
-			if (chonMB == 0)
+			if (chonMB == XOA_MB) {
+				int xacNhan = confirm("DONG Y", "HUY", false);
+				if (xacNhan == YES) {
+					chonMB = XOA_MB;
+					return lstMB.nodeMB[chon]->data;
+				}
+				else
+					break;
+			}
+			else if (chonMB == CANCEL)
 				break;
 			return lstMB.nodeMB[chon]->data;
+		}
 		}
 	} while (true);
 }
@@ -2145,9 +3233,9 @@ void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int &n, LIST_MB lstMB, int 
 			int dsve = createDsVe(mb, cb[n]->dsVe);
 			for (int k = 0; k < cb[n]->dsVe.n; k++) {
 			//	hienThongBao(string(cb[n]->dsVe.nodeVe[k].data.CMND));
-				if (stricmp(p->data.dsVe.nodeVe[k].data.CMND, "") != 0) {
-					strcpy(cb[n]->dsVe.nodeVe[k].data.CMND, p->data.dsVe.nodeVe[k].data.CMND);
-					insertVe(cb[n]->dsVe, k, cb[n]->dsVe.nodeVe[k].data.CMND);
+				if (stricmp(p->data.dsVe.nodeVe[k]->data.CMND, "") != 0) {
+					strcpy(cb[n]->dsVe.nodeVe[k]->data.CMND, p->data.dsVe.nodeVe[k]->data.CMND);
+					insertVe(cb[n]->dsVe, k, cb[n]->dsVe.nodeVe[k]->data.CMND);
 				}
 				
 			}
@@ -2168,7 +3256,16 @@ void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int &n, LIST_MB lstMB, int 
 				cb[n]->tgKhoiHanh.gio = p->data.tgKhoiHanh.gio;
 				cb[n]->tgKhoiHanh.phut = p->data.tgKhoiHanh.phut;
 				cb[n]->trangThai = p->data.trangThai;
-				
+				mayBay mb = getMB(lstMB, cb[n]->soHieuMayBay);
+				int dsve = createDsVe(mb, cb[n]->dsVe);
+				for (int k = 0; k < cb[n]->dsVe.n; k++) {
+					//	hienThongBao(string(cb[n]->dsVe.nodeVe[k].data.CMND));
+					if (stricmp(p->data.dsVe.nodeVe[k]->data.CMND, "") != 0) {
+						strcpy(cb[n]->dsVe.nodeVe[k]->data.CMND, p->data.dsVe.nodeVe[k]->data.CMND);
+						insertVe(cb[n]->dsVe, k, cb[n]->dsVe.nodeVe[k]->data.CMND);
+					}
+
+				}
 				n++;
 			}
 		}
@@ -2179,7 +3276,7 @@ PTRChuyenBay ChonCB_Edit(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB) {
 	
 	Normal();
 	khungGiaoDien();
-	khungNhapThongTin(NHAP_CB, "THEM CHUYEN BAY", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
+	khungNhapThongTin(GDTHEM_CB, "THEM CHUYEN BAY", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
 	hienHuongDan();
 	int chon = 0;
 	int i = 0;
@@ -2223,7 +3320,7 @@ PTRChuyenBay ChonCB_Edit(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB) {
 			}
 			break;
 		case F2:
-			chonCB = 1;
+			chonCB = THEM_CB;
 			tmp[0] = '\0';
 			strcpy(q->data.maChuyenBay, tmp);
 			return q;
@@ -2238,8 +3335,8 @@ PTRChuyenBay ChonCB_Edit(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB) {
 					hienThongBao("Khong tim thay chuyen bay nay!");
 				else break;
 			} while (true);
-			chonCB = confirm("HIEU CHINH", "XOA", false);
-			if (chonCB == 0)
+			chonCB = confirm("HIEU CHINH", "HUY CHUYEN", true);
+			if (chonCB == CANCEL)
 				break;
 			Normal();
 			return q;
@@ -2249,8 +3346,8 @@ PTRChuyenBay ChonCB_Edit(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB) {
 			q = searchBin_CB(lstCB, tmpCB[chon]->maChuyenBay);
 			if (q != NULL) {
 				int chon = confirm("CO", "KHONG", false);
-				if (chon == 3) {
-					chonCB = 2;
+				if (chon == YES) {
+					chonCB = XOA_CB;
 					Normal();
 					return q;
 				}
@@ -2261,15 +3358,13 @@ PTRChuyenBay ChonCB_Edit(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB) {
 		case ESC:
 		{
 			Normal();
-			tmp[0] = '\0';
-			strcpy(q->data.maChuyenBay, tmp);
 			chonCB = soItem_MenuCB;
-			return q;
+			return NULL;
 		}
 
 		case ENTER:
 			chonCB = confirm("HIEU CHINH", "HUY CHUYEN", true);
-			if (chonCB == 0)
+			if (chonCB == CANCEL)
 				break;
 			q = searchBin_CB(lstCB, tmpCB[chon]->maChuyenBay);
 			Normal();
@@ -2282,18 +3377,18 @@ PTRChuyenBay ChonCB_DatVe_HuyVe(PTRChuyenBay lstCB, int &chonCB, LIST_MB lstMB) 
 
 	Normal();
 	khungGiaoDien();
-	khungNhapThongTin(NHAP_CB, "", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
+	khungNhapThongTin(GDTHEM_CB, "", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
 	hienHuongDan();
 	int chon = 0;
 	int i = 0;
 	
-	showCB(lstCB);
+	showCB_DatVe(lstCB);
 	CHUYENBAY* tmpCB[300];
 	chuyenMang(lstCB, tmpCB, i, lstMB, CONVE);
 	PTRChuyenBay q = new NodeChuyenBay;
 	
 	Highlight();
-	show_1_CB(tmpCB[chon], chon);
+	show_1_CB_DatVe(tmpCB[chon], chon);
 	char tmp[20];
 	char kytu;
 	do
@@ -2308,21 +3403,21 @@ PTRChuyenBay ChonCB_DatVe_HuyVe(PTRChuyenBay lstCB, int &chonCB, LIST_MB lstMB) 
 		case UP:
 			if (chon > 0) {
 				Normal();
-				show_1_CB(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], chon);
 
 				chon--;
 				Highlight();
-				show_1_CB(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], chon);
 			}
 			break;
 		case DOWN:
 			if (chon + 1 < i) {
 				Normal();
-				show_1_CB(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], chon);
 
 				chon++;
 				Highlight();
-				show_1_CB(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], chon);
 			}
 			break;
 		case F3:
@@ -2387,7 +3482,7 @@ void xuatALL_HK_1_CB(CHUYENBAY* cb, TREEHanhKhach lstHK) {
 
 				page -= MAX_PAGE_SMALL;
 
-				xoaThongTin(SUA_HK);
+				xoaThongTin(XOA_HK);
 				xuatHK_1_CB(cb, lstHK, page);
 			}
 			break;
@@ -2400,7 +3495,7 @@ void xuatALL_HK_1_CB(CHUYENBAY* cb, TREEHanhKhach lstHK) {
 					break;
 				}
 
-				xoaThongTin(SUA_HK);
+				xoaThongTin(XOA_HK);
 				xuatHK_1_CB(cb, lstHK, page);
 				
 			}
@@ -2412,13 +3507,62 @@ void xuatALL_HK_1_CB(CHUYENBAY* cb, TREEHanhKhach lstHK) {
 	} while (true);
 }
 
+int checkHK_HuyVe(PTRChuyenBay p) {
+	khungNhapThongTin(GDTHEM_HK, "HUY VE", "CMND", "Ho", "Ten", "Phai");
+
+	HANHKHACH hk;
+	do
+	{
+		strcpy(hk.CMND, CheckInputCMND(DONGNHAP1));
+		if (hk.CMND[0] != ESC) {
+			if (checkVeCung_CB(p, hk)) {
+				return 1;
+			}
+			else return 0;
+		}
+		else
+			return 0;
+	} while (true);
+}
+
+int checkVeCung_CB(PTRChuyenBay p, HANHKHACH hk) {
+	for (int i = 0; i < p->data.dsVe.n; i++) {
+		if (stricmp(hk.CMND, p->data.dsVe.nodeVe[i]->data.CMND) == 0) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+PTRChuyenBay checkVeCungTime(PTRChuyenBay lstCB, PTRChuyenBay p, HANHKHACH hk) {
+	PTRChuyenBay q = lstCB;
+	do
+	{
+		for (q; q != NULL; q = q->next) {
+			/*kiem tra co khac chuyen bay, bay cung ngay va co cach nhau
+			5 tieng hay khong*/
+			if (stricmp(p->data.maChuyenBay, q->data.maChuyenBay) != 0
+				&& toTime(p->data.tgKhoiHanh) - toTime(q->data.tgKhoiHanh) == 0
+				&& !checkKC_5Gio(p->data.tgKhoiHanh, q->data.tgKhoiHanh)) {
+				break;
+			}
+		}
+		if (q == NULL)
+			return NULL;
+		if (checkVeCung_CB(q, hk)) {
+			return q;
+		}
+	} while (true);
+	
+}
+
 PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB, TREEHanhKhach lstHK) {
 
 	Normal();
 	khungGiaoDien();
-	khungXuatDS(NHAP_CB, DONGDS_D - DONGDS_U - 24, COTDS_R - COTDS_L, 5, 25, 45, 80, 100);
-	khungXuatDS(NHAP_HK, DONGDS_D - DONGDS_U - 24, COTDS_R - COTDS_L, 5, 25, 45, 93, 0, COTDS_L, DONGDS_U + 24);
-	khungNhapThongTin(NHAP_CB, "", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
+	khungXuatDS(XUAT_CB, DONGDS_D - DONGDS_U - 24, COTDS_R - COTDS_L, 5, 25, 45, 80, 100);
+	khungXuatDS(XUAT_HK, DONGDS_D - DONGDS_U - 24, COTDS_R - COTDS_L, 5, 25, 45, 93, 0, COTDS_L, DONGDS_U + 24);
+	khungNhapThongTin(GDTHEM_CB, "", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
 	hienHuongDan();
 	int chon = 0;
 	
@@ -2458,8 +3602,8 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB, TR
 		case UP:
 			if (chon > 0 && dem > 0) {
 				Normal();
-				show_1_CB(tmpCB[chon], chon);
-				xoaThongTin(SUA_HK);
+				show_1_CB(tmpCB[chon], dem);
+				xoaThongTin(XOA_HK);
 				chon--;
 				dem--;
 				Highlight();
@@ -2471,7 +3615,7 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB, TR
 			if (chon + 1 < i && dem + 1 < MAX_PAGE_SMALL) {
 				Normal();
 				show_1_CB(tmpCB[chon], dem);
-				xoaThongTin(SUA_HK);
+				xoaThongTin(XOA_HK);
 				chon++;
 				dem++;
 				Highlight();
@@ -2483,8 +3627,8 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB, TR
 			
 			if (pageCB > MAX_PAGE_SMALL) {
 				Normal();
-				xoaThongTin(NHAP_HK);
-				xoaThongTin(SUA_HK);
+				xoaThongTin(XOA_CB);
+				xoaThongTin(XOA_HK);
 				pageCB -= MAX_PAGE_SMALL*2;
 				chon = pageCB;
 				dem = 0;
@@ -2506,8 +3650,8 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB, TR
 		case RIGHT:
 			if (pageCB < i) {
 				Normal();
-				xoaThongTin(NHAP_HK);
-				xoaThongTin(SUA_HK);
+				xoaThongTin(XOA_CB);
+				xoaThongTin(XOA_HK);
 				pageCB ++;
 				chon = pageCB;
 				dem = 0;
@@ -2539,9 +3683,7 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB, TR
 					hienThongBao("Khong tim thay chuyen bay nay!");
 				else break;
 			} while (true);
-			chonCB = confirm("DAT VE", "TRO VE", false);
-			if (chonCB == 0)
-				break;
+			xuatALL_HK_1_CB(&q->data, lstHK);
 			Normal();
 			return q;
 		}
@@ -2616,16 +3758,14 @@ PTRChuyenBay ChonCB_Loc_NoiDen(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB) {
 		char *noiDen = new char[50];
 		strcpy(noiDen, LocNoiDen());
 	
-	PTRChuyenBay p;
+	PTRChuyenBay p; // dang sach tam luu cac chuyen bay co noi den X
 	initCB(p);
 	for (PTRChuyenBay q = lstCB; q != NULL; q = q->next) {
 		
 		if (q->data.tgKhoiHanh.ngay == tg.ngay && q->data.tgKhoiHanh.thang == tg.thang
 			&& q->data.tgKhoiHanh.nam == tg.nam && stricmp(q->data.sanBayDen, noiDen) == 0 && q->data.trangThai == CONVE) {
 			insert_OrderNodeCB(p, q->data);
-			
 		}
-		
 	}
 	
 	CHUYENBAY* tmpCB[300];
@@ -2655,7 +3795,7 @@ PTRChuyenBay ChonCB_Loc_NoiDen(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB) {
 		{
 		case LEFT:
 			if (pageCB > MAX_PAGE_SMALL) {
-				xoaThongTin(NHAP_HK);
+				xoaThongTin(THEM_HK);
 				pageCB -= MAX_PAGE_SMALL * 2;
 				chon = pageCB;
 				dem = 0;
@@ -2672,7 +3812,7 @@ PTRChuyenBay ChonCB_Loc_NoiDen(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB) {
 			break;
 		case RIGHT:
 			if (pageCB < i) {
-				xoaThongTin(NHAP_HK);
+				xoaThongTin(THEM_HK);
 				pageCB++;
 				chon = pageCB;
 				dem = 0;
@@ -2714,7 +3854,7 @@ PTRChuyenBay ChonCB_XemVeTrong(PTRChuyenBay lstCB, LIST_MB lstMB, int &chonCB) {
 
 	Normal();
 	khungGiaoDien();
-	khungNhapThongTin(NHAP_CB, "", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
+	khungNhapThongTin(GDTHEM_CB, "", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
 	hienHuongDan();
 
 	int chon = 0;
@@ -2781,7 +3921,6 @@ PTRChuyenBay ChonCB_XemVeTrong(PTRChuyenBay lstCB, LIST_MB lstMB, int &chonCB) {
 			chonCB = soItem_MenuCB;
 			return q;
 		}
-
 		case ENTER:
 			Normal();
 			q = searchBin_CB(lstCB, tmpCB[chon]->maChuyenBay);
@@ -2838,7 +3977,7 @@ void quickSortTK(int* soLuot, NODEMAYBAY tempMB, int q, int r) {
 void show_1_Ve(LIST_VE lstVe, int cot, int dong, int chon, int kc) {
 	//int kc = 3;
 	gotoxy(COTDS_L + cot + kc, DONGDS_U + dong);
-	cout << lstVe.nodeVe[chon].data.soVe;
+	cout << lstVe.nodeVe[chon]->data.soVe;
 }
 
 int chonVe(PTRChuyenBay& lstCB) {
@@ -2847,7 +3986,7 @@ int chonVe(PTRChuyenBay& lstCB) {
 	int n = 0;
 	for (int i = 0; i < lstCB->data.dsVe.soDay; i++) {
 		for (int j = 0; j < lstCB->data.dsVe.soDong; j++) {
-			if (stricmp(lstCB->data.dsVe.nodeVe[n].data.CMND, "") != 0)
+			if (stricmp(lstCB->data.dsVe.nodeVe[n]->data.CMND, "") != 0)
 				Red_Highlight();
 			show_1_Ve(lstCB->data.dsVe, i, j, n, kc);
 			Normal();
@@ -2858,7 +3997,7 @@ int chonVe(PTRChuyenBay& lstCB) {
 	int cot = 0;
 	int dong = 0;
 	kc = 3;
-	if (stricmp(lstCB->data.dsVe.nodeVe[chon].data.CMND, "") != 0)
+	if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") != 0)
 		Red_Highlight();
 	Highlight();
 	show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
@@ -2876,7 +4015,7 @@ int chonVe(PTRChuyenBay& lstCB) {
 		{
 			if (dong > 0) {
 				Normal();
-				if (stricmp(lstCB->data.dsVe.nodeVe[chon].data.CMND, "") != 0)
+				if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") != 0)
 					Red_Highlight();
 				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
 				chon--;
@@ -2891,7 +4030,7 @@ int chonVe(PTRChuyenBay& lstCB) {
 		{
 			if (dong + 1 < lstCB->data.dsVe.soDong) {
 				Normal();
-				if (stricmp(lstCB->data.dsVe.nodeVe[chon].data.CMND, "") != 0)
+				if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") != 0)
 					Red_Highlight();
 				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
 				chon++;
@@ -2905,7 +4044,7 @@ int chonVe(PTRChuyenBay& lstCB) {
 		{
 			if (cot > 0) {
 				Normal();
-				if (stricmp(lstCB->data.dsVe.nodeVe[chon].data.CMND, "") != 0)
+				if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") != 0)
 					Red_Highlight();
 				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
 				chon -= lstCB->data.dsVe.soDong;
@@ -2920,7 +4059,7 @@ int chonVe(PTRChuyenBay& lstCB) {
 		{
 			if (cot + 1 < lstCB->data.dsVe.soDay) {
 				Normal();
-				if (stricmp(lstCB->data.dsVe.nodeVe[chon].data.CMND, "") != 0)
+				if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") != 0)
 					Red_Highlight();
 				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
 				chon += lstCB->data.dsVe.soDong;
@@ -2931,25 +4070,124 @@ int chonVe(PTRChuyenBay& lstCB) {
 			}
 			break;
 		}
-		case DELETE:
-		{
+		case ESC:
+			return -1;
+		case ENTER:
 			Normal();
-			if (stricmp(lstCB->data.dsVe.nodeVe[chon].data.CMND, "") == 0) {
+			if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") != 0) {
+				hienThongBao("Ve nay da co nguoi dat!");
+				break;
+			}
+			xoaKhungDS();
+			return chon;
+		}
+	} while (true);
+	return -1;
+}
+
+int chonVe_HUY(PTRChuyenBay& lstCB) {
+	int chon = 0;
+	int kc = 3;
+	int n = 0;
+	for (int i = 0; i < lstCB->data.dsVe.soDay; i++) {
+		for (int j = 0; j < lstCB->data.dsVe.soDong; j++) {
+			if (stricmp(lstCB->data.dsVe.nodeVe[n]->data.CMND, "") != 0)
+				Red_Highlight();
+			show_1_Ve(lstCB->data.dsVe, i, j, n, kc);
+			Normal();
+			n++;
+		}
+		kc += 3;
+	}
+	int cot = 0;
+	int dong = 0;
+	kc = 3;
+	if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") != 0)
+		Red_Highlight();
+	Highlight();
+	show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
+	char kytu;
+	do
+	{
+		kytu = getch();
+		if (kytu == -32)
+			kytu = getch();
+		if (kytu == 0)
+			kytu = getch();
+		switch (kytu)
+		{
+		case UP:
+		{
+			if (dong > 0) {
+				Normal();
+				if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") != 0)
+					Red_Highlight();
+				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
+				chon--;
+				dong--;
+
+				Highlight();
+				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
+			}
+			break;
+		}
+		case DOWN:
+		{
+			if (dong + 1 < lstCB->data.dsVe.soDong) {
+				Normal();
+				if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") != 0)
+					Red_Highlight();
+				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
+				chon++;
+				dong++;
+				Highlight();
+				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
+			}
+			break;
+		}
+		case LEFT:
+		{
+			if (cot > 0) {
+				Normal();
+				if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") != 0)
+					Red_Highlight();
+				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
+				chon -= lstCB->data.dsVe.soDong;
+				cot--;
+				kc -= 3;
+				Highlight();
+				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
+			}
+			break;
+		}
+		case RIGHT:
+		{
+			if (cot + 1 < lstCB->data.dsVe.soDay) {
+				Normal();
+				if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") != 0)
+					Red_Highlight();
+				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
+				chon += lstCB->data.dsVe.soDong;
+				cot++;
+				kc += 3;
+				Highlight();
+				show_1_Ve(lstCB->data.dsVe, cot, dong, chon, kc);
+			}
+			break;
+		}
+		case ESC:
+		{
+			return -1;
+		}
+		case ENTER:
+			Normal();
+			if (stricmp(lstCB->data.dsVe.nodeVe[chon]->data.CMND, "") == 0) {
 				hienThongBao("Chua dat ve nay, khong the huy!");
 				break;
 			}
 			int xacNhan = confirm("DONG Y", "TRO VE", false);
 			if (xacNhan == 2 || xacNhan == 0)
 				break;
-			xoaKhungDS();
-			return chon;
-		}
-		case ENTER:
-			Normal();
-			if (stricmp(lstCB->data.dsVe.nodeVe[chon].data.CMND, "") != 0) {
-				hienThongBao("Ve nay da co nguoi dat!");
-				break;
-			}
 			xoaKhungDS();
 			return chon;
 		}
@@ -2963,7 +4201,7 @@ void show_VeTrong(PTRChuyenBay p) {
 	int n = 0;
 	for (int i = 0; i < p->data.dsVe.soDay; i++) {
 		for (int j = 0; j < p->data.dsVe.soDong; j++) {
-			if (stricmp(p->data.dsVe.nodeVe[n].data.CMND, "") != 0)
+			if (stricmp(p->data.dsVe.nodeVe[n]->data.CMND, "") != 0)
 				Red_Highlight();
 			show_1_Ve(p->data.dsVe, i, j, n, kc);
 			Normal();
@@ -3006,7 +4244,7 @@ void dsHK_1_CB(PTRChuyenBay lstCB, TREEHanhKhach lstHK, LIST_MB lstMB) {
 	}
 }
 
-void QLMB(LIST_MB &lstMB, char tdMayBay[soItem_MenuMB][100]) {
+void QLMB(LIST_MB &lstMB, PTRChuyenBay lstCB) {
 	int chonMB;
 	int exit1 = 1;
 	Normal();
@@ -3014,54 +4252,64 @@ void QLMB(LIST_MB &lstMB, char tdMayBay[soItem_MenuMB][100]) {
 	mayBay tmp;
 	while (exit1) {
 		show_MB(lstMB);
-		//chonMB = menuDong_MayBay(tdMayBay);
 		chonMB = 0;
 		tmp = ChonMB_Edit(lstMB, chonMB);
 		switch (chonMB)
 		{
-		case 1:
+		case THEM_MB:
 		{
-			mayBay mb = createMB(lstMB, mb);
-			int a = insert_MB(lstMB, mb);
-			if (a == 1) {
+			mayBay mb = createMB(lstMB);
+			if (mb.soHieuMayBay[0] == ESC) {
+				break;
+			}
+			int themMB = insert_MB(lstMB, mb);
+			if (themMB == 1) {
+				Green_Highlight();
 				hienThongBao("Them thanh cong!");
 				int save = saveMB(lstMB);
 			}
-			Normal();
-			system("cls");
-			break;
-
-		}
-		case 2:
-		{
-			int tontai = -1;
-			tontai = search_MB(lstMB, tmp.soHieuMayBay);
-
-			int xoa = delete_MB(lstMB, tontai);
-			if (xoa == 1) {
-				hienThongBao("Xoa thanh cong!");
-				int save = saveMB(lstMB);
-			}
 			else {
-				hienThongBao("Xoa that bai!");
+				Red_Highlight();
+				hienThongBao("Them that bai!");
 			}
 			Normal();
 			system("cls");
 			break;
 
 		}
-		case 3:
+		case HIEUCHINH_MB:
 		{
 			int tontai = -1;
 			tontai = search_MB(lstMB, tmp.soHieuMayBay);
-				
+
 			int sua = hieuChinh_MB(lstMB, tontai);
 			if (sua == 1) {
+				Green_Highlight();
 				hienThongBao("Hieu chinh thanh cong!");
 				int save = saveMB(lstMB);
 			}
 			else {
-				hienThongBao("Hieu chinh that bai!");
+				Red_Highlight();
+				hienThongBao("Da huy!");
+			}
+			Normal();
+			system("cls");
+			break;
+
+		}
+		case XOA_MB:
+		{
+			int tontai = -1;
+			tontai = search_MB(lstMB, tmp.soHieuMayBay);
+			int xoa = delete_MB(lstMB, tontai, lstCB);
+			if (xoa == 1) {
+				Green_Highlight();
+				hienThongBao("Xoa thanh cong!");
+				int save = saveMB(lstMB);
+			}
+			else {
+				Red_Highlight();
+				hienThongBao("May bay da lap chuyen bay khong the xoa!");
 			}
 			Normal();
 			system("cls");
@@ -3077,34 +4325,78 @@ void QLMB(LIST_MB &lstMB, char tdMayBay[soItem_MenuMB][100]) {
 	}
 }
 
-void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& lstMB) {
+void QLCB(PTRChuyenBay& lstCB, LIST_MB& lstMB) {
 	int chonCB;
 	int exit2 = 1;
 	Normal();
 	system("cls");
+	PTRChuyenBay p = lstCB;
 	while (exit2)
 	{
-		//showCB(lstCB);
-		//chonCB = menuDong_ChuyenBay(tdChuyenBay);
-		chonCB = 0;
-		PTRChuyenBay p = ChonCB_Edit(lstCB, lstMB, chonCB);
+		chonCB = THEM_CB;
+		if(!empty_CB(lstCB))
+			p = ChonCB_Edit(lstCB, lstMB, chonCB);
 		switch (chonCB)
 		{
-		case 1:
+		case THEM_CB:
 		{
 			CHUYENBAY cb;
-			cb = createCB(lstCB, cb, lstMB);
-			insert_OrderNodeCB(lstCB, cb);
-			hienThongBao("Them thanh cong!");
-			int save = saveCB(lstCB);
-
+			cb = createCB(lstCB, lstMB);
+			if (cb.maChuyenBay[0] != ESC) {
+				insert_OrderNodeCB(lstCB, cb);
+				hienThongBao("Them thanh cong!");
+				int save = saveCB(lstCB);
+			}
+			else
+				hienThongBao("Da huy!");
 			Normal();
 			system("cls");
 
 			break;
 		}
-		case 2:
+		case HIEUCHINH_CB:
 		{
+			// khong hieu chinh chuyen bay da huy hay hoan tat
+			if (checkStatus_CB(p->data)) {
+				Normal();
+				system("cls");
+				break;
+			}
+			int fix = hieuChinh_CB(lstCB, p, lstMB);
+			if (fix == 1)
+			{
+				hienThongBao("Hieu chinh thanh cong!");
+				int save = saveCB(lstCB);
+			}
+			else
+			{
+				hienThongBao("Da huy!");
+			}
+			Normal();
+			system("cls");
+			break;
+		}
+		case XOA_CB:
+		{
+			// khong xoa chuyen bay da huy hay hoan tat
+			if (checkStatus_CB(p->data)) {
+				Normal();
+				system("cls");
+				break;
+			}
+			/*Chuyển trạng thái về hủy chuyến khi có ít nhất 1 vé
+			được đăng kí và không xóa chuyến bay khỏi danh sách.*/ 
+			if (demSoVe(p->data.dsVe) != 0) {
+				int huy = huy_CB(lstCB, p);
+				if (huy) {
+					int save = saveCB(lstCB);
+					Green_Highlight();
+					hienThongBao("Da huy chuyen bay!");
+				}
+				Normal();
+				system("cls");
+				break;
+			}
 			int xoa = xoa_CB(lstCB, p->data.maChuyenBay);
 			if (xoa == 1) {
 				hienThongBao("Xoa thanh cong!");
@@ -3116,26 +4408,20 @@ void QLCB(PTRChuyenBay& lstCB, char tdChuyenBay[soItem_MenuCB][100], LIST_MB& ls
 			system("cls");
 			break;
 		}
-			
-		case 3:
+		case HUY_CB:
 		{
-			int fix = hieuChinh_CB(lstCB, p, lstMB);
-			if (fix == 1)
-			{
-				hienThongBao("Hieu chinh thanh cong!");
+			int huy = huy_CB(lstCB, p);
+			if (huy) {
 				int save = saveCB(lstCB);
+				Green_Highlight();
+				hienThongBao("Huy chuyen thanh cong!");
 			}
-			else
-			{
-				hienThongBao("Hieu chinh that bai!");
+			else {
+				Red_Highlight();
+				hienThongBao("Khong the huy chuyen bay nay hoac da bi huy truoc do!");
 			}
 			Normal();
 			system("cls");
-			break;
-		}
-		case 4:
-		{
-
 			break;
 		}
 		case soItem_MenuCB:
@@ -3165,24 +4451,65 @@ void DatHuyVe(PTRChuyenBay& lstCB, LIST_MB lstMB, TREEHanhKhach& lstHK) {
 		{
 			xoaKhungDS();
 			vitri = chonVe(p);
-			HANHKHACH hk = create_HK(lstHK);
-			insertNode_HK(lstHK, hk);
-			
-			insertVe(p->data.dsVe, vitri, hk.CMND);
-			hienThongBao("Dat ve thanh cong!");
+			if (vitri == -1)
+				break;
+			HANHKHACH hk = create_HK(lstHK, lstCB);
+			// sau khi sua thong tin hanh khach thi phai cap nhat lai vao file
 			int savehk = saveHK(lstHK);
 			int savecb = saveCB(lstCB);
+			if (hk.CMND[0] == ESC) {
+				Red_Highlight();
+				hienThongBao("Da huy dat ve!");
+				Normal();
+				break;
+			}
+			insertNode_HK(lstHK, hk);
+
+			// truong hop dat ve tren cung 1 chuyen bay
+			if (checkVeCung_CB(p, hk)) {
+				Red_Highlight();
+				hienThongBao("Quy khach da dat ve chuyen bay nay roi!");
+				break;
+			}
+			// truong hop dat ve cung thoi diem tren 2 chuyen khac nhau
+			PTRChuyenBay tmp = checkVeCungTime(lstCB, p, hk);
+			if (tmp != NULL) {
+				Red_Highlight();
+				hienThongBao("Quy khach da dat ve tren chuyen bay: ", string(tmp->data.maChuyenBay), string(tmp->data.sanBayDen), "Den noi:");
+				delete tmp;
+				break;
+			}
+			// them ve vao ds ve
+			insertVe(p->data.dsVe, vitri, hk.CMND);
+			if (demSoVe(p->data.dsVe) == p->data.dsVe.n) {
+				p->data.trangThai = HETVE;
+			}
+			hienThongBao("Dat ve thanh cong!");
+			
 			break;
 		}
 		case 2:
 		{
 			xoaKhungDS();
-			vitri = chonVe(p);
-			int cancle = cancelVe(p->data.dsVe, vitri);
-			if (cancle == 1) {
-				hienThongBao("Huy ve thanh cong!");
-				int save = saveCB(lstCB);
+			if (checkHK_HuyVe(p)) {
+				vitri = chonVe_HUY(p);
+				if (vitri == -1)
+					break;
+				int cancle = cancelVe(p->data.dsVe, vitri);
+				if (cancle == 1) {
+					if (demSoVe(p->data.dsVe) == p->data.dsVe.n) {
+						p->data.trangThai = HETVE;
+					}
+					hienThongBao("Huy ve thanh cong!");
+					int save = saveCB(lstCB);
+				}
+				
 			}
+			else {
+				Red_Highlight();
+				hienThongBao("Quy khach chua dat ve chuyen bay nay!");
+			}
+			break;
 		}
 		case soItem_MenuCB:
 			exit = 0;
@@ -3256,7 +4583,7 @@ void thongKeCB(PTRChuyenBay lstCB, LIST_MB lstMB) {
 		soLuot[i] = dem;
 		tempMB[i].data = lstMB.nodeMB[i]->data;
 	}
-
+	quickSortTK(soLuot, tempMB, 0, lstMB.n - 1);
 	Normal();
 	xoaKhungDS();
 	khungXuatDS(THONG_KE, DONGDS_D - DONGDS_U, COTDS_R - COTDS_L, 5, 25, 70);
@@ -3305,7 +4632,7 @@ int confirm(string chose1, string chose2, bool huyCB) {
 			Highlight();
 			gotoxy(COT + 10, DONGNHAP7);
 			cout << chose1;
-			chon = 3;
+			chon = YES;
 			break;
 		case RIGHT:
 			Normal();
@@ -3315,9 +4642,9 @@ int confirm(string chose1, string chose2, bool huyCB) {
 			gotoxy(COT + DAIKHUNGNHO + 28, DONGNHAP7);
 			cout << chose2;
 			if (huyCB == true)
-				chon = 4;
+				chon = HUY_CB;
 			else 
-				chon = 2;
+				chon = NO;
 			break;
 		case ENTER:
 			Normal();
@@ -3328,7 +4655,7 @@ int confirm(string chose1, string chose2, bool huyCB) {
 			Normal();
 			gotoxy(COT + 10, DONGNHAP7);
 			cout << "                                       ";
-			return 0;
+			return CANCEL;
 		}
 		
 	} while (true);

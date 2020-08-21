@@ -39,12 +39,14 @@ int main() {
 		switch (chon) {
 		case 1:
 		{
-			QLMB(lstMB, tdMayBay);
+			QLMB(lstMB, lstCB);
 			break;
 		}
 		case 2:
 		{
-			QLCB(lstCB, tdChuyenBay, lstMB);
+			int check = checkHoanTat_CB(lstCB);
+			QLCB(lstCB, lstMB);
+			int save = saveCB(lstCB);
 			break;
 		}
 		case 3:

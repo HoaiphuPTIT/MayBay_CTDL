@@ -67,17 +67,44 @@
 #define PASSWORD "abcdef"
 //const int WHITE=15;
 #define TIM_MA 0
-#define NHAP_MB 1
+#define THEM_MB 1
 #define XOA_MB 2
-#define SUA_MB 3
-#define NHAP_CB 4
-#define XOA_CB 5
-#define SUA_CB 6
-#define NHAP_HK 7
-#define XOA_HK 8
-#define SUA_HK 9
-#define LOC_CB 10
+#define HIEUCHINH_MB 3
+#define THEM_CB 1
+#define XOA_CB 2
+#define HIEUCHINH_CB 3
+#define HUY_CB 4
+#define THEM_HK 1
+#define GDTHEM_HK 113
+#define GDTHEM_CB 111
+#define XOA_HK 2
+#define HIEUCHINH_HK 3
+#define LOC_CB 12
 #define THONG_KE 11
+#define XUAT_MB 5
+#define XUAT_CB 6
+#define XUAT_HK 7
+#define XOA_MB 8
+#define XOA_CB 9
+#define XOA_HK 10
+#define YES 3
+#define NO 2
+#define CANCEL 0
+
+//A-Z/0-9
+#define A 65
+#define Z 90
+#define a 97
+#define z 122
+#define So0 48
+#define So1 49
+#define So2 50
+#define So3 51
+#define So4 52
+#define So5 53
+#define So6 54
+#define So9 57
+
 char* Pwd () {
      char S[40]; int i=0;
      while ((S[i]= getch()) != ENTER ) 
