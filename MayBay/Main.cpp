@@ -9,16 +9,6 @@ char tdChinh[soItem_MenuChinh][100] = { "1. Quan ly may bay                     
 										 "6. Danh sach ve con trong cua chuyen bay X            ",
 										 "7. Thong ke so luot thuc hien chuyen bay"
 };
-char tdMayBay[soItem_MenuMB][100] = { "1. Them may bay",
-										 "2. Xoa may bay",
-										 "3. Hieu chinh may bay",
-										 "4. Tro ve"
-};
-char tdChuyenBay[soItem_MenuCB][100] = { "1. Them chuyen bay",
-										 "2. Xoa chuyen bay",
-										 "3. Hieu chinh chuyen bay",
-										 "4. Tro ve"
-};
 
 int main() {
 	LIST_MB lstMB;
