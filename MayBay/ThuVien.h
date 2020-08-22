@@ -61,7 +61,7 @@ typedef struct NodeMayBay* NODEMAYBAY;
 
 struct ListMayBay {
 	int n = 0;
-	NODEMAYBAY nodeMB[MAXLIST];
+	NODEMAYBAY MB[MAXLIST];
 };
 typedef struct ListMayBay LIST_MB;
 
@@ -81,7 +81,7 @@ struct ListVe {
 	int n = 0;
 	int soDay;
 	int soDong;
-	NODEVEMB nodeVe[MAXVE];
+	NODEVEMB Ve[MAXVE];
 };
 typedef struct ListVe LIST_VE;
 
@@ -138,7 +138,7 @@ void show_MB(LIST_MB lstMB);
 int search_MB(LIST_MB lstMB, char ma[]);
 mayBay getMB(LIST_MB lstMB, char ma[]);
 int hieuChinh_MB(LIST_MB& lstMB, int i);
-void show_1_MB(LIST_MB lstMB, int chon, bool type);
+void show_1_MB(LIST_MB lstMB, int chon, bool type, int dem);
 void show_MB(LIST_MB lstMB);
 int checkMB_DaBay(mayBay mb, PTRChuyenBay lstCB);
 int checkTime_LapCB(CHUYENBAY cb, PTRChuyenBay lstCB);
