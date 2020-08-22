@@ -140,10 +140,7 @@ mayBay getMB(LIST_MB lstMB, char ma[]);
 int hieuChinh_MB(LIST_MB& lstMB, int i);
 void show_1_MB(LIST_MB lstMB, int chon, bool type, int dem);
 void show_MB(LIST_MB lstMB);
-int checkMB_DaBay(mayBay mb, PTRChuyenBay lstCB);
-int checkTime_LapCB(CHUYENBAY cb, PTRChuyenBay lstCB);
-int toTime(THOI_GIAN tg);
-int checkKC_5Gio(THOI_GIAN tg1, THOI_GIAN tg2);
+
 
 //======= ham xu ly ve =====
 int emptyVe(LIST_VE lstVe);
@@ -155,6 +152,7 @@ int demSoVe(LIST_VE lstVe);
 int cancelVe(LIST_VE& lstVe, int vitri);
 void themSLVe(LIST_VE& lstVe, maybay mb, LIST_VE lstVeCu);
 
+
 //============ cac ham xu ly chuyen bay ===============//
 void initCB(PTRChuyenBay& lstCB);
 int empty_CB(PTRChuyenBay lstCB);
@@ -165,18 +163,14 @@ PTRChuyenBay searchBin_CB(PTRChuyenBay lstCB, char ma[]);
 int hieuChinh_CB(PTRChuyenBay& lstCB, PTRChuyenBay p, LIST_MB lstMB);
 int xoa_CB(PTRChuyenBay& lstCB, char ma[]);
 int huy_CB(PTRChuyenBay& lstCB, PTRChuyenBay p);
-int checkStatus_CB(CHUYENBAY cb);
-int checkBooked(LIST_VE lstVe);
-int checkTime_HoanTat(THOI_GIAN tg1, THOI_GIAN tg2);
-int checkHoanTat_CB(PTRChuyenBay& lstCB);
-int checkTimeHienTai(THOI_GIAN tg);
-int checkSoDay_SoDong(mayBay mbCu, mayBay mbMoi);
+
 void showCB(PTRChuyenBay lstCB);
 void showCB_DatVe(PTRChuyenBay lstCB);
 void show_1_CB_DatVe(CHUYENBAY* cb, int chon);
 void showCB_ConVe(CHUYENBAY* p, int& i);
 void show_1_CB(CHUYENBAY* cb, int chon);
 void chuyenMang(PTRChuyenBay lstCB, CHUYENBAY* cb[], int& n, LIST_MB lstMB, int trangThai);
+
 
 //============= cac ham xu ly hanh khach ===================//
 void init_HK(TREEHanhKhach& lstHK);
@@ -190,10 +184,24 @@ void xuat_HK(TREEHanhKhach lstHK, int& stt); // theo thu tu NLR
 void timNodeTheMang(TREEHanhKhach& lstHK, TREEHanhKhach& r);
 void remove_HK(TREEHanhKhach& lstHK, char soCMND[]);
 void showHK(TREEHanhKhach lstHK);
+void quickSortTK(int* soLuot, NODEMAYBAY tempMB, int q, int r);
+
+
+//======= cac ham kiem tra ============//
+int checkMB_DaBay(mayBay mb, PTRChuyenBay lstCB);
+int checkTime_LapCB(CHUYENBAY cb, PTRChuyenBay lstCB);
+int toTime(THOI_GIAN tg);
+int checkKC_5Gio(THOI_GIAN tg1, THOI_GIAN tg2);
+int checkStatus_CB(CHUYENBAY cb);
+int checkBooked(LIST_VE lstVe);
+int checkTime_HoanTat(THOI_GIAN tg1, THOI_GIAN tg2);
+int checkHoanTat_CB(PTRChuyenBay& lstCB);
+int checkTimeHienTai(THOI_GIAN tg);
+int checkSoDay_SoDong(mayBay mbCu, mayBay mbMoi);
 int checkHK_HuyVe(PTRChuyenBay p, HANHKHACH& hk);
 int checkVeCung_CB(PTRChuyenBay p, HANHKHACH hk);
 PTRChuyenBay checkVeCungTime(PTRChuyenBay lstCB, PTRChuyenBay p, HANHKHACH hk);
-void quickSortTK(int* soLuot, NODEMAYBAY tempMB, int q, int r);
+
 
 //============= doc xuat file ================//
 int loadMB(LIST_MB &mb);
