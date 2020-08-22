@@ -2443,7 +2443,7 @@ int rangBuocGio(THOI_GIAN h)
 		hienThongBao(thongbao);
 		return 1;
 	}
-	if (checkTimeHienTai(h) && h.gio >= t.gio) {
+	if (checkTimeHienTai(h) && h.gio == t.gio) {
 		if (h.phut < t.phut) {
 			itoa(t.gio, gio, 10);
 			strcat(gio, ":");
@@ -3482,23 +3482,23 @@ PTRChuyenBay ChonCB_Edit(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB) {
 		case UP:
 			if (chon > 0 && dem > 0) {
 				Normal();
-				show_1_CB(tmpCB[chon], chon);
+				show_1_CB(tmpCB[chon], dem);
 
 				chon--;
 				dem--;
 				Highlight();
-				show_1_CB(tmpCB[chon], chon);
+				show_1_CB(tmpCB[chon], dem);
 			}
 			break;
 		case DOWN:
 			if (chon + 1 < i && dem + 1 < MAX_PAGE) {
 				Normal();
-				show_1_CB(tmpCB[chon], chon);
+				show_1_CB(tmpCB[chon], dem);
 
 				chon++;
 				dem++;
 				Highlight();
-				show_1_CB(tmpCB[chon], chon);
+				show_1_CB(tmpCB[chon], dem);
 			}
 			break;
 		case LEFT:
@@ -3629,23 +3629,23 @@ PTRChuyenBay ChonCB_DatVe_HuyVe(PTRChuyenBay lstCB, int &chonCB, LIST_MB lstMB) 
 		case UP:
 			if (chon > 0 && dem > 0) {
 				Normal();
-				show_1_CB_DatVe(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], dem);
 
 				chon--;
 				dem--;
 				Highlight();
-				show_1_CB_DatVe(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], dem);
 			}
 			break;
 		case DOWN:
 			if (chon + 1 < i && dem + 1 < MAX_PAGE) {
 				Normal();
-				show_1_CB_DatVe(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], dem);
 
 				chon++;
 				dem++;
 				Highlight();
-				show_1_CB_DatVe(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], dem);
 			}
 			break;
 		case LEFT:
@@ -4113,23 +4113,23 @@ PTRChuyenBay ChonCB_XemVeTrong(PTRChuyenBay lstCB, LIST_MB lstMB, int &chonCB) {
 		case UP:
 			if (chon > 0 && dem > 0) {
 				Normal();
-				show_1_CB_DatVe(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], dem);
 
 				chon--;
 				dem--;
 				Highlight();
-				show_1_CB_DatVe(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], dem);
 			}
 			break;
 		case DOWN:
 			if (chon + 1 < i && dem + 1 < MAX_PAGE) {
 				Normal();
-				show_1_CB_DatVe(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], dem);
 
 				chon++;
 				dem++;
 				Highlight();
-				show_1_CB_DatVe(tmpCB[chon], chon);
+				show_1_CB_DatVe(tmpCB[chon], dem);
 			}
 			break;
 		case LEFT:
