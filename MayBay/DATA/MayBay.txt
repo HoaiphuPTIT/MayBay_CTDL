@@ -11,10 +11,6 @@ VN03
 Boeing
 6
 1
-VN04
-Boeing
-8
-15
 VN05
 Viet Nam
 7
@@ -55,7 +51,3 @@ VN14
 Vietjet
 5
 2
-ERW
-Fds
-10
-20

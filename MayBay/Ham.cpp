@@ -982,7 +982,7 @@ void showCB(PTRChuyenBay lstCB) {
 		else if (p->data.trangThai == 3)
 			cout << "Hoan tat";
 		i++;
-		if (i == MAX_PAGE - 1)
+		if (i == MAX_PAGE)
 			break;
 	}
 	
@@ -1257,6 +1257,8 @@ HANHKHACH create_HK(TREEHanhKhach& lstHK, PTRChuyenBay& lstCB) {
 				int hieuChinh = hieuChinh_HK(lstHK, tmp, lstCB);
 				if (hieuChinh) {
 					hienThongBao("Sua thong tin thanh cong!");
+					int savehk = saveHK(lstHK);
+					int savecb = saveCB(lstCB);
 					int datVe = confirm("DAT VE", "TRO VE", false);
 					if (datVe == YES) {
 						return tmp->data;
@@ -1269,8 +1271,16 @@ HANHKHACH create_HK(TREEHanhKhach& lstHK, PTRChuyenBay& lstCB) {
 				else
 					goto DatVe;
 			}
-			else {
-				return tmp->data;
+			else if (sua == NO){
+				int datVe = confirm("DONG Y", "TRO VE", false);
+				if (datVe == YES) {
+					
+					return tmp->data;
+				}
+				else {
+					tmp->data.CMND[0] = ESC;
+					return tmp->data;
+				}
 			}
 			
 		}
@@ -2326,17 +2336,10 @@ THOI_GIAN CheckInputTime(THOI_GIAN& tg, int DongInfo) {
 			cout << "   ";
 			gotoxy(COT + DAIKHUNGNHO + 1, DongInfo + 2);
 			NhapPHUT(tg.phut, 3);
-			if (tg.phut == 0 || tg.phut == -1)
+			if (tg.phut == -1)
 				goto Check;
 
 		Check:
-			if (tg.phut == 0) {
-				hienThongBao("Chua nhap thong tin!");
-				if (tg.gio == 0)
-					goto Gio;
-				if (tg.phut == 0)
-					goto Phut;
-			}
 			if (tg.gio == -1 || tg.phut == -1) {
 				int exit = confirm("HUY", "NHAP TIEP", false);
 				if (exit == YES) {
@@ -2420,7 +2423,37 @@ int rangBuocThoiGian(THOI_GIAN tg) {
 
 int rangBuocGio(THOI_GIAN h)
 {
-
+	time_t baygio = time(0);
+	tm* ltm = localtime(&baygio);
+	THOI_GIAN t;
+	t.ngay = ltm->tm_mday;
+	t.thang = ltm->tm_mon + 1;
+	t.nam = ltm->tm_year + 1900;
+	t.gio = ltm->tm_hour;
+	t.phut = ltm->tm_min;
+	char thongbao[70] = "Bay gio la ";
+	char gio[4];
+	char phut[4];
+	if (checkTimeHienTai(h) && h.gio < t.gio) {
+		itoa(t.gio, gio, 10);
+		strcat(gio, ":");
+		itoa(t.phut, phut, 10);
+		strcat(thongbao, gio);
+		strcat(thongbao, phut);
+		hienThongBao(thongbao);
+		return 1;
+	}
+	if (checkTimeHienTai(h) && h.gio >= t.gio) {
+		if (h.phut < t.phut) {
+			itoa(t.gio, gio, 10);
+			strcat(gio, ":");
+			itoa(t.phut, phut, 10);
+			strcat(thongbao, gio);
+			strcat(thongbao, phut);
+			hienThongBao(thongbao);
+			return 1;
+		}
+	}
 	if (h.gio > 23 || h.gio < 0)
 	{
 		hienThongBao("Gio bat dau tu 0h den 23h. Vui long nhap gio hop le!");
@@ -3025,7 +3058,9 @@ mayBay ChonMB_LapCB(LIST_MB lstMB) {
 	xoaKhungDS();
 	mayBay tmp;
 	Normal();
-	int page = MAX_PAGE;
+	int page = MAX_PAGE - 1;
+	if (lstMB.n < MAX_PAGE)
+		page = lstMB.n;
 	int dem = 0;
 	int chon = 0;
 	int i;
@@ -3041,26 +3076,29 @@ mayBay ChonMB_LapCB(LIST_MB lstMB) {
 		switch (kytu)
 		{
 		case UP:
-			if (chon > 0) {
+			if (chon > 0 && dem > 0) {
 				Normal();
 				show_1_MB(lstMB, chon, false);
 
 				chon--;
+				dem--;
 				Highlight();
 				show_1_MB(lstMB, chon, false);
 			}
 			break;
 		case DOWN:
-			if (chon + 1 < lstMB.n) {
+			if (chon + 1 < lstMB.n && dem + 1 < MAX_PAGE) {
 				Normal();
 				show_1_MB(lstMB, chon, false);
 				chon++;
+				dem++;
 				Highlight();
 				show_1_MB(lstMB, chon, false);
 			}
 			break;
 		case LEFT:
 			if (page > MAX_PAGE) {
+				Normal();
 				page -= MAX_PAGE * 2;
 				chon = page;
 				dem = 0;
@@ -3072,11 +3110,15 @@ mayBay ChonMB_LapCB(LIST_MB lstMB) {
 					}
 					dem++;
 				}
+				dem = 0;
+				Highlight();
+				show_1_MB(lstMB, chon, true);
 			}
-			dem = 0;
+
 			break;
 		case RIGHT:
 			if (page < lstMB.n) {
+				Normal();
 				xoaThongTin(XOA_MB);
 				page++;
 				chon = page;
@@ -3090,6 +3132,8 @@ mayBay ChonMB_LapCB(LIST_MB lstMB) {
 				}
 				page += MAX_PAGE - dem;
 				dem = 0;
+				Highlight();
+				show_1_MB(lstMB, chon, true);
 			}
 			break;
 		case ESC:
@@ -3199,7 +3243,7 @@ mayBay ChonMB_Edit(LIST_MB lstMB, int& chonMB) {
 	khungGiaoDien();
 	khungNhapThongTin(THEM_MB, "THEM MAY BAY", "So hieu may bay:", "Loai may bay:", "So day:", "So dong:");
 	hienHuongDan(1);
-	int page = MAX_PAGE;
+	int page = MAX_PAGE - 1;
 	int dem = 0;
 	int chon = 0;
 	int i;
@@ -3217,27 +3261,30 @@ mayBay ChonMB_Edit(LIST_MB lstMB, int& chonMB) {
 		switch (kytu)
 		{
 		case UP:
-			if (chon > 0) {
+			if (chon > 0 && dem > 0) {
 				Normal();
 				show_1_MB(lstMB, chon, true);
 
 				chon--;
+				dem--;
 				Highlight();
 				show_1_MB(lstMB, chon, true);
 			}
 			break;
 		case DOWN:
-			if (chon + 1 < lstMB.n) {
+			if (chon + 1 < lstMB.n && dem + 1 < MAX_PAGE) {
 				Normal();
 				show_1_MB(lstMB, chon, true);
 
 				chon++;
+				dem++;
 				Highlight();
 				show_1_MB(lstMB, chon, true);
 			}
 			break;
 		case LEFT:
 			if (page > MAX_PAGE) {
+				Normal();
 				page -= MAX_PAGE * 2;
 				chon = page;
 				dem = 0;
@@ -3249,11 +3296,14 @@ mayBay ChonMB_Edit(LIST_MB lstMB, int& chonMB) {
 					}
 					dem++;
 				}
+				dem = 0;
+				Highlight();
+				show_1_MB(lstMB, chon, true);
 			}
-			dem = 0;
 			break;
 		case RIGHT:
 			if (page < lstMB.n) {
+				Normal();
 				xoaThongTin(XOA_MB);
 				page++;
 				chon = page;
@@ -3267,6 +3317,8 @@ mayBay ChonMB_Edit(LIST_MB lstMB, int& chonMB) {
 				}
 				page += MAX_PAGE - dem;
 				dem = 0;
+				Highlight();
+				show_1_MB(lstMB, chon, true);
 			}
 			break;
 		case F2:
@@ -3405,7 +3457,7 @@ PTRChuyenBay ChonCB_Edit(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB) {
 	khungNhapThongTin(GDTHEM_CB, "THEM CHUYEN BAY", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
 	hienHuongDan(1);
 	int chon = 0;
-	int page = MAX_PAGE;
+	int page = MAX_PAGE - 1;
 	int dem = 0;
 	showCB(lstCB);
 
@@ -3428,27 +3480,30 @@ PTRChuyenBay ChonCB_Edit(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB) {
 		switch (kytu)
 		{
 		case UP:
-			if (chon > 0) {
+			if (chon > 0 && dem > 0) {
 				Normal();
 				show_1_CB(tmpCB[chon], chon);
 
 				chon--;
+				dem--;
 				Highlight();
 				show_1_CB(tmpCB[chon], chon);
 			}
 			break;
 		case DOWN:
-			if (chon + 1 < i) {
+			if (chon + 1 < i && dem + 1 < MAX_PAGE) {
 				Normal();
 				show_1_CB(tmpCB[chon], chon);
 
 				chon++;
+				dem++;
 				Highlight();
 				show_1_CB(tmpCB[chon], chon);
 			}
 			break;
 		case LEFT:
 			if (page > MAX_PAGE) {
+				Normal();
 				page -= MAX_PAGE * 2;
 				chon = page;
 				dem = 0;
@@ -3460,11 +3515,14 @@ PTRChuyenBay ChonCB_Edit(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB) {
 					}
 					dem++;
 				}
+				dem = 0;
+				Highlight();
+				show_1_CB(tmpCB[chon], dem);
 			}
-			dem = 0;
 			break;
 		case RIGHT:
 			if (page < i) {
+				Normal();
 				xoaThongTin(XOA_CB_L);
 				page++;
 				chon = page;
@@ -3478,6 +3536,8 @@ PTRChuyenBay ChonCB_Edit(PTRChuyenBay lstCB, LIST_MB lstMB, int& chonCB) {
 				}
 				page += MAX_PAGE - dem;
 				dem = 0;
+				Highlight();
+				show_1_CB(tmpCB[chon], dem);
 			}
 			break;
 		case F2:
@@ -3544,7 +3604,7 @@ PTRChuyenBay ChonCB_DatVe_HuyVe(PTRChuyenBay lstCB, int &chonCB, LIST_MB lstMB) 
 	khungNhapThongTin(GDTHEM_CB, "", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
 	hienHuongDan(DATVE);
 	int chon = 0;
-	int page = MAX_PAGE;
+	int page = MAX_PAGE - 1;
 	int dem = 0;
 	
 	showCB_DatVe(lstCB);
@@ -3567,27 +3627,30 @@ PTRChuyenBay ChonCB_DatVe_HuyVe(PTRChuyenBay lstCB, int &chonCB, LIST_MB lstMB) 
 		switch (kytu)
 		{
 		case UP:
-			if (chon > 0) {
+			if (chon > 0 && dem > 0) {
 				Normal();
 				show_1_CB_DatVe(tmpCB[chon], chon);
 
 				chon--;
+				dem--;
 				Highlight();
 				show_1_CB_DatVe(tmpCB[chon], chon);
 			}
 			break;
 		case DOWN:
-			if (chon + 1 < i) {
+			if (chon + 1 < i && dem + 1 < MAX_PAGE) {
 				Normal();
 				show_1_CB_DatVe(tmpCB[chon], chon);
 
 				chon++;
+				dem++;
 				Highlight();
 				show_1_CB_DatVe(tmpCB[chon], chon);
 			}
 			break;
 		case LEFT:
 			if (page > MAX_PAGE) {
+				Normal();
 				page -= MAX_PAGE * 2;
 				chon = page;
 				dem = 0;
@@ -3599,11 +3662,14 @@ PTRChuyenBay ChonCB_DatVe_HuyVe(PTRChuyenBay lstCB, int &chonCB, LIST_MB lstMB) 
 					}
 					dem++;
 				}
+				dem = 0;
+				Highlight();
+				show_1_CB(tmpCB[chon], dem);
 			}
-			dem = 0;
 			break;
 		case RIGHT:
 			if (page < i) {
+				Normal();
 				xoaThongTin(XOA_CB_L);
 				page++;
 				chon = page;
@@ -3617,6 +3683,8 @@ PTRChuyenBay ChonCB_DatVe_HuyVe(PTRChuyenBay lstCB, int &chonCB, LIST_MB lstMB) 
 				}
 				page += MAX_PAGE - dem;
 				dem = 0;
+				Highlight();
+				show_1_CB(tmpCB[chon], dem);
 			}
 			break;
 		case F3:
@@ -3662,11 +3730,12 @@ PTRChuyenBay ChonCB_DatVe_HuyVe(PTRChuyenBay lstCB, int &chonCB, LIST_MB lstMB) 
 void xuatALL_HK_1_CB(CHUYENBAY* cb, TREEHanhKhach lstHK) {
 	Normal();
 	int page = 0;
-	if (cb->dsVe.n < 15)
+	if (cb->dsVe.n < MAX_PAGE_SMALL)
 		page = cb->dsVe.n;
 	int max_HK = demSoVe(cb->dsVe);
 	char kytu;
 	bool max = false;
+	xuatHK_1_CB(cb, lstHK, page);
 	do
 	{
 		kytu = getch();
@@ -3735,23 +3804,22 @@ int checkVeCung_CB(PTRChuyenBay p, HANHKHACH hk) {
 
 PTRChuyenBay checkVeCungTime(PTRChuyenBay lstCB, PTRChuyenBay p, HANHKHACH hk) {
 	PTRChuyenBay q = lstCB;
-	do
-	{
-		for (q; q != NULL; q = q->next) {
-			/*kiem tra co khac chuyen bay, bay cung ngay va co cach nhau
-			5 tieng hay khong*/
-			if (stricmp(p->data.maChuyenBay, q->data.maChuyenBay) != 0
-				&& toTime(p->data.tgKhoiHanh) - toTime(q->data.tgKhoiHanh) == 0
-				&& !checkKC_5Gio(p->data.tgKhoiHanh, q->data.tgKhoiHanh)) {
-				break;
-			}
+
+	for (q; q != NULL; q = q->next) {
+		/*kiem tra co khac chuyen bay, bay cung ngay va co cach nhau
+		5 tieng hay khong*/
+		if (stricmp(p->data.maChuyenBay, q->data.maChuyenBay) != 0
+			&& toTime(p->data.tgKhoiHanh) - toTime(q->data.tgKhoiHanh) == 0
+			&& !checkKC_5Gio(p->data.tgKhoiHanh, q->data.tgKhoiHanh)) {
+			break;
 		}
-		if (q == NULL)
-			return NULL;
-		if (checkVeCung_CB(q, hk)) {
-			return q;
-		}
-	} while (true);
+	}
+	if (q == NULL)
+		return NULL;
+	if (!checkVeCung_CB(q, hk)) {
+		return q;
+	}
+
 	
 }
 
@@ -3882,6 +3950,7 @@ PTRChuyenBay ChonCB_Xuat_DSHK(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB, TR
 					hienThongBao("Khong tim thay chuyen bay nay!");
 				else break;
 			} while (true);
+			xoaThongTin(XOA_HK);
 			xuatALL_HK_1_CB(&q->data, lstHK);
 			Normal();
 			return q;
@@ -3941,7 +4010,7 @@ PTRChuyenBay ChonCB_Loc_NoiDen(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB) {
 	for (pageCB; pageCB < i; pageCB++) {
 		showCB_ConVe(tmpCB[pageCB], pageCB);
 
-		if (dem == MAX_PAGE_SMALL - 1) {
+		if (dem == MAX_PAGE - 1) {
 			break;
 		}
 		dem++;
@@ -3960,15 +4029,14 @@ PTRChuyenBay ChonCB_Loc_NoiDen(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB) {
 		switch (kytu)
 		{
 		case LEFT:
-			if (pageCB > MAX_PAGE_SMALL) {
-				xoaThongTin(XOA_CB);
-				pageCB -= MAX_PAGE_SMALL * 2;
-				chon = pageCB;
+			if (pageCB > MAX_PAGE) {
+				xoaThongTin(XOA_CB_L);
+				pageCB -= MAX_PAGE * 2;
 				dem = 0;
 				for (pageCB; pageCB < i; pageCB++) {
 					showCB_ConVe(tmpCB[pageCB], dem);
 
-					if (dem == MAX_PAGE_SMALL - 1) {
+					if (dem == MAX_PAGE - 1) {
 						break;
 					}
 					dem++;
@@ -3978,20 +4046,19 @@ PTRChuyenBay ChonCB_Loc_NoiDen(PTRChuyenBay lstCB, int& chonCB, LIST_MB lstMB) {
 			break;
 		case RIGHT:
 			if (pageCB < i) {
-				xoaThongTin(XOA_CB);
+				xoaThongTin(XOA_CB_L);
 				pageCB++;
-				chon = pageCB;
 				dem = 0;
 				for (pageCB; pageCB < i; pageCB++) {
 					showCB_ConVe(tmpCB[pageCB], dem);
 
-					if (dem == MAX_PAGE_SMALL - 1) {
+					if (dem == MAX_PAGE - 1) {
 
 						break;
 					}
 					dem++;
 				}
-				pageCB += MAX_PAGE_SMALL - dem;
+				pageCB += MAX_PAGE - dem;
 				dem = 0;
 			}
 			break;
@@ -4018,7 +4085,7 @@ PTRChuyenBay ChonCB_XemVeTrong(PTRChuyenBay lstCB, LIST_MB lstMB, int &chonCB) {
 	khungGiaoDien();
 	khungNhapThongTin(GDTHEM_CB, "", "Ma chuyen bay:", "So hieu may bay:", "San bay den:", "Ngay khoi hanh:", "Gio khoi hanh:");
 	hienHuongDan(DATVE);
-	int page = MAX_PAGE;
+	int page = MAX_PAGE - 1;
 	int dem = 0;
 	int chon = 0;
 	
@@ -4044,21 +4111,23 @@ PTRChuyenBay ChonCB_XemVeTrong(PTRChuyenBay lstCB, LIST_MB lstMB, int &chonCB) {
 		switch (kytu)
 		{
 		case UP:
-			if (chon > 0) {
+			if (chon > 0 && dem > 0) {
 				Normal();
 				show_1_CB_DatVe(tmpCB[chon], chon);
 
 				chon--;
+				dem--;
 				Highlight();
 				show_1_CB_DatVe(tmpCB[chon], chon);
 			}
 			break;
 		case DOWN:
-			if (chon + 1 < i) {
+			if (chon + 1 < i && dem + 1 < MAX_PAGE) {
 				Normal();
 				show_1_CB_DatVe(tmpCB[chon], chon);
 
 				chon++;
+				dem++;
 				Highlight();
 				show_1_CB_DatVe(tmpCB[chon], chon);
 			}
@@ -4068,6 +4137,7 @@ PTRChuyenBay ChonCB_XemVeTrong(PTRChuyenBay lstCB, LIST_MB lstMB, int &chonCB) {
 				page -= MAX_PAGE * 2;
 				chon = page;
 				dem = 0;
+				Normal();
 				xoaThongTin(XOA_CB_L);
 				for (page; page < i; page++) {
 					show_1_CB(tmpCB[page], dem);
@@ -4076,11 +4146,14 @@ PTRChuyenBay ChonCB_XemVeTrong(PTRChuyenBay lstCB, LIST_MB lstMB, int &chonCB) {
 					}
 					dem++;
 				}
+				dem = 0;
+				Highlight();
+				show_1_CB(tmpCB[chon], dem);
 			}
-			dem = 0;
 			break;
 		case RIGHT:
 			if (page < i) {
+				Normal();
 				xoaThongTin(XOA_CB_L);
 				page++;
 				chon = page;
@@ -4094,6 +4167,8 @@ PTRChuyenBay ChonCB_XemVeTrong(PTRChuyenBay lstCB, LIST_MB lstMB, int &chonCB) {
 				}
 				page += MAX_PAGE - dem;
 				dem = 0;
+				Highlight();
+				show_1_CB(tmpCB[chon], dem);
 			}
 			break;
 		case F3:
@@ -4652,10 +4727,8 @@ void DatHuyVe(PTRChuyenBay& lstCB, LIST_MB lstMB, TREEHanhKhach& lstHK) {
 			if (vitri == -1)
 				break;
 			HANHKHACH hk = create_HK(lstHK, lstCB);
-
 			// sau khi sua thong tin hanh khach thi phai cap nhat lai vao file
-			int savehk = saveHK(lstHK);
-			int savecb = saveCB(lstCB);
+			
 			if (hk.CMND[0] == ESC) {
 				Red_Highlight();
 				hienThongBao("Da huy dat ve!");
@@ -4675,9 +4748,10 @@ void DatHuyVe(PTRChuyenBay& lstCB, LIST_MB lstMB, TREEHanhKhach& lstHK) {
 			if (tmp != NULL) {
 				Red_Highlight();
 				hienThongBao("Quy khach da dat ve tren chuyen bay: ", string(tmp->data.maChuyenBay), string(tmp->data.sanBayDen), "Den noi:");
-				delete tmp;
+				
 				break;
 			}
+			hienThongBao(string(hk.CMND), string(hk.ho), string(hk.ten));
 
 			// them ve vao ds ve
 			insertNode_HK(lstHK, hk);
@@ -4686,7 +4760,8 @@ void DatHuyVe(PTRChuyenBay& lstCB, LIST_MB lstMB, TREEHanhKhach& lstHK) {
 				p->data.trangThai = HETVE;
 			}
 			hienThongBao("Dat ve thanh cong!");
-			
+			int savehk = saveHK(lstHK);
+			int savecb = saveCB(lstCB);
 			break;
 		}
 		case HUYVE:
